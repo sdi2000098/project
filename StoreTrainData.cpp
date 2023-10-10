@@ -18,7 +18,6 @@ void Image :: Insert(uint8_t NewByte){
 }
 
 void Image :: Display(void){
-    cout << "[" ;
     for (int i = 0 ; i < NumberOfPixels ; i ++)
         cout << unsigned(Pixels[i]) << " ,";
     cout <<"]\n\n\n";

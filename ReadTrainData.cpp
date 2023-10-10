@@ -5,16 +5,16 @@
 
 using namespace std;
 static TrainStore * MyTrainData = NULL;
-int reverseInt (int i) 
+int reverseInt (int x)                      //We need to change endian representation
 {
-    uint8_t c1, c2, c3, c4;
+    uint8_t Byte1, Byte2, Byte3, Byte4;     //Store each byte of number
 
-    c1 = i & 255;
-    c2 = (i >> 8) & 255;
-    c3 = (i >> 16) & 255;
-    c4 = (i >> 24) & 255;
+    Byte1 = x & 255;                        //Least significant byte
+    Byte2 = (x >> 8) & 255;
+    Byte3 = (x >> 16) & 255;
+    Byte4 = (x >> 24) & 255;                //Most Significant byte
 
-    return ((int)c1 << 24) + ((int)c2 << 16) + ((int)c3 << 8) + c4;
+    return ((int)Byte1 << 24) + ((int)Byte2 << 16) + ((int)Byte3 << 8) + Byte4;         //Change the order of bytes
 }
 
 void ReadTrainData(string path){
