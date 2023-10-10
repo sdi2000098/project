@@ -1,7 +1,7 @@
 #ifndef STORE_TRAIN
     #include <stdint.h>
     #define STORE_TRAIN
-
+    int reverseInt (int x);
     class Image{
         public : 
             void Insert(uint8_t NewByte);

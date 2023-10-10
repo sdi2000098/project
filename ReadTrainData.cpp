@@ -3,6 +3,7 @@
 #include <fstream>
 #include "StoreTrainData.h"
 
+
 using namespace std;
 static TrainStore * MyTrainData = NULL;
 int reverseInt (int x)                      //We need to change endian representation
@@ -32,6 +33,8 @@ void ReadTrainData(string path){
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));
         Columns= reverseInt(Columns);
+        if (MyTrainData != NULL)
+            delete MyTrainData;
         MyTrainData = new TrainStore;
         for (int i = 0 ; i < NumberOfImages; i++){
             Image * ImageToInsert = new Image;

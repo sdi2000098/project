@@ -3,7 +3,7 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall -g
 
 # Source files
-SRCS =  StoreTrainData.cpp ReadTrainData.cpp main.cpp
+SRCS =  StoreTrainData.cpp ReadTrainData.cpp main.cpp StoreQueryData.cpp ReadQueryData.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
