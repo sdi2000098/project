@@ -20,8 +20,18 @@ void Image :: Insert(uint8_t NewByte){
 
 void Image :: Display(void){
     for (int i = 0 ; i < NumberOfPixels ; i ++)
-        cout << unsigned(Pixels[i]) << " ,";
-    cout <<"]\n\n\n";
+    {
+        if(Pixels[i]<10)
+            cout<<" " <<unsigned(Pixels[i])<<" ";
+            //cout<<"   ";
+        else if(Pixels[i]>9 && Pixels[i]<100)
+            cout<<" " << unsigned(Pixels[i]);
+        else
+            cout<< unsigned(Pixels[i]);
+        if((i+1) % 28 ==0)
+            cout<<endl;
+    }
+    cout<<endl;
 }
 
 TrainStore :: TrainStore(){
