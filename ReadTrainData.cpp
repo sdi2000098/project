@@ -6,6 +6,7 @@
 
 using namespace std;
 static TrainStore * MyTrainData = NULL;
+static int TrainNumber;
 int reverseInt (int x)                      //We need to change endian representation
 {
     uint8_t Byte1, Byte2, Byte3, Byte4;     //Store each byte of number
@@ -28,7 +29,8 @@ void ReadTrainData(string path){
         file.read((char*)&Magic,sizeof(Magic)); 
         Magic= reverseInt(Magic);
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
-        NumberOfImages= reverseInt(NumberOfImages);
+        NumberOfImages = reverseInt(NumberOfImages);
+        TrainNumber = NumberOfImages;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));
@@ -53,4 +55,8 @@ void ReadTrainData(string path){
 
 void DisplayTrainData(void){
     MyTrainData->Display();
+}
+
+int GetTrainNumber(void){
+    return TrainNumber;
 }

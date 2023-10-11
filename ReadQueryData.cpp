@@ -6,7 +6,7 @@
 
 using namespace std;
 static QueryStore * MyQueryData = NULL;
-
+static int QueryNumber;
 
 void ReadQueryData(string path){
     ifstream file(path,ios::binary);
@@ -19,6 +19,7 @@ void ReadQueryData(string path){
         Magic= reverseInt(Magic);
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
         NumberOfImages= reverseInt(NumberOfImages);
+        QueryNumber = NumberOfImages;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));
@@ -43,4 +44,8 @@ void ReadQueryData(string path){
 
 void DisplayQueryData(void){
     MyQueryData->Display();
+}
+
+int GetQueryNumber(void){
+    return QueryNumber;
 }

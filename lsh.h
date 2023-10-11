@@ -6,19 +6,16 @@
 
     class LSH{
         private :
-            int k,L;
+            int L;
             int NumberOfTrain;
             HashTable ** MyHash;
         public :
-            void SetMatrix(uint8_t * Matrix);
             void SetTrainData(uint8_t ** TrainData,int NumberOfTrain);
-            void SetL(int L);
-            void SetK(int K);
-            int NearestNeighbour(void);
+            int NearestNeighbour(uint8_t * Query);
             int * KNN(int N);
             int * RangeSearch(double R);
 
-            LSH();
+            LSH(int K, int L);
             ~LSH();
     };
     

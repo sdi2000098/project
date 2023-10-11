@@ -6,5 +6,5 @@
     using namespace std;
     void ReadTrainData(string path);
     void DisplayTrainData(void);
-    
+    int GetTrainNumber(void);
 #endif

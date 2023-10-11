@@ -6,5 +6,5 @@
     using namespace std;
     void ReadQueryData(string path);
     void DisplayQueryData(void);
-    
+    int GetQueryNumber(void);
 #endif
