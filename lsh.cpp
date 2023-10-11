@@ -63,6 +63,7 @@ class hFunction {
                 v[i] = distribution(generator);
             }
 
+
             // Initialize the random number generator for 't'
             std::random_device rd_t;
             t_generator = std::mt19937(rd_t());
