@@ -1,5 +1,8 @@
 #include "lsh.h"
 #include <iostream>
+#include <vector>
+#include <random>
+#include <cmath>
 #define TABLE_SIZE 5
 
 
@@ -39,6 +42,42 @@ class HashTable {
         }
 };
 
+class hFunction {
+    private:
+        int dimension_;
+        int window_;
+        std::vector<float> v;
+        std::mt19937 v_generator;
+        std::normal_distribution<float> v_distribution;
+
+        std::mt19937 t_generator;
+        std::uniform_real_distribution<float> t_distribution;
+    public:
+        hFunction(int dimension, int window) : dimension_(dimension), window_(window){
+            std::random_device rd_v;
+            std::mt19937 generator(rd_v());
+            std::normal_distribution<float> distribution(0.0, 1.0);
+
+            // Generate vector v
+            for (int i = 0; i < dimension; ++i) {
+                v[i] = distribution(generator);
+            }
+
+            // Initialize the random number generator for 't'
+            std::random_device rd_t;
+            t_generator = std::mt19937(rd_t());
+            t_distribution = std::uniform_real_distribution<float>(0.0, static_cast<float>(window));
+        }
+
+        int operator()(const std::vector<float>& p) {
+            float dot_product = 0.0f;
+            for (int i = 0; i < dimension_; ++i) {
+                dot_product += p[i] * v[i];
+            }
+            float t = t_distribution(t_generator);
+            return static_cast<int>(std::round(dot_product + t) / window_);
+        }
+};
 
 LSH :: LSH(){
     L = 0;
