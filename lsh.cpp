@@ -65,7 +65,8 @@ class Bucket{
                 ToReturn[0] = Euclidean(Query,Data,DIMENSION);
                 ToReturn[1] = (double)position;
             }
-            
+            if (NextBucket == NULL)
+                return ToReturn;
             return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
         }
 
@@ -88,7 +89,34 @@ class Bucket{
             double * ToReturn = new double[2];
                 ToReturn[0] = Euclidean(Query,Data,DIMENSION);
                 ToReturn[1] = (double)position;
+            if (NextBucket == NULL)
+                return ToReturn;
             return NextBucket->AccurateInnerNearestNeighbour(Query,ToReturn);
+        }
+
+        vector <int> RangeSearch(double R,uint8_t * Query,int QueryId){
+            vector <int> ToReturn;
+            if (ID == QueryId){
+                double e = Euclidean(Query,Data,DIMENSION);
+                if (e <=R)
+                    ToReturn.push_back(e);
+            }
+            if (NextBucket == NULL)
+                return ToReturn;
+            return NextBucket->InnerRangeSearch(R,Query,QueryId,&ToReturn);
+        }
+
+        vector <int> InnerRangeSearch(double R, uint8_t * Query,int QueryId,vector <int> * ToReturn){
+            if (NextBucket == NULL)
+                return *ToReturn;
+            if (ID == QueryId){
+                double e = Euclidean(Query,Data,DIMENSION);
+                if (e <=R)
+                    (*ToReturn).push_back(e);
+            }
+            if (NextBucket == NULL)
+                return *ToReturn;
+            return NextBucket->InnerRangeSearch(R,Query,QueryId,ToReturn);
         }
         
 };
@@ -222,6 +250,15 @@ class HashTable {
             return ToReturn;
         }
 
+        vector <int> RangeSearch(double R, uint8_t * Query){
+            int ID = MyG->FindPosition(Query);
+            if (ID < 0)
+                ID *=-1;
+            vector <int> ToReturn;
+            ToReturn = HashBuckets[ID%TableSize]->RangeSearch(R,Query,ID);
+            return ToReturn;
+        }
+
 };
 
 
@@ -304,5 +341,17 @@ int * LSH ::AccurateKNN(int K,uint8_t * Query){
     }
     for (int i = 0 ; i < K ;i ++)
         SetUnchecked(ToReturn[i]);
+    return ToReturn;
+}
+
+vector <int> LSH ::RangeSearch(double R,uint8_t * Query){
+    vector <int> ToReturn;
+    vector <int>temp;
+    for (int i = 0 ; i < L ; i++){
+        temp = MyHash[i]->RangeSearch(R,Query);
+        if (temp.size() == 0)
+            continue;
+        ToReturn.insert( ToReturn.end(), temp.begin(), temp.end() );    
+    }
     return ToReturn;
 }
