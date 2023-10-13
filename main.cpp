@@ -38,6 +38,10 @@ int main(void){
         for (int j = 0 ; j < K ; j++)
             DisplayTrainData(Result[j]);
         //DisplayTrainData(MyLsh->NearestNeighbour(GetQueryRepresentation(i)));
+        vector <int> Range = MyLsh->RangeSearch(1600,GetQueryRepresentation(i));
+        cout << "R-near neighbors:\n";
+        for (int j = 0 ; j < (int)Range.size();j++)
+            cout << Range[j] << "\n";
     }
 
 

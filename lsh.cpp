@@ -307,9 +307,7 @@ int * LSH ::KNN(int K,uint8_t * Query){
         SetUnchecked(ToReturn[i]);
     return ToReturn;
 }
-int * LSH ::RangeSearch(double R){
-    return 0;
-}
+
 
 void LSH :: Train(void){
     int limit = GetTrainNumber();
