@@ -30,7 +30,7 @@ void ReadTrainData(string path){
         Magic= reverseInt(Magic);
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
         NumberOfImages = reverseInt(NumberOfImages);
-        TrainNumber = NumberOfImages;
+        TrainNumber = 10000;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));
@@ -38,7 +38,7 @@ void ReadTrainData(string path){
         if (MyTrainData != NULL)
             delete MyTrainData;
         MyTrainData = new TrainStore;
-        for (int i = 0 ; i < NumberOfImages; i++){
+        for (int i = 0 ; i < TrainNumber; i++){
             Image * ImageToInsert = new Image;
             for (int j = 0 ; j < Columns*Rows ; j++){
                 uint8_t temp = 0;
@@ -51,7 +51,8 @@ void ReadTrainData(string path){
     else
         cout << "Could not open file " << path << "\n";
 
-}
+}    //int limit = 1000;
+
 
 void DisplayTrainData(int Pos){
     MyTrainData->Display(Pos);
@@ -63,4 +64,15 @@ int GetTrainNumber(void){
 
 uint8_t * GetRepresenation(int Position){
     return MyTrainData->GetRepresenation(Position);
+}
+
+void SetChecked(int Position){
+    MyTrainData->SetChecked(Position);
+}
+void SetUnchecked(int Position){
+    MyTrainData->SetUnchecked(Position);
+}
+
+bool GetChecked (int Position){
+    return MyTrainData->GetChecked(Position);
 }

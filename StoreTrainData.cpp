@@ -33,7 +33,17 @@ void Image :: Display(void){
     }
     cout<<endl;
 }
+void Image :: SetChecked(void){
+    checked = true;
+}
 
+void Image :: SetUnchecked(void){
+    checked = false;
+}
+
+bool Image :: GetChecked(void){
+    return checked;
+}
 uint8_t * Image :: GetRepresenation(void){
     return Pixels;
 }
@@ -60,4 +70,16 @@ void TrainStore :: Display(int Pos){
 
 uint8_t * TrainStore :: GetRepresenation(int Position){
     return AllImages[Position]->GetRepresenation();
+}
+
+void TrainStore :: SetChecked(int Position){
+    AllImages[Position]->SetChecked();
+}
+
+void TrainStore :: SetUnchecked(int Position){
+    AllImages[Position]->SetUnchecked();
+}
+
+bool TrainStore :: GetChecked(int Position){
+    return AllImages[Position]->GetChecked();
 }

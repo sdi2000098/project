@@ -27,13 +27,19 @@ int main(void){
     LSH * MyLsh = new LSH(10,5);
     MyLsh->Train();
     
-    int limit = 10;
+    int limit = 5;
+    int K = 4,*Result;
     for (int i = 0 ; i < limit ; i++){
         cout << "Query :\n";
         DisplayQueryData(i);
         cout << "Result\n";
-        DisplayTrainData(MyLsh->NearestNeighbour(GetQueryRepresentation(i)));
+        Result = MyLsh->KNN(K,GetQueryRepresentation(i));
+        MyLsh->AccurateKNN(K,GetQueryRepresentation(i));
+        for (int j = 0 ; j < K ; j++)
+            DisplayTrainData(Result[j]);
+        //DisplayTrainData(MyLsh->NearestNeighbour(GetQueryRepresentation(i)));
     }
+
 
     
     

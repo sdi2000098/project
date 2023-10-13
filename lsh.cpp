@@ -45,7 +45,7 @@ class Bucket{
         double * InnerNearestNeighbour(uint8_t * Query,int QueryId,double * ToReturn){
             if (NextBucket == NULL)
                 return ToReturn;
-            if (ID == QueryId ){
+            if (ID == QueryId && !GetChecked(position)){
                 double e = Euclidean(Query,Data,DIMENSION);
                 if (e < ToReturn[0]){
                     ToReturn[0] = e;
@@ -69,9 +69,26 @@ class Bucket{
             return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
         }
 
-        void SetUnchecked(void){
-            if (NextBucket != NULL)
-                NextBucket->SetUnchecked();
+        double * AccurateInnerNearestNeighbour(uint8_t * Query,double * ToReturn){
+            if (NextBucket == NULL)
+                return ToReturn;
+            if (!GetChecked(position)){
+                double e = Euclidean(Query,Data,DIMENSION);
+                if (e < ToReturn[0]){
+                    ToReturn[0] = e;
+                    ToReturn[1] = (double)position;
+                }
+            }
+            if (NextBucket == NULL)
+                return ToReturn;
+            return NextBucket->AccurateInnerNearestNeighbour(Query,ToReturn);
+        }
+
+        double * AccurateNearestNeighbour(uint8_t * Query){
+            double * ToReturn = new double[2];
+                ToReturn[0] = Euclidean(Query,Data,DIMENSION);
+                ToReturn[1] = (double)position;
+            return NextBucket->AccurateInnerNearestNeighbour(Query,ToReturn);
         }
         
 };
@@ -184,14 +201,27 @@ class HashTable {
             if (ID < 0)
                 ID *=-1;
             double *ToReturn;
-            ToReturn = HashBuckets[ID%TABLE_SIZE]->NearestNeighbour(Query,ID);
+            ToReturn = HashBuckets[ID%TableSize]->NearestNeighbour(Query,ID);
             return ToReturn;
         }
 
-        void SetUckeched(void){
-            for (int i =  0;i < TABLE_SIZE;i++)
-                HashBuckets[i]->SetUnchecked();
+        
+        double *AccurateNearestNeighbour(uint8_t * Query){
+
+            double *ToReturn,*temp;
+            for (int i = 0 ; i < TableSize;i++){
+                if (i == 0 )
+                    ToReturn = HashBuckets[i]->AccurateNearestNeighbour(Query);
+                else{
+                    temp = ToReturn = HashBuckets[i]->AccurateNearestNeighbour(Query);
+                    if (temp[0] < ToReturn[0]){
+                        ToReturn = temp;
+                    }
+                }
+            }
+            return ToReturn;
         }
+
 };
 
 
@@ -225,11 +255,20 @@ int LSH ::NearestNeighbour(uint8_t * Query){
             MinPos = (int)ptr[1];
         }
     }
-    std::cout << "Min Size was : " << MinSize << " and Min Pos was : " << MinPos << "\n";
+    std::cout << "Approximate Min Size was : " << MinSize << " and Min Pos was : " << MinPos << "\n";
     return MinPos; 
 }
 int * LSH ::KNN(int K,uint8_t * Query){
-    return 0;
+    int * ToReturn = new int[K],Result;
+    for (int i = 0 ; i < K ;i++){
+        cout << "For nearest neighbur " << i <<" ";
+        Result = NearestNeighbour(Query);
+        SetChecked(Result);
+        ToReturn[i] = Result;
+    }
+    for (int i = 0 ; i < K ;i ++)
+        SetUnchecked(ToReturn[i]);
+    return ToReturn;
 }
 int * LSH ::RangeSearch(double R){
     return 0;
@@ -237,9 +276,33 @@ int * LSH ::RangeSearch(double R){
 
 void LSH :: Train(void){
     int limit = GetTrainNumber();
-    //int limit = 1000;
     for (int i = 0 ; i < limit ; i++){
         SetTrainData(GetRepresenation(i),i);
     }
 }
 
+int LSH ::AccurateNearestNeighbour(uint8_t * Query){
+    int  MinPos = -1;
+    double MinSize = (double)MAXSIZE,  *ptr; 
+    for (int i = 0 ; i < L; i++){
+        ptr = MyHash[i]->AccurateNearestNeighbour(Query);
+        if (ptr[0] < MinSize){
+            MinSize = ptr[0];
+            MinPos = (int)ptr[1];
+        }
+    }
+    std::cout << "Accurate Min Size was : " << MinSize << " and Min Pos was : " << MinPos << "\n";
+    return MinPos; 
+}
+int * LSH ::AccurateKNN(int K,uint8_t * Query){
+    int * ToReturn = new int[K],Result;
+    for (int i = 0 ; i < K ;i++){
+        cout << "For nearest neighbur " << i <<" ";
+        Result = AccurateNearestNeighbour(Query);
+        SetChecked(Result);
+        ToReturn[i] = Result;
+    }
+    for (int i = 0 ; i < K ;i ++)
+        SetUnchecked(ToReturn[i]);
+    return ToReturn;
+}

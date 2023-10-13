@@ -17,6 +17,8 @@
             void Train(void);
             LSH(int K, int L);
             ~LSH();
+            int  AccurateNearestNeighbour(uint8_t * Query);
+            int * AccurateKNN(int K,uint8_t * Query);
     };
     
 #endif
