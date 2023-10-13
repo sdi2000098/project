@@ -1,10 +1,17 @@
 #include "ReadTrainData.h"
 #include "ReadQueryData.h"
 #include <iostream>
-
-
+#include <cmath>
+#include "lsh.h"
+double Euclidean2(uint8_t * x, uint8_t * y, int D){
+    double ToReturn = 0;
+    for (int i = 0 ; i < D;i++)
+        ToReturn += pow(x[i] - y[i] , 2);
+    
+    return sqrt(ToReturn);
+}
 int main(void){
-    string s;
+    /*string s;
     cout << "Please insert dataset path : \n";
     cin >> s;
     ReadTrainData(s);
@@ -12,7 +19,26 @@ int main(void){
     cout << "Please insert query set path\n";
     cin >> s;
     ReadQueryData(s);
-    DisplayQueryData();
+    DisplayQueryData();*/
+
+    ReadTrainData("dataset.dat");
+    ReadQueryData("query.dat");
+
+    LSH * MyLsh = new LSH(10,5);
+    MyLsh->Train();
+    
+    int limit = 10;
+    for (int i = 0 ; i < limit ; i++){
+        cout << "Query :\n";
+        DisplayQueryData(i);
+        cout << "Result\n";
+        DisplayTrainData(MyLsh->NearestNeighbour(GetQueryRepresentation(i)));
+    }
+
+    
+    
+
+
     return 0;
 }
 

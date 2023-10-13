@@ -34,6 +34,10 @@ void Image :: Display(void){
     cout<<endl;
 }
 
+uint8_t * Image :: GetRepresenation(void){
+    return Pixels;
+}
+
 TrainStore :: TrainStore(){
     NumberOfImages = 0;
     AllImages = NULL;
@@ -50,7 +54,10 @@ void TrainStore :: Insert(Image * NewImage){
     AllImages[NumberOfImages-1] = NewImage;
 }
 
-void TrainStore :: Display(void){
-    for (int i = 0;i<5;i++)
-        AllImages[i]->Display();
+void TrainStore :: Display(int Pos){
+    AllImages[Pos]->Display();
+}
+
+uint8_t * TrainStore :: GetRepresenation(int Position){
+    return AllImages[Position]->GetRepresenation();
 }

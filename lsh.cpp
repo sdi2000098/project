@@ -4,16 +4,17 @@
 #include <random>
 #include <cmath>
 #define TABLE_SIZE 5
-#define M 4294967291
+#define M 100
 #define MAXSIZE 1215752202
 #define DIMENSION 784
 #define WINDOW 5
+#include "ReadTrainData.h"
 
 
 double Euclidean(uint8_t * x, uint8_t * y, int D){
     double ToReturn = 0;
     for (int i = 0 ; i < D;i++)
-        ToReturn += pow(x[i] + y[i] , 2);
+        ToReturn += pow(x[i] - y[i] , 2);
     
     return sqrt(ToReturn);
 }
@@ -30,32 +31,21 @@ class Bucket{
             ID = -1;
         }
         ~Bucket(){}
-        void Insert(uint8_t * NewData,int NewID,int position){
+        void Insert(uint8_t * NewData,int NewID,int NewPosition){
             if (NextBucket == NULL)
                 NextBucket = new Bucket();
             if (ID == -1){
-                position = position;
+                position = NewPosition;
                 Data = NewData;
                 ID = NewID;
                 return;
             }
-            NextBucket->Insert(NewData,NewID,position);
+            NextBucket->Insert(NewData,NewID,NewPosition);
         }
-        double * NearestNeighbour(uint8_t * Query, int QueryId){
-            double * ToReturn = new double[2];
-            ToReturn[0] = MAXSIZE;
-            ToReturn[1] = -1;
-            if (ID == QueryId){
-                ToReturn[0] = Euclidean(Query,Data,DIMENSION);
-                ToReturn[1] = (double)position;
-            }
-            return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
-        }
-
         double * InnerNearestNeighbour(uint8_t * Query,int QueryId,double * ToReturn){
             if (NextBucket == NULL)
                 return ToReturn;
-            if (ID == QueryId){
+            if (ID == QueryId ){
                 double e = Euclidean(Query,Data,DIMENSION);
                 if (e < ToReturn[0]){
                     ToReturn[0] = e;
@@ -66,6 +56,24 @@ class Bucket{
                 return ToReturn;
             return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
         }
+
+        double * NearestNeighbour(uint8_t * Query, int QueryId){
+            double * ToReturn = new double[2];
+            ToReturn[0] = MAXSIZE;
+            ToReturn[1] = -1;
+            if (ID == QueryId){
+                ToReturn[0] = Euclidean(Query,Data,DIMENSION);
+                ToReturn[1] = (double)position;
+            }
+            
+            return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
+        }
+
+        void SetUnchecked(void){
+            if (NextBucket != NULL)
+                NextBucket->SetUnchecked();
+        }
+        
 };
 
 class hFunction {
@@ -160,8 +168,11 @@ class HashTable {
             MyG = new gFunction(K,dimension,window);
         }
         void Insert(uint8_t * NewData,int position){
+            
             int ID = MyG->FindPosition(NewData);
-            HashBuckets[ID%M]->Insert(NewData,ID,position);
+            if ( ID < 0 )
+                ID *=-1;
+            HashBuckets[ID%TABLE_SIZE]->Insert(NewData,ID,position);
         }
         ~HashTable(){
             for(int i =0;i<TableSize;i++)
@@ -170,9 +181,16 @@ class HashTable {
         }
         double *NearestNeighbour(uint8_t * Query){
             int ID = MyG->FindPosition(Query);
+            if (ID < 0)
+                ID *=-1;
             double *ToReturn;
-            ToReturn = HashBuckets[ID%M]->NearestNeighbour(Query,ID);
+            ToReturn = HashBuckets[ID%TABLE_SIZE]->NearestNeighbour(Query,ID);
             return ToReturn;
+        }
+
+        void SetUckeched(void){
+            for (int i =  0;i < TABLE_SIZE;i++)
+                HashBuckets[i]->SetUnchecked();
         }
 };
 
@@ -191,16 +209,16 @@ LSH :: ~LSH(){
 }
 
 
-void LSH ::SetTrainData(uint8_t ** TrainData,int NumberOfTrain){
-    for (int i = 0 ; i < NumberOfTrain ; i ++)
-        for (int j = 0 ; j < L ; j++)
-            MyHash[j]->Insert(TrainData[i],i);
+void LSH ::SetTrainData(uint8_t * TrainData,int Position){
+    for (int j = 0 ; j < L ; j++){
+        MyHash[j]->Insert(TrainData,Position);
+    }
 }
 
 int LSH ::NearestNeighbour(uint8_t * Query){
     int  MinPos = -1;
     double MinSize = (double)MAXSIZE,  *ptr; 
-    for (int i = 0 ; i < M; i++){
+    for (int i = 0 ; i < L; i++){
         ptr = MyHash[i]->NearestNeighbour(Query);
         if (ptr[0] < MinSize){
             MinSize = ptr[0];
@@ -210,9 +228,18 @@ int LSH ::NearestNeighbour(uint8_t * Query){
     std::cout << "Min Size was : " << MinSize << " and Min Pos was : " << MinPos << "\n";
     return MinPos; 
 }
-int * LSH ::KNN(int N){
+int * LSH ::KNN(int K,uint8_t * Query){
     return 0;
 }
 int * LSH ::RangeSearch(double R){
     return 0;
 }
+
+void LSH :: Train(void){
+    int limit = GetTrainNumber();
+    //int limit = 1000;
+    for (int i = 0 ; i < limit ; i++){
+        SetTrainData(GetRepresenation(i),i);
+    }
+}
+

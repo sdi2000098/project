@@ -8,6 +8,7 @@
             Image();
             ~Image();
             void Display(void);
+            uint8_t * GetRepresenation(void);
         private :
             uint8_t * Pixels;
             int NumberOfPixels;
@@ -19,7 +20,8 @@
             void Insert(Image * NewImage);
             TrainStore();
             ~TrainStore();
-            void Display(void);
+            void Display(int Pos);
+            uint8_t * GetRepresenation(int Position);
         private :
             Image ** AllImages;
             int NumberOfImages;

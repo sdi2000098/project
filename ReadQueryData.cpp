@@ -42,10 +42,14 @@ void ReadQueryData(string path){
 
 }
 
-void DisplayQueryData(void){
-    MyQueryData->Display();
+void DisplayQueryData(int Pos){
+    MyQueryData->Display(Pos);
 }
 
 int GetQueryNumber(void){
     return QueryNumber;
+}
+
+uint8_t *  GetQueryRepresentation(int Position){
+    return MyQueryData->GetRepresentation(Position);
 }

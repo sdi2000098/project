@@ -53,10 +53,14 @@ void ReadTrainData(string path){
 
 }
 
-void DisplayTrainData(void){
-    MyTrainData->Display();
+void DisplayTrainData(int Pos){
+    MyTrainData->Display(Pos);
 }
 
 int GetTrainNumber(void){
     return TrainNumber;
+}
+
+uint8_t * GetRepresenation(int Position){
+    return MyTrainData->GetRepresenation(Position);
 }

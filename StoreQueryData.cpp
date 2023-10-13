@@ -18,8 +18,10 @@ void QueryStore :: Insert(Image * NewImage){
     AllImages[NumberOfImages-1] = NewImage;
 }
 
-void QueryStore :: Display(void){
-    std::cout << "Total images are " << NumberOfImages << "\n";
-    for (int i = 0;i<5;i++)
-        AllImages[i]->Display();
+void QueryStore :: Display(int Pos){
+    AllImages[Pos]->Display();
+}
+
+uint8_t * QueryStore :: GetRepresentation(int Position){
+    return AllImages[Position]->GetRepresenation();
 }
