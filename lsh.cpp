@@ -241,7 +241,7 @@ class HashTable {
                 if (i == 0 )
                     ToReturn = HashBuckets[i]->AccurateNearestNeighbour(Query);
                 else{
-                    temp = ToReturn = HashBuckets[i]->AccurateNearestNeighbour(Query);
+                    temp = HashBuckets[i]->AccurateNearestNeighbour(Query);
                     if (temp[0] < ToReturn[0]){
                         ToReturn = temp;
                     }

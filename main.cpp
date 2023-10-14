@@ -28,7 +28,7 @@ int main(void){
     MyLsh->Train();
     
     int limit = 5;
-    int K = 4,*Result;
+    int K = 30,*Result;
     
     for (int i = 0 ; i < limit ; i++){
         cout << "Query :\n";
@@ -45,8 +45,9 @@ int main(void){
             cout << Range[j] << "\n";
     }
 
+    
 
-    cout << Euclidean2(GetQueryRepresentation(0),GetRepresenation(1121),784);
+    cout << Euclidean2(GetQueryRepresentation(0),GetRepresenation(8476),784);
     
 
 
