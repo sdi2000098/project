@@ -29,6 +29,7 @@ int main(void){
     
     int limit = 5;
     int K = 4,*Result;
+    
     for (int i = 0 ; i < limit ; i++){
         cout << "Query :\n";
         DisplayQueryData(i);
@@ -45,7 +46,7 @@ int main(void){
     }
 
 
-    
+    cout << Euclidean2(GetQueryRepresentation(0),GetRepresenation(1121),784);
     
 
 

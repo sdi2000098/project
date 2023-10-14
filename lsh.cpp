@@ -99,7 +99,7 @@ class Bucket{
             if (ID == QueryId){
                 double e = Euclidean(Query,Data,DIMENSION);
                 if (e <=R)
-                    ToReturn.push_back(e);
+                    ToReturn.push_back(position);
             }
             if (NextBucket == NULL)
                 return ToReturn;
@@ -112,7 +112,7 @@ class Bucket{
             if (ID == QueryId){
                 double e = Euclidean(Query,Data,DIMENSION);
                 if (e <=R)
-                    (*ToReturn).push_back(e);
+                    (*ToReturn).push_back(position);
             }
             if (NextBucket == NULL)
                 return *ToReturn;

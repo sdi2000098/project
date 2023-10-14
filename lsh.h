@@ -12,8 +12,9 @@
             int L;
             int NumberOfTrain;
             HashTable ** MyHash;
-        public :
             void SetTrainData(uint8_t * TrainData,int Position);
+        public :
+            
             int NearestNeighbour(uint8_t * Query);
             int * KNN(int K,uint8_t * Query);
             void Train(void);
