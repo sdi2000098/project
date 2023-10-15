@@ -9,6 +9,10 @@
 #define DIMENSION 784
 #define WINDOW 5
 #include "ReadTrainData.h"
+#include <fstream>
+
+extern const char * outputfileName;
+extern std::ofstream outputFile;
 
 
 double Euclidean(uint8_t * x, uint8_t * y, int D){
@@ -292,8 +296,10 @@ int LSH ::NearestNeighbour(uint8_t * Query){
             MinPos = (int)ptr[1];
         }
     }
-    std:: cout<<" "<<MinPos << "\n";
-    std::cout << "DistanceLSH: " << MinSize <<"\n";
+    outputFile.open(outputfileName, std::ios::app);
+    outputFile <<" "<<MinPos << "\n";
+    outputFile << "DistanceLSH: " << MinSize <<"\n";
+    outputFile.close();
     return MinPos; 
 }
 void  LSH ::KNN(int K,uint8_t * Query){
@@ -301,7 +307,10 @@ void  LSH ::KNN(int K,uint8_t * Query){
     int * ToReturn2 = new int[K],Result2;
 
     for (int i = 0 ; i < K ;i++){
-        cout << "Nearest neighbor-" << i <<":";
+        outputFile.open(outputfileName, std::ios::app);
+        outputFile << "Nearest neighbor-" << i <<":";
+        outputFile.close();
+        
         Result = NearestNeighbour(Query);
         SetChecked(Result);
         ToReturn[i] = Result;
@@ -348,7 +357,10 @@ int LSH ::AccurateNearestNeighbour(uint8_t * Query){
             MinPos = (int)ptr[1];
         }
     }
-    std::cout << "DistanceTrue: " << MinSize <<"\n";
+
+    outputFile.open(outputfileName, std::ios::app);
+    outputFile << "DistanceTrue: " << MinSize <<"\n";
+    outputFile.close();
     return MinPos; 
 }
 
