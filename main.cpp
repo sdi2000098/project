@@ -35,7 +35,7 @@ int main(void){
        // DisplayQueryData(i);
         cout << "Result\n";
         MyLsh->KNN(K,GetQueryRepresentation(i));
-        MyLsh->AccurateKNN(K,GetQueryRepresentation(i));
+        //MyLsh->AccurateKNN(K,GetQueryRepresentation(i));
         //for (int j = 0 ; j < K ; j++)
            // DisplayTrainData(Result[j]);
         //DisplayTrainData(MyLsh->NearestNeighbour(GetQueryRepresentation(i)));

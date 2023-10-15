@@ -298,29 +298,37 @@ int LSH ::NearestNeighbour(uint8_t * Query){
 }
 void  LSH ::KNN(int K,uint8_t * Query){
     int * ToReturn = new int[K],Result;
+    int * ToReturn2 = new int[K],Result2;
+
     for (int i = 0 ; i < K ;i++){
         cout << "Nearest neighbor-" << i <<":";
         Result = NearestNeighbour(Query);
         SetChecked(Result);
         ToReturn[i] = Result;
+        Result2 = AccurateNearestNeighbour(Query);
+        SetChecked(Result2);
+        ToReturn2[i] = Result2;
     }
     for (int i = 0 ; i < K ;i ++)
+    {
         SetUnchecked(ToReturn[i]);
+        SetUnchecked(ToReturn2[i]);
+    }
     //return ToReturn;
 }
 
-void  LSH ::AccurateKNN(int K,uint8_t * Query){
-    int * ToReturn = new int[K],Result;
-    for (int i = 0 ; i < K ;i++){
-        cout << "Nearest neighbor-" << i <<":";
-        Result = AccurateNearestNeighbour(Query);
-        SetChecked(Result);
-        ToReturn[i] = Result;
-    }
-    for (int i = 0 ; i < K ;i ++)
-        SetUnchecked(ToReturn[i]);
-    //return ToReturn;
-}
+// void  LSH ::AccurateKNN(int K,uint8_t * Query){
+//     int * ToReturn = new int[K],Result;
+//     for (int i = 0 ; i < K ;i++){
+//         cout << "Nearest neighbor-" << i <<":";
+//         Result = AccurateNearestNeighbour(Query);
+//         SetChecked(Result);
+//         ToReturn[i] = Result;
+//     }
+//     for (int i = 0 ; i < K ;i ++)
+//         SetUnchecked(ToReturn[i]);
+//     //return ToReturn;
+// }
 
 
 void LSH :: Train(void){
