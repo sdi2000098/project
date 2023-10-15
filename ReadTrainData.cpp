@@ -54,9 +54,9 @@ void ReadTrainData(string path){
 }    //int limit = 1000;
 
 
-void DisplayTrainData(int Pos){
-    MyTrainData->Display(Pos);
-}
+// void DisplayTrainData(int Pos){
+//     MyTrainData->Display(Pos);
+// }
 
 int GetTrainNumber(void){
     return TrainNumber;

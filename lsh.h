@@ -16,12 +16,12 @@
         public :
             
             int NearestNeighbour(uint8_t * Query);
-            int * KNN(int K,uint8_t * Query);
+            void  KNN(int K,uint8_t * Query);
             void Train(void);
             LSH(int K, int L);
             ~LSH();
             int  AccurateNearestNeighbour(uint8_t * Query);
-            int * AccurateKNN(int K,uint8_t * Query);
+            void  AccurateKNN(int K,uint8_t * Query);
             std::vector <int> RangeSearch(double R,uint8_t * Query);
     };
     

@@ -7,7 +7,7 @@
             void Insert(uint8_t NewByte);
             Image();
             ~Image();
-            void Display(void);
+            // void Display(void);
             uint8_t * GetRepresenation(void);
             void SetChecked(void);
             void SetUnchecked(void);
@@ -24,7 +24,7 @@
             void Insert(Image * NewImage);
             TrainStore();
             ~TrainStore();
-            void Display(int Pos);
+            // void Display(int Pos);
             uint8_t * GetRepresenation(int Position);
             void SetChecked (int Position);
             void SetUnchecked(int Position);

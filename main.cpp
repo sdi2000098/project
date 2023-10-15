@@ -28,16 +28,16 @@ int main(void){
     MyLsh->Train();
     
     int limit = 5;
-    int K = 30,*Result;
+    int K = 10,*Result;
     
     for (int i = 0 ; i < limit ; i++){
-        cout << "Query :\n";
-        DisplayQueryData(i);
+        cout << "Query : "<<i<<std::endl;
+       // DisplayQueryData(i);
         cout << "Result\n";
-        Result = MyLsh->KNN(K,GetQueryRepresentation(i));
+        MyLsh->KNN(K,GetQueryRepresentation(i));
         MyLsh->AccurateKNN(K,GetQueryRepresentation(i));
-        for (int j = 0 ; j < K ; j++)
-            DisplayTrainData(Result[j]);
+        //for (int j = 0 ; j < K ; j++)
+           // DisplayTrainData(Result[j]);
         //DisplayTrainData(MyLsh->NearestNeighbour(GetQueryRepresentation(i)));
         vector <int> Range = MyLsh->RangeSearch(1600,GetQueryRepresentation(i));
         cout << "R-near neighbors:\n";

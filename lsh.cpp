@@ -292,20 +292,34 @@ int LSH ::NearestNeighbour(uint8_t * Query){
             MinPos = (int)ptr[1];
         }
     }
-    std::cout << "Approximate Min Size was : " << MinSize << " and Min Pos was : " << MinPos << "\n";
+    std:: cout<<" "<<MinPos << "\n";
+    std::cout << "DistanceLSH: " << MinSize <<"\n";
     return MinPos; 
 }
-int * LSH ::KNN(int K,uint8_t * Query){
+void  LSH ::KNN(int K,uint8_t * Query){
     int * ToReturn = new int[K],Result;
     for (int i = 0 ; i < K ;i++){
-        cout << "For nearest neighbur " << i <<" ";
+        cout << "Nearest neighbor-" << i <<":";
         Result = NearestNeighbour(Query);
         SetChecked(Result);
         ToReturn[i] = Result;
     }
     for (int i = 0 ; i < K ;i ++)
         SetUnchecked(ToReturn[i]);
-    return ToReturn;
+    //return ToReturn;
+}
+
+void  LSH ::AccurateKNN(int K,uint8_t * Query){
+    int * ToReturn = new int[K],Result;
+    for (int i = 0 ; i < K ;i++){
+        cout << "Nearest neighbor-" << i <<":";
+        Result = AccurateNearestNeighbour(Query);
+        SetChecked(Result);
+        ToReturn[i] = Result;
+    }
+    for (int i = 0 ; i < K ;i ++)
+        SetUnchecked(ToReturn[i]);
+    //return ToReturn;
 }
 
 
@@ -326,20 +340,8 @@ int LSH ::AccurateNearestNeighbour(uint8_t * Query){
             MinPos = (int)ptr[1];
         }
     }
-    std::cout << "Accurate Min Size was : " << MinSize << " and Min Pos was : " << MinPos << "\n";
+    std::cout << "DistanceTrue: " << MinSize <<"\n";
     return MinPos; 
-}
-int * LSH ::AccurateKNN(int K,uint8_t * Query){
-    int * ToReturn = new int[K],Result;
-    for (int i = 0 ; i < K ;i++){
-        cout << "For nearest neighbur " << i <<" ";
-        Result = AccurateNearestNeighbour(Query);
-        SetChecked(Result);
-        ToReturn[i] = Result;
-    }
-    for (int i = 0 ; i < K ;i ++)
-        SetUnchecked(ToReturn[i]);
-    return ToReturn;
 }
 
 vector <int> LSH ::RangeSearch(double R,uint8_t * Query){

@@ -10,7 +10,7 @@
             void Insert(Image * NewImage);
             QueryStore();
             ~QueryStore();
-            void Display(int Pos);
+            // void Display(int Pos);
             uint8_t * GetRepresentation(int Position);
         private :
             Image ** AllImages;

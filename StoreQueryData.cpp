@@ -18,9 +18,9 @@ void QueryStore :: Insert(Image * NewImage){
     AllImages[NumberOfImages-1] = NewImage;
 }
 
-void QueryStore :: Display(int Pos){
-    AllImages[Pos]->Display();
-}
+// void QueryStore :: Display(int Pos){
+//     AllImages[Pos]->Display();
+// }
 
 uint8_t * QueryStore :: GetRepresentation(int Position){
     return AllImages[Position]->GetRepresenation();

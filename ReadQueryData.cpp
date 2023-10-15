@@ -42,9 +42,9 @@ void ReadQueryData(string path){
 
 }
 
-void DisplayQueryData(int Pos){
-    MyQueryData->Display(Pos);
-}
+// void DisplayQueryData(int Pos){
+//     MyQueryData->Display(Pos);
+// }
 
 int GetQueryNumber(void){
     return QueryNumber;
