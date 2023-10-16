@@ -2,13 +2,13 @@
 #include "ReadQueryData.h"
 #include <fstream>
 #include "StoreQueryData.h"
-
+#define ERROR -1
 
 using namespace std;
 static QueryStore * MyQueryData = NULL;
 static int QueryNumber;
 
-void ReadQueryData(string path){
+int ReadQueryData(string path){
     ifstream file(path,ios::binary);
     if (file.is_open()){
         int Magic;
@@ -37,14 +37,14 @@ void ReadQueryData(string path){
             MyQueryData->Insert(ImageToInsert);
         }
     }
-    else
+    else{
         cout << "Could not open file " << path << "\n";
+        return ERROR;
+    }
+    return 0;
 
 }
 
-// void DisplayQueryData(int Pos){
-//     MyQueryData->Display(Pos);
-// }
 
 int GetQueryNumber(void){
     return QueryNumber;

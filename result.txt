@@ -1,110 +1,199 @@
 Query : 0
-Result
-Nearest neighbor-0: 6902
-DistanceLSH: 1292.26
-DistanceTrue: 1034.78
-Nearest neighbor-1: 6054
-DistanceLSH: 1542.59
-DistanceTrue: 1047.63
-Nearest neighbor-2: 9522
-DistanceLSH: 1599.9
-DistanceTrue: 1095.86
-Nearest neighbor-3: 5769
-DistanceLSH: 1743.4
-DistanceTrue: 1097.3
-Nearest neighbor-4: 3925
-DistanceLSH: 1847.46
-DistanceTrue: 1121.85
+Nearest neighbor-1: 9444
+distanceLSH: 1034.78
+distanceTrue: 1034.78
+Nearest neighbor-2: 3324
+distanceLSH: 1165.95
+distanceTrue: 1047.63
+Nearest neighbor-3: 7092
+distanceLSH: 1239.9
+distanceTrue: 1095.86
+Nearest neighbor-4: 5100
+distanceLSH: 1285.42
+distanceTrue: 1097.3
+Nearest neighbor-5: 6953
+distanceLSH: 1411.18
+distanceTrue: 1121.85
+Nearest neighbor-6: 9001
+distanceLSH: 1440.7
+distanceTrue: 1123.16
+Nearest neighbor-7: 7423
+distanceLSH: 1645.65
+distanceTrue: 1139.6
+Nearest neighbor-8: 5811
+distanceLSH: 1656.04
+distanceTrue: 1165.95
+Nearest neighbor-9: 9767
+distanceLSH: 1674.36
+distanceTrue: 1175.03
+Nearest neighbor-10: 387
+distanceLSH: 1678.29
+distanceTrue: 1182.56
+tLSH: 0.051093
+tTrue: 4.46108
 R-near neighbors:
-6054
-6902
-9522
+9001
+6953
+9444
+3324
+7092
+5100
 Query : 1
-Result
-Nearest neighbor-0: 2936
-DistanceLSH: 2329.31
-DistanceTrue: 1554.42
-Nearest neighbor-1: 5910
-DistanceLSH: 2355.6
-DistanceTrue: 1664.16
-Nearest neighbor-2: 6754
-DistanceLSH: 2391.83
-DistanceTrue: 1698.03
-Nearest neighbor-3: 1242
-DistanceLSH: 2397.58
-DistanceTrue: 1719.08
-Nearest neighbor-4: 3287
-DistanceLSH: 2413.95
-DistanceTrue: 1741.09
+Nearest neighbor-1: 5094
+distanceLSH: 2021.71
+distanceTrue: 1554.42
+Nearest neighbor-2: 2346
+distanceLSH: 2163.23
+distanceTrue: 1664.16
+Nearest neighbor-3: 4828
+distanceLSH: 2197.22
+distanceTrue: 1698.03
+Nearest neighbor-4: 274
+distanceLSH: 2201.33
+distanceTrue: 1719.08
+Nearest neighbor-5: 3451
+distanceLSH: 2208.15
+distanceTrue: 1741.09
+Nearest neighbor-6: 8311
+distanceLSH: 2249.33
+distanceTrue: 1741.45
+Nearest neighbor-7: 7460
+distanceLSH: 2260.97
+distanceTrue: 1830.26
+Nearest neighbor-8: 630
+distanceLSH: 2266.86
+distanceTrue: 1835.82
+Nearest neighbor-9: 6142
+distanceLSH: 2271.91
+distanceTrue: 1836.55
+Nearest neighbor-10: 8786
+distanceLSH: 2281.37
+distanceTrue: 1953.48
+tLSH: 0.098575
+tTrue: 9.25021
 R-near neighbors:
 Query : 2
-Result
-Nearest neighbor-0: 6701
-DistanceLSH: 846.777
-DistanceTrue: 497.042
-Nearest neighbor-1: 9987
-DistanceLSH: 950.142
-DistanceTrue: 547.098
+Nearest neighbor-1: 1703
+distanceLSH: 768.67
+distanceTrue: 497.042
 Nearest neighbor-2: 6565
-DistanceLSH: 968.789
-DistanceTrue: 569.867
-Nearest neighbor-3: 7131
-DistanceLSH: 1033.81
-DistanceTrue: 572.729
-Nearest neighbor-4: 9277
-DistanceLSH: 1035.9
-DistanceTrue: 582.955
+distanceLSH: 968.789
+distanceTrue: 547.098
+Nearest neighbor-3: 2894
+distanceLSH: 1058.44
+distanceTrue: 569.867
+Nearest neighbor-4: 2356
+distanceLSH: 1081.63
+distanceTrue: 572.729
+Nearest neighbor-5: 6511
+distanceLSH: 1115
+distanceTrue: 582.955
+Nearest neighbor-6: 3592
+distanceLSH: 1122.73
+distanceTrue: 595.124
+Nearest neighbor-7: 8919
+distanceLSH: 1168.73
+distanceTrue: 595.793
+Nearest neighbor-8: 5530
+distanceLSH: 1187.37
+distanceTrue: 605.664
+Nearest neighbor-9: 7938
+distanceLSH: 1236.09
+distanceTrue: 617.898
+Nearest neighbor-10: 2563
+distanceLSH: 1265.86
+distanceTrue: 620.096
+tLSH: 0.13761
+tTrue: 13.6153
 R-near neighbors:
-310
-2134
-2831
-3155
-4900
-5204
+2563
+4010
+7938
+9774
+1703
+4750
+5601
+6511
+3592
+5530
+5610
+6104
+6318
+6464
+8513
+2894
+5667
+5826
+8428
+8919
+2356
 6565
-6665
-6701
-6931
-7131
-7435
-9277
-9942
-9987
+9590
 Query : 3
-Result
-Nearest neighbor-0: 3262
-DistanceLSH: 1524.09
-DistanceTrue: 1297.79
-Nearest neighbor-1: 326
-DistanceLSH: 1704.66
-DistanceTrue: 1304.55
-Nearest neighbor-2: 4343
-DistanceLSH: 1956.35
-DistanceTrue: 1325.31
-Nearest neighbor-3: 3248
-DistanceLSH: 2015.49
-DistanceTrue: 1335.96
-Nearest neighbor-4: 5246
-DistanceLSH: 2060.05
-DistanceTrue: 1394.31
+Nearest neighbor-1: 2624
+distanceLSH: 1721.6
+distanceTrue: 1297.79
+Nearest neighbor-2: 4931
+distanceLSH: 1820.78
+distanceTrue: 1304.55
+Nearest neighbor-3: 1907
+distanceLSH: 1827.09
+distanceTrue: 1325.31
+Nearest neighbor-4: 2826
+distanceLSH: 1884.85
+distanceTrue: 1335.96
+Nearest neighbor-5: 3937
+distanceLSH: 1925.84
+distanceTrue: 1394.31
+Nearest neighbor-6: 5007
+distanceLSH: 1931.91
+distanceTrue: 1413.33
+Nearest neighbor-7: 9707
+distanceLSH: 1939.18
+distanceTrue: 1419.34
+Nearest neighbor-8: 1837
+distanceLSH: 1945.79
+distanceTrue: 1465.03
+Nearest neighbor-9: 4343
+distanceLSH: 1956.35
+distanceTrue: 1465.17
+Nearest neighbor-10: 8294
+distanceLSH: 1957.21
+distanceTrue: 1467.85
+tLSH: 0.190509
+tTrue: 18.5274
 R-near neighbors:
-3262
 Query : 4
-Result
-Nearest neighbor-0: 9597
-DistanceLSH: 1847.64
-DistanceTrue: 1322.51
-Nearest neighbor-1: 8126
-DistanceLSH: 1969.54
-DistanceTrue: 1335.51
-Nearest neighbor-2: 4833
-DistanceLSH: 1970.26
-DistanceTrue: 1346.48
-Nearest neighbor-3: 9931
-DistanceLSH: 1981.22
-DistanceTrue: 1365.74
-Nearest neighbor-4: 7578
-DistanceLSH: 2057.64
-DistanceTrue: 1382.04
+Nearest neighbor-1: 6258
+distanceLSH: 1724.85
+distanceTrue: 1322.51
+Nearest neighbor-2: 9496
+distanceLSH: 1747.73
+distanceTrue: 1335.51
+Nearest neighbor-3: 9654
+distanceLSH: 1787.91
+distanceTrue: 1346.48
+Nearest neighbor-4: 7296
+distanceLSH: 1862.82
+distanceTrue: 1365.74
+Nearest neighbor-5: 7605
+distanceLSH: 1863.25
+distanceTrue: 1382.04
+Nearest neighbor-6: 4466
+distanceLSH: 1878.05
+distanceTrue: 1394.33
+Nearest neighbor-7: 1794
+distanceLSH: 1896.24
+distanceTrue: 1409.61
+Nearest neighbor-8: 3790
+distanceLSH: 1913.43
+distanceTrue: 1410.3
+Nearest neighbor-9: 1720
+distanceLSH: 1929.85
+distanceTrue: 1461.43
+Nearest neighbor-10: 2704
+distanceLSH: 1929.98
+distanceTrue: 1461.9
+tLSH: 0.241208
+tTrue: 23.2017
 R-near neighbors:
-1267.2

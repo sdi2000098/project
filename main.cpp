@@ -4,25 +4,19 @@
 #include <cmath>
 #include "lsh.h"
 #include <fstream> // For file stream operations
-
+#define ERROR -1
 const char * outputfileName;
 std::ofstream outputFile;
 
-double Euclidean2(uint8_t * x, uint8_t * y, int D){
-    double ToReturn = 0;
-    for (int i = 0 ; i < D;i++)
-        ToReturn += pow(x[i] - y[i] , 2);
-    
-    return sqrt(ToReturn);
-}
+
 int main(int argc, char* argv[]) {
 
-    std::string inputFile, queryFile;
+    std::string inputFile , queryFile;
 
     int K = 4;
     int L = 1;
     int N = 5;
-    int R = 100000;
+    double R = 100000;
 
 
    for (int i = 1; i < argc; i++) {
@@ -50,10 +44,27 @@ int main(int argc, char* argv[]) {
             R = std::stod(argv[i + 1]);
             i++;
         }
+        else{
+            cout << "Unexpected argument in command line\n";
+            return ERROR;
+        }
+    }
+    
+    if (inputFile.empty()){         //Input file not initialized by command line
+        cout << "Please insert path to dataset :\n";
+        cin >> inputFile;
     }
 
-    ReadTrainData(inputFile);
-    ReadQueryData(queryFile);
+    if ( ReadTrainData(inputFile) == ERROR)
+        return ERROR;
+    
+    if (queryFile.empty()){
+        cout << "Please insert path to query file\n";
+        cin >> queryFile;
+    }
+    
+    if ( ReadQueryData(queryFile) == ERROR)
+        return ERROR;
 
     LSH * MyLsh = new LSH(K,L);
     MyLsh->Train();
@@ -64,40 +75,53 @@ int main(int argc, char* argv[]) {
     if (std::ifstream(outputfileName)) {
         std::remove(outputfileName);
     }
-
-    // // Check if the file is opened successfully
-    // if (!outputFile.is_open()) {
-    //     std::cerr << "Error: Could not open the file." << std::endl;
-    //     return 1;
-    // }
-
-    
+    outputFile.open(outputfileName, std::ios::app);
+    // Check if the file is opened successfully
+    if (!outputFile.is_open()) {
+        std::cerr << "Error: Could not open the file." << std::endl;
+        return ERROR;
+    }
+    vector <double> KNNResult, AcuurateKNNReult;    
+    clock_t start, end;
+    double KNNTIme = 0,AccurateKNNTime = 0;
     for (int i = 0 ; i < limit ; i++){
-        outputFile.open(outputfileName, std::ios::app);
+        
         outputFile << "Query : "<<i<<std::endl;
-       // DisplayQueryData(i);
-        outputFile << "Result\n";
-        outputFile.close();
 
-        MyLsh->KNN(N,GetQueryRepresentation(i));
-        //MyLsh->AccurateKNN(K,GetQueryRepresentation(i));
-        //for (int j = 0 ; j < K ; j++)
-           // DisplayTrainData(Result[j]);
-        //DisplayTrainData(MyLsh->NearestNeighbour(GetQueryRepresentation(i)));
-        vector <int> Range = MyLsh->RangeSearch(1600,GetQueryRepresentation(i));
-        outputFile.open(outputfileName, std::ios::app);
-        outputFile << "R-near neighbors:\n";
-        outputFile.close();
-        for (int j = 0 ; j < (int)Range.size();j++)
-        {
-            outputFile.open(outputfileName, std::ios::app);
-            outputFile << Range[j] << "\n";
-            outputFile.close();
+        start = clock();
+        KNNResult = MyLsh->KNN(N,GetQueryRepresentation(i));
+        end = clock();
+        KNNTIme += double(end - start) / double(CLOCKS_PER_SEC);
+
+        start = clock();
+        AcuurateKNNReult = MyLsh->AccurateKNN(K,GetQueryRepresentation(i));
+        end = clock();
+        AccurateKNNTime += double(end - start) / double(CLOCKS_PER_SEC);
+
+        for (int j = 0 ; j < 2*K ; j+=2 ){
+            if ( j < (int)KNNResult.size()){
+                outputFile << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
+                outputFile << "distanceLSH: " << KNNResult[j] <<"\n";
+            }
+            else
+                outputFile << "Could not find Nearest neighbor " << j/2 << " using aproximate KNN\n";
+            if (j <(int) AcuurateKNNReult.size())
+                outputFile << "distanceTrue: " << AcuurateKNNReult[j] << "\n";
+            else 
+                outputFile << "Could not find Nearest neighbor " << j/2 << " using exhaustive KNN\n";
+
         }
+
+        outputFile << "tLSH: " << KNNTIme << "\ntTrue: " << AccurateKNNTime <<"\n";
+
+        vector <int> Range = MyLsh->RangeSearch(R,GetQueryRepresentation(i));
+        outputFile << "R-near neighbors:\n";
+        for (int j = 0 ; j < (int)Range.size();j++)
+            outputFile << Range[j] << "\n";
+
+        
     }
 
-    outputFile.open(outputfileName, std::ios::app);
-    outputFile << Euclidean2(GetQueryRepresentation(0),GetRepresenation(8476),784);
     outputFile.close();
 
     return 0;

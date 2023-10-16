@@ -2,7 +2,7 @@
 #include "ReadTrainData.h"
 #include <fstream>
 #include "StoreTrainData.h"
-
+#define ERROR -1
 
 using namespace std;
 static TrainStore * MyTrainData = NULL;
@@ -19,7 +19,7 @@ int reverseInt (int x)                      //We need to change endian represent
     return ((int)Byte1 << 24) + ((int)Byte2 << 16) + ((int)Byte3 << 8) + Byte4;         //Change the order of bytes
 }
 
-void ReadTrainData(string path){
+int ReadTrainData(string path){
     ifstream file(path,ios::binary);
     if (file.is_open()){
         int Magic;
@@ -48,10 +48,13 @@ void ReadTrainData(string path){
             MyTrainData->Insert(ImageToInsert);
         }
     }
-    else
+    else{
         cout << "Could not open file " << path << "\n";
+        return ERROR;
+    }
+    return 0;
 
-}    //int limit = 1000;
+}    
 
 
 // void DisplayTrainData(int Pos){

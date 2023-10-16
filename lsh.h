@@ -15,13 +15,16 @@
             void SetTrainData(uint8_t * TrainData,int Position);
         public :
             
-            int NearestNeighbour(uint8_t * Query);
-            void  KNN(int K,uint8_t * Query);
+            //KNN and accurate KNN return a vector of doubles
+            //The neighbours in the vector come in pairs, first is the distance and second position
+            //So the nearest neighobur's  distanced is ReturnedArray[0] and position ReturnedArray[1]
+            double * NearestNeighbour(uint8_t * Query);
+            vector <double>  KNN(int K,uint8_t * Query);
             void Train(void);
             LSH(int K, int L);
             ~LSH();
-            int  AccurateNearestNeighbour(uint8_t * Query);
-            void  AccurateKNN(int K,uint8_t * Query);
+            double  * AccurateNearestNeighbour(uint8_t * Query);
+            vector <double>  AccurateKNN(int K,uint8_t * Query);
             std::vector <int> RangeSearch(double R,uint8_t * Query);
     };
     

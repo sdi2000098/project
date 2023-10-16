@@ -3,17 +3,18 @@
 #include <vector>
 #include <random>
 #include <cmath>
+#include "ReadTrainData.h"
+#include "hFunc.h"
+#include <fstream>
+
+
 #define TABLE_SIZE 5
 #define M 100
 #define MAXSIZE 1215752202
 #define DIMENSION 784
 #define WINDOW 5
-#include "ReadTrainData.h"
-#include "hFunc.h"
-#include <fstream>
 
-extern const char * outputfileName;
-extern std::ofstream outputFile;
+#define ERROR -1
 
 
 double Euclidean(uint8_t * x, uint8_t * y, int D){
@@ -227,6 +228,10 @@ class HashTable {
 
 
 LSH :: LSH(int K, int L) : L(L){
+    if ( K < 0  || L <0 ){
+        cout << "K and L in LSH have to be positive integers\n";
+        exit(ERROR);
+    }
     MyHash = new HashTable * [L];
     for (int i = 0 ; i < L ; i ++)
         MyHash[i] = new HashTable(K,DIMENSION,WINDOW,TABLE_SIZE);
@@ -245,7 +250,7 @@ void LSH ::SetTrainData(uint8_t * TrainData,int Position){
     }
 }
 
-int LSH ::NearestNeighbour(uint8_t * Query){
+double * LSH ::NearestNeighbour(uint8_t * Query){
     int  MinPos = -1;
     double MinSize = (double)MAXSIZE,  *ptr; 
     for (int i = 0 ; i < L; i++){
@@ -255,58 +260,28 @@ int LSH ::NearestNeighbour(uint8_t * Query){
             MinPos = (int)ptr[1];
         }
     }
-    outputFile.open(outputfileName, std::ios::app);
-    outputFile <<" "<<MinPos << "\n";
-    outputFile << "DistanceLSH: " << MinSize <<"\n";
-    outputFile.close();
-    return MinPos; 
+    double * ToReturn = new double[2];
+    ToReturn[0]=MinSize;
+    ToReturn[1]=MinPos;
+    return ToReturn; 
 }
-void  LSH ::KNN(int K,uint8_t * Query){
-    int * ToReturn = new int[K],Result;
-    int * ToReturn2 = new int[K],Result2;
-
+vector <double>  LSH ::KNN(int K,uint8_t * Query){
+    vector <double> ToReturn;
+    double * Result;
     for (int i = 0 ; i < K ;i++){
-        outputFile.open(outputfileName, std::ios::app);
-        outputFile << "Nearest neighbor-" << i+1 <<":";
-        outputFile.close();
-        
         Result = NearestNeighbour(Query);
-        SetChecked(Result);
-        ToReturn[i] = Result;
-        Result2 = AccurateNearestNeighbour(Query);
-        SetChecked(Result2);
-        ToReturn2[i] = Result2;
+        SetChecked((int)Result[1]);
+        ToReturn.push_back(Result[0]);
+        ToReturn.push_back(Result[1]);
+        delete Result;
     }
-    for (int i = 0 ; i < K ;i ++)
-    {
+    for (int i = 1 ; i < (int)ToReturn.size() ;i +=2)
         SetUnchecked(ToReturn[i]);
-        SetUnchecked(ToReturn2[i]);
-    }
-    //return ToReturn;
+    
+    return ToReturn;
 }
 
-// void  LSH ::AccurateKNN(int K,uint8_t * Query){
-//     int * ToReturn = new int[K],Result;
-//     for (int i = 0 ; i < K ;i++){
-//         cout << "Nearest neighbor-" << i <<":";
-//         Result = AccurateNearestNeighbour(Query);
-//         SetChecked(Result);
-//         ToReturn[i] = Result;
-//     }
-//     for (int i = 0 ; i < K ;i ++)
-//         SetUnchecked(ToReturn[i]);
-//     //return ToReturn;
-// }
-
-
-void LSH :: Train(void){
-    int limit = GetTrainNumber();
-    for (int i = 0 ; i < limit ; i++){
-        SetTrainData(GetRepresenation(i),i);
-    }
-}
-
-int LSH ::AccurateNearestNeighbour(uint8_t * Query){
+double * LSH ::AccurateNearestNeighbour(uint8_t * Query){
     int  MinPos = -1;
     double MinSize = (double)MAXSIZE,  *ptr; 
     for (int i = 0 ; i < L; i++){
@@ -316,13 +291,33 @@ int LSH ::AccurateNearestNeighbour(uint8_t * Query){
             MinPos = (int)ptr[1];
         }
     }
-
-    outputFile.open(outputfileName, std::ios::app);
-    outputFile << "DistanceTrue: " << MinSize <<"\n";
-    outputFile.close();
-    return MinPos; 
+    double * ToReturn = new double[2];
+    ToReturn[0]=MinSize;
+    ToReturn[1]=MinPos;
+    return ToReturn; 
+}
+vector <double>  LSH ::AccurateKNN(int K,uint8_t * Query){
+    vector <double> ToReturn ;
+    double * Result;
+    for (int i = 0 ; i < K ;i++){
+        Result = AccurateNearestNeighbour(Query);
+        SetChecked((int)Result[1]);
+        ToReturn.push_back(Result[0]);
+        ToReturn.push_back(Result[1]);
+        delete Result;
+    }
+    for (int i = 1 ; i <(int) ToReturn.size() ;i +=2)
+        SetUnchecked(ToReturn[i]);
+    return ToReturn;
 }
 
+
+void LSH :: Train(void){
+    int limit = GetTrainNumber();
+    for (int i = 0 ; i < limit ; i++){
+        SetTrainData(GetRepresenation(i),i);
+    }
+}
 vector <int> LSH ::RangeSearch(double R,uint8_t * Query){
     vector <int> ToReturn;
     vector <int>temp;
