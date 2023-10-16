@@ -308,7 +308,7 @@ void  LSH ::KNN(int K,uint8_t * Query){
 
     for (int i = 0 ; i < K ;i++){
         outputFile.open(outputfileName, std::ios::app);
-        outputFile << "Nearest neighbor-" << i <<":";
+        outputFile << "Nearest neighbor-" << i+1 <<":";
         outputFile.close();
         
         Result = NearestNeighbour(Query);

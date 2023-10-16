@@ -17,18 +17,48 @@ double Euclidean2(uint8_t * x, uint8_t * y, int D){
 }
 int main(int argc, char* argv[]) {
 
-    ReadTrainData(argv[2]);
-    ReadQueryData(argv[4]);
+    std::string inputFile, queryFile;
 
-    int K = std::atoi(argv[6]);
-    int L = std::atoi(argv[8]);
+    int K = 4;
+    int L = 1;
+    int N = 5;
+    int R = 100000;
+
+
+   for (int i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+
+        if (arg == "-d" && i + 1 < argc) {
+            inputFile = argv[i + 1];
+            i++;
+        } else if (arg == "-q" && i + 1 < argc) {
+            queryFile = argv[i + 1];
+            i++;
+        } else if (arg == "-k" && i + 1 < argc) {
+            K = std::stoi(argv[i + 1]);
+            i++;
+        } else if (arg == "-L" && i + 1 < argc) {
+            L = std::stoi(argv[i + 1]);
+            i++;
+        } else if (arg == "-o" && i + 1 < argc) {
+            outputfileName = argv[i + 1];
+            i++;
+        } else if (arg == "-N" && i + 1 < argc) {
+            N = std::stoi(argv[i + 1]);
+            i++;
+        } else if (arg == "-R" && i + 1 < argc) {
+            R = std::stod(argv[i + 1]);
+            i++;
+        }
+    }
+
+    ReadTrainData(inputFile);
+    ReadQueryData(queryFile);
 
     LSH * MyLsh = new LSH(K,L);
     MyLsh->Train();
     
     int limit = 5;
-
-    outputfileName=argv[10];
 
     // Check if the file exists and delete it if it does
     if (std::ifstream(outputfileName)) {
@@ -41,8 +71,6 @@ int main(int argc, char* argv[]) {
     //     return 1;
     // }
 
-    int N = std::atoi(argv[12]),*Result;
-    int R = std::atoi(argv[14]);
     
     for (int i = 0 ; i < limit ; i++){
         outputFile.open(outputfileName, std::ios::app);
