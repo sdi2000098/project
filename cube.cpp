@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     ReadTrainData("dataset.dat");
     ReadQueryData("query.dat");
 
-    RandomProjection * MyCube = new RandomProjection(100,5,45);
+    RandomProjection * MyCube = new RandomProjection(10,5,2);
     MyCube->Train();
     
     int limit = 5;
