@@ -2,12 +2,16 @@
 #include "hFunc.h"
 #include <random>
 #include "ReadTrainData.h"
+#include <bits/stdc++.h>
 
 #define DIMENSION 784
 #define WINDOW 5
 #define MAXSIZE 1215752202
 
 using namespace std;
+
+
+
 
 double EuclideanHypercube(uint8_t * x, uint8_t * y, int D){
     double ToReturn = 0;
@@ -171,7 +175,7 @@ int RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
     HypercubePoint * temp = TrainData;
     while (temp != NULL)
     {
-        if (!GetChecked(temp->GetPosition()) && HammingDistance(QuereyRepresentation,temp->GetRepresentation(),this->K) <= Probes){
+        if (!GetChecked(temp->GetPosition()) && HammingDistance(QuereyRepresentation,temp->GetRepresentation(),this->K) == Hamming){
             double e = EuclideanHypercube(Query,temp->GetPixels(),DIMENSION);
             if (e < MinSize){
                 MinSize = e;
@@ -195,8 +199,6 @@ int * RandomProjection :: KNN(int K,uint8_t * Query){
         do
         {
             if (i == K){
-                for (int i = 0 ; i < K ; i++)
-                    SetUnchecked(ToReturn[i]);
                 CurrentHamming = Probes +1;
                 break;
             }
@@ -208,11 +210,96 @@ int * RandomProjection :: KNN(int K,uint8_t * Query){
             }
         } while (Result != -1);  
     }
+
+    int x,y;
+    bool swapped;
+    for (x = 0; x < i -1; x ++){
+        swapped = false;
+        for ( y = 0 ; y < i - x -1;y++){
+            double ey1 = EuclideanHypercube(Query,GetRepresenation(ToReturn[y]),DIMENSION);
+            double ey2 = EuclideanHypercube(Query,GetRepresenation(ToReturn[y+1]),DIMENSION);
+            if (ey1 > ey2 ){
+                swap(ToReturn[y],ToReturn[y+1]);
+                swapped = true;
+            }
+        }
+        if (!swapped)
+            break;
+    }
+
     cout << "Printing " << i << " nearest neighbours :\n";
+    for (int j = 0 ; j < i ; j++){
+
+        cout << "Neighbour - " << j << " position : " << ToReturn[j] << " distance : " ;
+        cout << EuclideanHypercube(Query,GetRepresenation(ToReturn[j]),DIMENSION) << "\n";
+        SetUnchecked(ToReturn[j]);
+    }
+    return ToReturn;
+}
+
+
+int RandomProjection :: AccurateNearestNeighbour(uint8_t * Query){
+
+    int  MinPos = -1;
+    double MinSize = (double)MAXSIZE; 
+    HypercubePoint * temp = TrainData;
+    while (temp != NULL)
+    {
+        if (!GetChecked(temp->GetPosition()) ){
+            double e = EuclideanHypercube(Query,temp->GetPixels(),DIMENSION);
+            if (e < MinSize){
+                MinSize = e;
+                MinPos = temp->GetPosition();
+            }
+        }
+        temp = temp->Next;
+    }
+    return MinPos;
+}
+int * RandomProjection :: AccurateKNN(int K,uint8_t * Query){
+    int * ToReturn = new int[K];
+    for (int i = 0 ; i < K; i++)
+        ToReturn[i] = -1;
+    int i = 0;
+    int Result;
+    do
+    {
+        if (i == K)
+            break;
+        
+        Result = AccurateNearestNeighbour(Query);
+        if (Result != -1){
+            SetChecked(Result);
+            ToReturn[i++] = Result;
+        }
+    } while (Result != -1);  
+    cout << "Printing " << i << " accurate nearest neighbours :\n";
     for (int j = 0 ; j < i ; j++){
         cout << "Neighbour - " << j << " position : " << ToReturn[j] << " distance : " ;
         cout << EuclideanHypercube(Query,GetRepresenation(ToReturn[j]),DIMENSION) << "\n";
         SetUnchecked(ToReturn[j]);
+    }
+    return ToReturn;
+}
+
+vector <int> RandomProjection :: RangeSearch(double R,uint8_t * Query){
+    vector <int> ToReturn;
+    uint8_t * QuereyRepresentation = new uint8_t[this->K];
+    for (int i = 0 ; i < K ; i ++)  
+        QuereyRepresentation[i] = MyF[i]->FindValue(Query);
+    HypercubePoint * temp ;
+    for ( int Hamming = 0 ; Hamming <= Probes; Hamming ++){
+        temp = TrainData;
+        while (temp != NULL)
+        {
+            if (HammingDistance(QuereyRepresentation,temp->GetRepresentation(),this->K) == Hamming){
+                double e = EuclideanHypercube(Query,temp->GetPixels(),DIMENSION);
+                if (e <= R)
+                    ToReturn.push_back(temp->GetPosition());
+                
+            }
+            temp=temp->Next;
+        }
     }
     return ToReturn;
 }

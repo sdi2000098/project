@@ -4,7 +4,7 @@
 #include <cmath>
 #include "RandomProjection.h"
 #include <fstream> // For file stream operations
-
+#include <vector>
 const char * outputfileName;
 std::ofstream outputFile;
 
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     ReadTrainData("dataset.dat");
     ReadQueryData("query.dat");
 
-    RandomProjection * MyCube = new RandomProjection(10,5,2);
+    RandomProjection * MyCube = new RandomProjection(14,10,2);
     MyCube->Train();
     
     int limit = 5;
@@ -71,6 +71,12 @@ int main(int argc, char* argv[]) {
         //outputFile << "Result\n";
         //outputFile.close();
         MyCube->KNN(10,GetQueryRepresentation(i));
+        MyCube->AccurateKNN(10,GetQueryRepresentation(i));
+        vector <int> Result = MyCube->RangeSearch(1600,GetQueryRepresentation(i));
+        cout << "Neighbours in range 1600 or less :\n";
+        for (int j = 0 ; j < (int)Result.size();j++)
+            cout << Result[j]<<"\n";
+        cout << "\n\n\n";
         //MyLsh->AccurateKNN(K,GetQueryRepresentation(i));
         //for (int j = 0 ; j < K ; j++)
            // DisplayTrainData(Result[j]);
