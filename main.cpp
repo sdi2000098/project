@@ -5,18 +5,18 @@
 #include "lsh.h"
 #include <fstream> // For file stream operations
 #define ERROR -1
-const char * outputfileName;
-std::ofstream outputFile;
+
 
 
 int main(int argc, char* argv[]) {
-
+    const char * outputfileName;
+    std::ofstream outputFile;
     std::string inputFile , queryFile;
 
     int K = 4;
-    int L = 1;
-    int N = 5;
-    double R = 100000;
+    int L = 5;
+    int N = 1;
+    double R = 10000;
 
 
    for (int i = 1; i < argc; i++) {
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
         end = clock();
         AccurateKNNTime += double(end - start) / double(CLOCKS_PER_SEC);
 
-        for (int j = 0 ; j < 2*K ; j+=2 ){
+        for (int j = 0 ; j < 2*N ; j+=2 ){
             if ( j < (int)KNNResult.size()){
                 outputFile << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
                 outputFile << "distanceLSH: " << KNNResult[j] <<"\n";

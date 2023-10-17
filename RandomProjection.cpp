@@ -166,7 +166,7 @@ void RandomProjection ::Train(void){
         SetTrainData(GetRepresenation(i),i);
 }
 
-int RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
+double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
     uint8_t * QuereyRepresentation = new uint8_t[this->K];
     for (int i = 0 ; i < K ; i ++)  
         QuereyRepresentation[i] = MyF[i]->FindValue(Query);
@@ -184,62 +184,42 @@ int RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
         }
         temp = temp->Next;
     }
-    return MinPos;
+    double * ToReturn = new double[2];
+    ToReturn[0] = MinSize;
+    ToReturn[1]=(double)MinPos;
+    return ToReturn;
     
 }
 
 
-int * RandomProjection :: KNN(int K,uint8_t * Query){
-    int * ToReturn = new int[K];
-    for (int i = 0 ; i < K; i++)
-        ToReturn[i] = -1;
+vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
+    vector <double> ToReturn;
     int i = 0;
     for (int CurrentHamming = 0; CurrentHamming <= Probes;CurrentHamming++){
-        int Result;
+        double * Result;
         do
         {
-            if (i == K){
+            if (i == this->M){
                 CurrentHamming = Probes +1;
                 break;
             }
             
             Result = NearestNeighbour(Query,CurrentHamming);
-            if (Result != -1){
-                SetChecked(Result);
-                ToReturn[i++] = Result;
+            if (Result[1] != -1){
+                SetChecked(Result[1]);
+                ToReturn.push_back(Result[0]);
+                ToReturn.push_back(Result[1]);
+                i++;
             }
-        } while (Result != -1);  
+        } while (Result[1] != -1);  
     }
-
-    int x,y;
-    bool swapped;
-    for (x = 0; x < i -1; x ++){
-        swapped = false;
-        for ( y = 0 ; y < i - x -1;y++){
-            double ey1 = EuclideanHypercube(Query,GetRepresenation(ToReturn[y]),DIMENSION);
-            double ey2 = EuclideanHypercube(Query,GetRepresenation(ToReturn[y+1]),DIMENSION);
-            if (ey1 > ey2 ){
-                swap(ToReturn[y],ToReturn[y+1]);
-                swapped = true;
-            }
-        }
-        if (!swapped)
-            break;
-    }
-
-    cout << "Printing " << i << " nearest neighbours :\n";
-    for (int j = 0 ; j < i ; j++){
-
-        cout << "Neighbour - " << j << " position : " << ToReturn[j] << " distance : " ;
-        cout << EuclideanHypercube(Query,GetRepresenation(ToReturn[j]),DIMENSION) << "\n";
+    for (int j = 1 ; j <(int) ToReturn.size() ; j+=2)
         SetUnchecked(ToReturn[j]);
-    }
     return ToReturn;
 }
 
 
-int RandomProjection :: AccurateNearestNeighbour(uint8_t * Query){
-
+double * RandomProjection :: AccurateNearestNeighbour(uint8_t * Query){
     int  MinPos = -1;
     double MinSize = (double)MAXSIZE; 
     HypercubePoint * temp = TrainData;
@@ -254,31 +234,29 @@ int RandomProjection :: AccurateNearestNeighbour(uint8_t * Query){
         }
         temp = temp->Next;
     }
-    return MinPos;
+    double * ToReturn = new double[2];
+    ToReturn[0] = MinSize;
+    ToReturn[1]=(double)MinPos;
+    return ToReturn;
 }
-int * RandomProjection :: AccurateKNN(int K,uint8_t * Query){
-    int * ToReturn = new int[K];
-    for (int i = 0 ; i < K; i++)
-        ToReturn[i] = -1;
+vector <double> RandomProjection :: AccurateKNN(int K,uint8_t * Query){
+    vector <double> ToReturn;
     int i = 0;
-    int Result;
+    double * Result;
     do
     {
         if (i == K)
             break;
-        
         Result = AccurateNearestNeighbour(Query);
-        if (Result != -1){
-            SetChecked(Result);
-            ToReturn[i++] = Result;
+        if (Result[1] != -1){
+                SetChecked(Result[1]);
+                ToReturn.push_back(Result[0]);
+                ToReturn.push_back(Result[1]);
+                i++;
         }
-    } while (Result != -1);  
-    cout << "Printing " << i << " accurate nearest neighbours :\n";
-    for (int j = 0 ; j < i ; j++){
-        cout << "Neighbour - " << j << " position : " << ToReturn[j] << " distance : " ;
-        cout << EuclideanHypercube(Query,GetRepresenation(ToReturn[j]),DIMENSION) << "\n";
+    } while (Result[1] != -1);  
+    for (int j = 1 ; j <(int) ToReturn.size() ; j+=2)
         SetUnchecked(ToReturn[j]);
-    }
     return ToReturn;
 }
 

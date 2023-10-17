@@ -17,7 +17,7 @@
             
             //KNN and accurate KNN return a vector of doubles
             //The neighbours in the vector come in pairs, first is the distance and second position
-            //So the nearest neighobur's  distanced is ReturnedArray[0] and position ReturnedArray[1]
+            //So the nearest neighobur's  distance is ReturnedArray[0] and position ReturnedArray[1]
             double * NearestNeighbour(uint8_t * Query);
             vector <double>  KNN(int K,uint8_t * Query);
             void Train(void);
