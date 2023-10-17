@@ -7,6 +7,8 @@
 #include <vector>
 #define ERROR -1
 
+//Same code with main.cpp but now we use hypercube code
+
 int main(int argc, char* argv[]) {
     const char * outputfileName;
     std::string inputFile, queryFile;
@@ -95,6 +97,8 @@ int main(int argc, char* argv[]) {
     double KNNTIme = 0,AccurateKNNTime = 0;
 
     for (int i = 0 ; i < limit ; i++){
+        KNNTIme = 0;
+        AccurateKNNTime = 0; 
         outputFile << "Query : "<<i<<std::endl;
 
         start = clock();;
@@ -103,7 +107,7 @@ int main(int argc, char* argv[]) {
         KNNTIme += double(end - start) / double(CLOCKS_PER_SEC);
 
         start = clock();
-        AcuurateKNNReult = MyCube->AccurateKNN(K,GetQueryRepresentation(i));
+        AcuurateKNNReult = MyCube->AccurateKNN(N,GetQueryRepresentation(i));
         end = clock();
         AccurateKNNTime += double(end - start) / double(CLOCKS_PER_SEC);
 

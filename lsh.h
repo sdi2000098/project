@@ -8,9 +8,9 @@
     class HashTable;
 
     class LSH{
+        //LSH need number of tables (L) and L hash tables
         private :
             int L;
-            int NumberOfTrain;
             HashTable ** MyHash;
             void SetTrainData(uint8_t * TrainData,int Position);
         public :
@@ -20,7 +20,7 @@
             //So the nearest neighobur's  distance is ReturnedArray[0] and position ReturnedArray[1]
             double * NearestNeighbour(uint8_t * Query);
             vector <double>  KNN(int K,uint8_t * Query);
-            void Train(void);
+            void Train(void);           //Train lsh based on the dataset that is stored in file StoreTrainData
             LSH(int K, int L);
             ~LSH();
             double  * AccurateNearestNeighbour(uint8_t * Query);

@@ -11,17 +11,14 @@
 using namespace std;
 
 
+//For the implementation of the hypercube, each point is converted to a K-dimension array of unsigned bytes
+//these bytes in fact will only store 0 or 1, but we decided to use bytes and not boolean bits for easier
+//computations and understanding. Furthermore using boolean we would not even get smaller memory occupation
+//since boolean are also a byte long
 
-
-double EuclideanHypercube(uint8_t * x, uint8_t * y, int D){
-    double ToReturn = 0;
-    for (int i = 0 ; i < D;i++)
-        ToReturn += pow(x[i] - y[i] , 2);
-    
-    return sqrt(ToReturn);
-}
 
 int HammingDistance(uint8_t * x, uint8_t *y, int dimension){
+    //Simple implementation of Hamming Distance 
     int ToReturn =0;
     for (int i = 0 ; i < dimension ; i ++)
         if (x[i] != y[i])
@@ -31,7 +28,11 @@ int HammingDistance(uint8_t * x, uint8_t *y, int dimension){
 }
 
 class FValues{
-
+    //Lazy way to store values of F function
+    //Every time we get an input, we randomly assign it a value 0 or 1
+    //We store those values and whenever same input is given we return the value
+    //If input is new, we creaqte a new fValue
+    //Fvalue also follow the structure of linked lists
     private :
         uint8_t Value;
         int Input;
@@ -52,6 +53,8 @@ class FValues{
 };
 
 class HypercubePoint{
+    //Class to store HyperCube points, each point consists of the image representation of bytes-pixeles (Pixels),
+    //the representation of the projection of the image (Representation) and position in the dataset
     private :
         uint8_t * Pixels;
         uint8_t * Representation;
@@ -60,17 +63,20 @@ class HypercubePoint{
         HypercubePoint * Next;
 
         HypercubePoint(uint8_t * pixels,int RepresentationDimension,int Pos){
+            //Given the dimension d' we allocate memory for the Representation and construct hypercube point
             Pixels = pixels;
             Representation = new uint8_t[RepresentationDimension];
             Next = NULL;
             Position = Pos;
         }
         void Insert(uint8_t value,int Position){
+            //Insert 0-1 value to Position in the Representation
             Representation[Position] = value;
         }
         ~HypercubePoint(){
             delete Representation;
         }
+        //Some Getters
         uint8_t * GetPixels(void){
             return Pixels;
         }
@@ -83,7 +89,7 @@ class HypercubePoint{
 };
 
 class FunctionF {
-    
+    //Function F consists of a unique LSH function and unique FValues
     private :
         hFunction * MyH;
         FValues * MyValues;
@@ -94,10 +100,10 @@ class FunctionF {
         }
 
         u_int8_t FindValue(u_int8_t * p){
+            //Given a point this function returns 0 or 1 based on fvalues and h(p)
             int HValue = MyH->operator()(p);
-            if (HValue < 0 )
-                HValue *=-1;
             if (MyValues == NULL){
+                //We will create our first fValue
                 random_device rd;  
                 mt19937 gen(rd()); 
                 uniform_int_distribution<> distrib(0, 1);
@@ -105,13 +111,16 @@ class FunctionF {
                 return MyValues->GetValue();
             }
             FValues * temp = MyValues,* prev = MyValues;
+            //Iterate through fValues
             while (temp != NULL)
             {
                 if (temp->GetInput() == HValue)
+                    //If fvalue's input is same as hValue, we just return the fvalue's value
                     return temp->GetValue();
                 prev = temp;
                 temp = temp->Next;
             }
+            //If we reached here, this means that there is no fvalue for the new hvalue, we create one
             random_device rd;  
             mt19937 gen(rd()); 
             uniform_int_distribution<> distrib(0, 1);
@@ -132,6 +141,7 @@ class FunctionF {
 };
 
 RandomProjection ::RandomProjection(int k, int m, int probes){
+    //Simple constructor
     K = k;
     M=m;
     Probes = probes;
@@ -142,6 +152,7 @@ RandomProjection ::RandomProjection(int k, int m, int probes){
 }
 
 RandomProjection :: ~RandomProjection(){
+    //Simple destructor
     for (int i = 0 ; i < K ; i ++)
         delete MyF[i];
     delete []MyF;
@@ -149,13 +160,17 @@ RandomProjection :: ~RandomProjection(){
 
 
 void RandomProjection ::SetTrainData(uint8_t * p,int Position){
+    //Given a train data point (p) we get its projection and store it
     HypercubePoint * NewPoint = new HypercubePoint(p,K,Position);
+    //After we create a new HyperCube point we need to fill its Representation array
     for (int i = 0 ; i < K ; i ++)
         NewPoint->Insert(MyF[i]->FindValue(p),i);
     if( this->TrainData == NULL){
+        //This is our first point, update LastInsert
         TrainData = NewPoint;
         LastInsert = TrainData;
     }
+    //Not our first, link it to last point and update last
     LastInsert->Next=NewPoint;
     LastInsert = LastInsert->Next;
 }
@@ -167,6 +182,8 @@ void RandomProjection ::Train(void){
 }
 
 double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
+    //We project the query to the hypercube dimesnion and get its representation
+    //Then the implementation is simillar to the LSH but now we use hamming distance
     uint8_t * QuereyRepresentation = new uint8_t[this->K];
     for (int i = 0 ; i < K ; i ++)  
         QuereyRepresentation[i] = MyF[i]->FindValue(Query);
@@ -176,7 +193,7 @@ double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
     while (temp != NULL)
     {
         if (!GetChecked(temp->GetPosition()) && HammingDistance(QuereyRepresentation,temp->GetRepresentation(),this->K) == Hamming){
-            double e = EuclideanHypercube(Query,temp->GetPixels(),DIMENSION);
+            double e = Euclidean(Query,temp->GetPixels(),DIMENSION);
             if (e < MinSize){
                 MinSize = e;
                 MinPos = temp->GetPosition();
@@ -196,10 +213,12 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
     vector <double> ToReturn;
     int i = 0;
     for (int CurrentHamming = 0; CurrentHamming <= Probes;CurrentHamming++){
+        //We keep searching until we reach probes or we find M canditates
         double * Result;
         do
         {
-            if (i == this->M){
+            if (i == this->M ){
+                //We need to stop, CurrentHamming = Probes +1 makes the outer loop stop
                 CurrentHamming = Probes +1;
                 break;
             }
@@ -211,7 +230,7 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
                 ToReturn.push_back(Result[1]);
                 i++;
             }
-        } while (Result[1] != -1);  
+        } while (Result[1] != -1);  //If result == -1, no neighbor was found for this hamming, we go to the next one
     }
     for (int j = 1 ; j <(int) ToReturn.size() ; j+=2)
         SetUnchecked(ToReturn[j]);
@@ -220,13 +239,14 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
 
 
 double * RandomProjection :: AccurateNearestNeighbour(uint8_t * Query){
+    //Same as above but now we dont need hamming, we check all
     int  MinPos = -1;
     double MinSize = (double)MAXSIZE; 
     HypercubePoint * temp = TrainData;
     while (temp != NULL)
     {
         if (!GetChecked(temp->GetPosition()) ){
-            double e = EuclideanHypercube(Query,temp->GetPixels(),DIMENSION);
+            double e = Euclidean(Query,temp->GetPixels(),DIMENSION);
             if (e < MinSize){
                 MinSize = e;
                 MinPos = temp->GetPosition();
@@ -239,12 +259,14 @@ double * RandomProjection :: AccurateNearestNeighbour(uint8_t * Query){
     ToReturn[1]=(double)MinPos;
     return ToReturn;
 }
+
 vector <double> RandomProjection :: AccurateKNN(int K,uint8_t * Query){
     vector <double> ToReturn;
     int i = 0;
     double * Result;
     do
     {
+        //Loop untill we get K neighbors or no neighbor exists Result[1] will be -1
         if (i == K)
             break;
         Result = AccurateNearestNeighbour(Query);
@@ -261,6 +283,7 @@ vector <double> RandomProjection :: AccurateKNN(int K,uint8_t * Query){
 }
 
 vector <int> RandomProjection :: RangeSearch(double R,uint8_t * Query){
+    //Same as KNN but we check range
     vector <int> ToReturn;
     uint8_t * QuereyRepresentation = new uint8_t[this->K];
     for (int i = 0 ; i < K ; i ++)  
@@ -271,7 +294,7 @@ vector <int> RandomProjection :: RangeSearch(double R,uint8_t * Query){
         while (temp != NULL)
         {
             if (HammingDistance(QuereyRepresentation,temp->GetRepresentation(),this->K) == Hamming){
-                double e = EuclideanHypercube(Query,temp->GetPixels(),DIMENSION);
+                double e = Euclidean(Query,temp->GetPixels(),DIMENSION);
                 if (e <= R)
                     ToReturn.push_back(temp->GetPosition());
                 

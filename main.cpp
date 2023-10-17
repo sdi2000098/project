@@ -13,6 +13,8 @@ int main(int argc, char* argv[]) {
     std::ofstream outputFile;
     std::string inputFile , queryFile;
 
+
+    //Initialize default values
     int K = 4;
     int L = 5;
     int N = 1;
@@ -21,7 +23,7 @@ int main(int argc, char* argv[]) {
 
    for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
-
+        //Check for flags and change values if needed
         if (arg == "-d" && i + 1 < argc) {
             inputFile = argv[i + 1];
             i++;
@@ -83,9 +85,10 @@ int main(int argc, char* argv[]) {
     }
     vector <double> KNNResult, AcuurateKNNReult;    
     clock_t start, end;
-    double KNNTIme = 0,AccurateKNNTime = 0;
+    double KNNTIme ,AccurateKNNTime ;
     for (int i = 0 ; i < limit ; i++){
-        
+        KNNTIme = 0;
+        AccurateKNNTime = 0; 
         outputFile << "Query : "<<i<<std::endl;
 
         start = clock();
@@ -94,18 +97,20 @@ int main(int argc, char* argv[]) {
         KNNTIme += double(end - start) / double(CLOCKS_PER_SEC);
 
         start = clock();
-        AcuurateKNNReult = MyLsh->AccurateKNN(K,GetQueryRepresentation(i));
+        AcuurateKNNReult = MyLsh->AccurateKNN(N,GetQueryRepresentation(i));
         end = clock();
         AccurateKNNTime += double(end - start) / double(CLOCKS_PER_SEC);
 
         for (int j = 0 ; j < 2*N ; j+=2 ){
-            if ( j < (int)KNNResult.size()){
+            //Note that KNN and AKNN return a 2*N arrray, distance and position
+            //Also if Position is -1, that means no nearest neighbour was found
+            if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 ){
                 outputFile << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
                 outputFile << "distanceLSH: " << KNNResult[j] <<"\n";
             }
             else
                 outputFile << "Could not find Nearest neighbor " << j/2 << " using aproximate KNN\n";
-            if (j <(int) AcuurateKNNReult.size())
+            if (j <(int) AcuurateKNNReult.size() && KNNResult[j+1] != -1 )
                 outputFile << "distanceTrue: " << AcuurateKNNReult[j] << "\n";
             else 
                 outputFile << "Could not find Nearest neighbor " << j/2 << " using exhaustive KNN\n";

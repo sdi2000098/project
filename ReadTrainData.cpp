@@ -57,10 +57,6 @@ int ReadTrainData(string path){
 }    
 
 
-// void DisplayTrainData(int Pos){
-//     MyTrainData->Display(Pos);
-// }
-
 int GetTrainNumber(void){
     return TrainNumber;
 }

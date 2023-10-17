@@ -18,21 +18,6 @@ void Image :: Insert(uint8_t NewByte){
     Pixels[NumberOfPixels-1] = NewByte;
 }
 
-// void Image :: Display(void){
-//     // for (int i = 0 ; i < NumberOfPixels ; i ++)
-//     // {
-//     //     if(Pixels[i]<10)
-//     //         cout<<" " <<unsigned(Pixels[i])<<" ";
-//     //         //cout<<"   ";
-//     //     else if(Pixels[i]>9 && Pixels[i]<100)
-//     //         cout<<" " << unsigned(Pixels[i]);
-//     //     else
-//     //         cout<< unsigned(Pixels[i]);
-//     //     if((i+1) % 28 ==0)
-//     //         cout<<endl;
-//     // }
-//     // cout<<endl;
-// }
 void Image :: SetChecked(void){
     checked = true;
 }
@@ -63,10 +48,6 @@ void TrainStore :: Insert(Image * NewImage){
     AllImages = (Image **)realloc(AllImages,++NumberOfImages*sizeof(Image *));
     AllImages[NumberOfImages-1] = NewImage;
 }
-
-// void TrainStore :: Display(int Pos){
-//     AllImages[Pos]->Display();
-// }
 
 uint8_t * TrainStore :: GetRepresenation(int Position){
     return AllImages[Position]->GetRepresenation();
