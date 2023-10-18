@@ -8,6 +8,9 @@ using namespace std;
 static QueryStore * MyQueryData = NULL;
 static int QueryNumber;
 
+//File that is responsible to read query data
+
+
 int ReadQueryData(string path){
     ifstream file(path,ios::binary);
     if (file.is_open()){
@@ -34,6 +37,7 @@ int ReadQueryData(string path){
                 file.read((char*)&temp,sizeof(temp));
                 ImageToInsert->Insert(temp);
             }
+            //Aftere reading each image we insert it to QuryStore
             MyQueryData->Insert(ImageToInsert);
         }
     }

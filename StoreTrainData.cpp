@@ -4,6 +4,8 @@
 
 using namespace std;
 
+//This file also has the implementations of image functions
+
 Image :: Image(){
     NumberOfPixels = 0;
     Pixels = NULL;
@@ -14,6 +16,7 @@ Image :: ~Image(){
 }
 
 void Image :: Insert(uint8_t NewByte){
+    //The Insert function for image inserts bytes one by one
     Pixels = (uint8_t *)realloc(Pixels,++NumberOfPixels*sizeof(uint8_t));
     Pixels[NumberOfPixels-1] = NewByte;
 }

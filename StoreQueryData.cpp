@@ -14,13 +14,11 @@ QueryStore :: ~QueryStore(){
 }
 
 void QueryStore :: Insert(Image * NewImage){
+    //Allocate memory for the new image and store the pointer to it
     AllImages = (Image **)realloc(AllImages,++NumberOfImages*sizeof(Image *));
     AllImages[NumberOfImages-1] = NewImage;
 }
 
-// void QueryStore :: Display(int Pos){
-//     AllImages[Pos]->Display();
-// }
 
 uint8_t * QueryStore :: GetRepresentation(int Position){
     return AllImages[Position]->GetRepresenation();

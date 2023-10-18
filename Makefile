@@ -3,18 +3,18 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall -g
 
 # Source files
-SRCS =  StoreTrainData.cpp ReadTrainData.cpp main.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp
+SRCS =  StoreTrainData.cpp ReadTrainData.cpp lshmain.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp
 SRCS2 =  StoreTrainData.cpp ReadTrainData.cpp cube.cpp StoreQueryData.cpp ReadQueryData.cpp RandomProjection.cpp hFunc.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
 OBJS2 = $(SRCS2:.cpp=.o)
 # Executable name
-EXEC = main
+EXEC = lsh
 EXEC2 = cube
 
 # Default target
-all: $(EXEC)
+lsh: $(EXEC)
 projection: $(EXEC2)
 
 # Rule to build the executable

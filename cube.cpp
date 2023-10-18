@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 
     int K = 4;          
     int N = 1;
-    int M = 10;         //M needs to be at least 2 times N
+    int M = 5;         //M needs to be at least 2 times N
     int probes = 2;
     double R = 10000;
 
@@ -97,19 +97,17 @@ int main(int argc, char* argv[]) {
     double KNNTIme = 0,AccurateKNNTime = 0;
 
     for (int i = 0 ; i < limit ; i++){
-        KNNTIme = 0;
-        AccurateKNNTime = 0; 
         outputFile << "Query : "<<i<<std::endl;
 
         start = clock();;
         KNNResult = MyCube->KNN(N,GetQueryRepresentation(i));
         end = clock();
-        KNNTIme += double(end - start) / double(CLOCKS_PER_SEC);
+        KNNTIme = double(end - start) / double(CLOCKS_PER_SEC);
 
         start = clock();
         AcuurateKNNReult = MyCube->AccurateKNN(N,GetQueryRepresentation(i));
         end = clock();
-        AccurateKNNTime += double(end - start) / double(CLOCKS_PER_SEC);
+        AccurateKNNTime = double(end - start) / double(CLOCKS_PER_SEC);
 
         for (int j = 0 ; j < 2*N ; j+=2 ){
             if ( j < (int)KNNResult.size()){

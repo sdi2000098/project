@@ -20,6 +20,7 @@ int reverseInt (int x)                      //We need to change endian represent
 }
 
 int ReadTrainData(string path){
+    //Same procedure as query data reading
     ifstream file(path,ios::binary);
     if (file.is_open()){
         int Magic;
