@@ -14,9 +14,9 @@ int main(int argc, char* argv[]) {
     std::string inputFile, queryFile;
     std::ofstream outputFile;
 
-    int K = 13;          
-    int N = 10;
-    int M = 100;         //M needs to be at least 2 times N
+    int K = 14;          
+    int N = 1;
+    int M = 10;         //M needs to be at least 2 times N
     int probes = 2;
     double R = 10000;
 

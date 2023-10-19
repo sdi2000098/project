@@ -361,6 +361,6 @@ vector <int> LSH ::RangeSearch(double R,uint8_t * Query){
         ToReturn.insert( ToReturn.end(), temp.begin(), temp.end() );    
     }
     for (int j = 0 ; j < (int)ToReturn.size() ; j++)
-            SetChecked(ToReturn[j]);
+            SetUnchecked(ToReturn[j]);
     return ToReturn;
 }

@@ -76,3 +76,21 @@ void SetUnchecked(int Position){
 bool GetChecked (int Position){
     return MyTrainData->GetChecked(Position);
 }
+
+void SetCluster(int Position,int NewCluster){
+    MyTrainData->SetCluster(Position,NewCluster);
+}
+int GetCluster(int Position){
+    return MyTrainData->GetCluster(Position);
+}
+
+void SetFlag(int Position){
+    MyTrainData->SetFlag(Position);
+}
+void UnsetFlag(int Position){
+    MyTrainData->UnsetFlag(Position);
+}
+
+bool GetFlag (int Position){
+    return MyTrainData->GetFlag(Position);
+}
