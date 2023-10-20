@@ -84,13 +84,3 @@ int GetCluster(int Position){
     return MyTrainData->GetCluster(Position);
 }
 
-void SetFlag(int Position){
-    MyTrainData->SetFlag(Position);
-}
-void UnsetFlag(int Position){
-    MyTrainData->UnsetFlag(Position);
-}
-
-bool GetFlag (int Position){
-    return MyTrainData->GetFlag(Position);
-}

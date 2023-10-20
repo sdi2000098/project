@@ -10,7 +10,7 @@ Image :: Image(){
     NumberOfPixels = 0;
     Pixels = NULL;
     checked = false;
-    Flag= false;
+    cluster= -1;
 }
 
 Image :: ~Image(){
@@ -42,17 +42,6 @@ int Image::GetCluster(void){
 }
 void Image ::SetCluster(int NewCluster){
     cluster = NewCluster;
-}
-void Image :: SetFlag(void){
-    Flag = true;
-}
-
-void Image :: UnsetFlag(void){
-    Flag = false;
-}
-
-bool Image :: GetFlag(void){
-    return Flag;
 }
 TrainStore :: TrainStore(){
     NumberOfImages = 0;
@@ -92,16 +81,4 @@ int TrainStore :: GetCluster(int Position){
 
 void TrainStore :: SetCluster (int Position,int NewCluster){
     AllImages[Position]->SetCluster(NewCluster);
-}
-
-void TrainStore :: SetChecked(int Position){
-    AllImages[Position]->SetFlag();
-}
-
-void TrainStore :: SetUnchecked(int Position){
-    AllImages[Position]->UnsetFlag();
-}
-
-bool TrainStore :: GetChecked(int Position){
-    return AllImages[Position]->GetFlag();
 }

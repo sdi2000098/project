@@ -151,6 +151,7 @@ RandomProjection ::RandomProjection(int k, int m, int probes){
     MyF = new FunctionF *[K];
     for (int i = 0 ; i < K ; i ++)
         MyF[i] = new FunctionF();
+    TrainData = NULL;
     
 }
 
@@ -165,23 +166,29 @@ RandomProjection :: ~RandomProjection(){
 void RandomProjection ::SetTrainData(uint8_t * p,int Position){
     //Given a train data point (p) we get its projection and store it
     HypercubePoint * NewPoint = new HypercubePoint(p,K,Position);
+    
     //After we create a new HyperCube point we need to fill its Representation array
     for (int i = 0 ; i < K ; i ++)
         NewPoint->Insert(MyF[i]->FindValue(p),i);
+    
     if( this->TrainData == NULL){
         //This is our first point, update LastInsert
         TrainData = NewPoint;
         LastInsert = TrainData;
     }
+    
     //Not our first, link it to last point and update last
+    
     LastInsert->Next=NewPoint;
     LastInsert = LastInsert->Next;
+    
 }
 
 void RandomProjection ::Train(void){
     int limit = GetTrainNumber();
-    for (int i = 0;i<limit;i++)
+    for (int i = 0;i<limit;i++){
         SetTrainData(GetRepresenation(i),i);
+    }
 }
 
 double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){

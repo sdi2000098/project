@@ -12,40 +12,76 @@
 #define WINDOW 5
 #define ERROR -1
 #define R_THRESHHOLD 2000
+static int times=0;
+
+double Euclidean(double * x, uint8_t * y, int D){      //Simple euclidean implementation
+//Arguments two vectors and their dimension
+    double ToReturn = 0;
+    for (int i = 0 ; i < D;i++)
+        ToReturn += pow(round(x[i]) - y[i] , 2);
+    return sqrt(ToReturn);
+}
+
+double Euclidean(double * x, double * y, int D){      //Simple euclidean implementation
+//Arguments two vectors and their dimension
+    double ToReturn = 0;
+    for (int i = 0 ; i < D;i++)
+        ToReturn += pow(x[i] - y[i] , 2);
+    return sqrt(ToReturn);
+}
+
 class Cluster{
     private : 
-        uint8_t * Centroid;
+        double * Centroid;
         vector <int> Members;
     public : 
         Cluster(int  NewCentroid){
-            Centroid = GetRepresenation(NewCentroid);
+            Centroid = new double [DIMENSION];
+            uint8_t * temp = GetRepresenation(NewCentroid);
+            for (int i = 0 ; i < DIMENSION ;i ++)
+                Centroid[i] = (double) temp[i];
             Members.push_back(NewCentroid);
         }
         ~Cluster(){};
         void InsertMember(int NewMember){
+            for (int i = 0 ; i < DIMENSION; i++)
+                Centroid[i] = ( (Centroid[i]*Members.size()) + (double)GetRepresenation(NewMember)[i]) / (Members.size()+1);
             Members.push_back(NewMember);
-            Update();
         }
-        uint8_t * GetCentroid(void){
+        double * GetCentroid(void){
             return Centroid;
         }
         void DeleteMember(int ToDelete){
-            for (int i = 0 ; i < Members.size() ; i++){
-                if (Members[i] == ToDelete){
-                    Members.erase(Members.begin() + i);
-                    break;
-                }
-            }
-            Update();
-        }
-        void Update(void){
-            for(int i = 0 ; i < DIMENSION ; i ++){
-                double Accumulator = 0;
-                for (int j=0; j<Members.size();j++ )
-                    Accumulator += GetRepresenation(Members[j])[i];
-                Centroid[i] = Accumulator/Members.size();
+            times++;
+            Members.erase(std::remove(Members.begin(), Members.end(), ToDelete), Members.end());
+            for (int i = 0 ; i < DIMENSION; i++){
+                Centroid[i] = ( (Centroid[i]* (Members.size()+1)) - (double)GetRepresenation(ToDelete)[i]) / (Members.size());
+                if (Centroid[i] <0)
+                    Centroid[i] = 0;
             }
         }
+        uint8_t * CentroidAsBytes(void){
+            uint8_t * ToReturn = new uint8_t[DIMENSION];
+            for (int i = 0 ; i < DIMENSION;i++)
+                ToReturn[i] = (uint8_t)(round(Centroid[i]));
+            return ToReturn;
+        }
+        int GetMember(int Position){
+            return Members[Position];
+        }
+        int GetSize(void){
+            return Members.size();
+        }
+        void PrintCentroid(void){
+            cout << "[ ";
+            for (int i = 0 ; i < DIMENSION ; i++){
+                if (i == DIMENSION -1)
+                    cout << Centroid[i] << " ]\n";
+                else
+                    cout << Centroid[i] << ", ";
+            }
+        }
+
 };
 
 
@@ -54,17 +90,38 @@ KMeans :: KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int prob
     MyClusters  = new Cluster *[K];
     random_device rd;  
     mt19937 gen(rd()); 
+
     uniform_int_distribution<> distrib(0, GetTrainNumber());
     int NewCentroidIndex = distrib(gen);
     MyClusters[0] = new Cluster(NewCentroidIndex);
-    SetChecked(NewCentroidIndex);
+    SetCluster(NewCentroidIndex,0);
     Initialize();
-    if (strcmp(Method,"Classic") == 0 )
+    clock_t start, end;
+    double Time = 0;
+
+    start = clock();
+    if (strcmp(Method,"Classic") == 0 ){
+        cout << "Algorithm: Lloyds\n";
         Lloyds();
-    else if (strcmp(Method,"LSH") == 0 || strcmp(Method,"Hypercube") == 0 )
+    }
+    else if (strcmp(Method,"LSH") == 0 || strcmp(Method,"Hypercube") == 0 ){
+        cout << "Algorithm: Range Search " << Method << "\n";
         RangeSearch(KLSH,L,Kcube,M,probes,Method);
+    }
     else
         cout << "No such method" << Method << "\n";
+    end = clock();
+    Time = double(end - start) / double(CLOCKS_PER_SEC);
+    
+    for (int i =0 ; i< K;i++){
+        cout << "Cluster-" << i+1 << " {size: " << MyClusters[i]->GetSize()<< " centroid: ";
+        MyClusters[i]->PrintCentroid();
+        cout << " }\n";
+    }
+    cout <<"clustering_time: " << Time <<"\n";
+    Silhouette();
+    for (int i = 0 ; i < GetTrainNumber() ; i++)
+        SetCluster(i,-1);
 }
 KMeans :: ~KMeans(){
     for (int i = 0 ; i < K ; i ++)
@@ -77,7 +134,8 @@ void KMeans :: Initialize(){
     double Max = -1;
     for (int NumberOfCentroids =1;NumberOfCentroids < K;NumberOfCentroids++){
         for (int i = 0 ; i < GetTrainNumber() ;i++){
-            if (GetChecked(i)){
+                
+            if (GetCluster(i) != -1){
                 AllEuclideans[i] = 0;
                 continue;
             }
@@ -103,12 +161,12 @@ void KMeans :: Initialize(){
         double Result = t_distribution(t_generator);
         double temp = 0,temp2;
         for (int i = 0 ; i < GetTrainNumber();i++){
-            if (GetChecked(i))
+            if (GetCluster(i) != -1)
                 continue;
             temp2 = temp + AllEuclideans[i];
             if (Result >= temp && Result <= temp2){
-                SetChecked(i);
                 MyClusters[NumberOfCentroids] = new Cluster(i);
+                SetCluster(i,NumberOfCentroids);
                 break;
             }
             temp += AllEuclideans[i];
@@ -119,26 +177,16 @@ void KMeans :: Initialize(){
 void KMeans :: Lloyds(void){
     int Position;
     double Min;
-    for (int i = 0 ; i < GetTrainNumber();i++){
-        Position=-1;
-        Min = static_cast<double>(MAXSIZE);
-        for (int j = 0 ; j < K ; j ++){
-            double e = Euclidean(MyClusters[j]->GetCentroid(),GetRepresenation(i),DIMENSION);
-                if (e < Min){
-                    Min = e;
-                    Position = j;
-                }
-        }
-        MyClusters[Position]->InsertMember(i);
-    }
     bool SmtChanged ;
     do
     {
         SmtChanged = false;
         for (int i = 0; i < GetTrainNumber() ; i++){
+            
             Position=-1;
             Min = static_cast<double>(MAXSIZE);
             for (int j = 0 ; j < K ; j++ ){
+                
                 double e = Euclidean(MyClusters[j]->GetCentroid(),GetRepresenation(i),DIMENSION);
                 if (e < Min){
                     Min = e;
@@ -148,14 +196,17 @@ void KMeans :: Lloyds(void){
             if (Position == GetCluster(i) )
                 continue;
             SmtChanged = true;
-            MyClusters[GetCluster(i)]->DeleteMember(i);
+            if (GetCluster(i) != -1)
+                MyClusters[GetCluster(i)]->DeleteMember(i);
             MyClusters[Position]->InsertMember(i);
+            SetCluster(i,Position);
         }
     } while (SmtChanged);
-    
+
 }
 
 void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Method){
+    
     LSH * MyLsh;
     RandomProjection * MyCube;
     if (strcmp(Method,"LSH") == 0 ){
@@ -166,53 +217,121 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
         MyCube = new RandomProjection(KCube,M,probes);
         MyCube->Train();
     }
+    
     int i,j;
     double R = static_cast<double>(MAXSIZE);
     for (i = 0 ; i < K; i++){
-        for (j = 0 ; j < K ;j ++)
+        for (j = 0 ; j < K ;j ++){
             if (i == j)
                 continue;
             double e = Euclidean(MyClusters[i]->GetCentroid(),MyClusters[j]->GetCentroid(),DIMENSION);
             if ( e < R)
                 R = e;
+        }
     }
-    R/=2;
-    bool * SmtChanged  = new bool[K];
+    R/=4;
+    bool SmtChanged;
     do
     {
+        R*=2;
+        SmtChanged = false;
         vector <int> * Neighbors;
         Neighbors = new vector <int>[K];
         for (int i = 0 ; i < K ; i ++){
-            SmtChanged[i] = false;
+            
+            uint8_t * temp = MyClusters[i]->CentroidAsBytes();
             if (strcmp(Method,"LSH") == 0 )
-                Neighbors[i] = MyLsh->RangeSearch(R,MyClusters[i]->GetCentroid());
+                Neighbors[i] = MyLsh->RangeSearch(R,temp);
             else
-                Neighbors[i] = MyCube->RangeSearch(R,MyClusters[i]->GetCentroid());
+                Neighbors[i] = MyCube->RangeSearch(R,temp);
+            delete temp;
         }
         for (int i = 0 ; i < K ; i++){
             if (Neighbors->size() == 0 )
                 continue;
-            for (int j = 0 ; j < Neighbors[i].size(); j++){
-                if (GetChecked(Neighbors[i][j]))
-                    continue;
+            for (int j = 0 ; j <(int) Neighbors[i].size(); j++){
                 int Pos = i;
                 for (int x = 0 ; x < K ; x++){
                     if (x == i)
                         continue;
                     if(find(Neighbors[x].begin(), Neighbors[x].end(), Neighbors[i][j]) != Neighbors[x].end()) {
-                        if (Euclidean(GetRepresenation(Neighbors[i][j]),MyClusters[x]->GetCentroid(),DIMENSION) < Euclidean(GetRepresenation(Neighbors[i][j]),MyClusters[i]->GetCentroid(),DIMENSION))
+                        if (Euclidean(MyClusters[x]->GetCentroid(),GetRepresenation(Neighbors[i][j]),DIMENSION) < Euclidean(MyClusters[Pos]->GetCentroid(),GetRepresenation(Neighbors[i][j]),DIMENSION))
                             Pos = x;
                     }
                 }
-                if ( Pos == i )
+                if (Pos == GetCluster(Neighbors[i][j]))
                     continue;
-                MyClusters[i]->DeleteMember(Neighbors[i][j]);
+                if (GetCluster(Neighbors[i][j]) != -1)
+                     MyClusters[GetCluster(Neighbors[i][j])]->DeleteMember(Neighbors[i][j]);
                 MyClusters[Pos]->InsertMember(Neighbors[i][j]);
-                SetChecked(Neighbors[i][j]);
-                SmtChanged[i] = true;
+                SetCluster(Neighbors[i][j],Pos);
+                SmtChanged = true;
             }
         }
-    } while (R < R_THRESHHOLD );
-    
+        fprintf(stderr,"%f\n",R);
+    } while ( (R < R_THRESHHOLD || SmtChanged ) && R < 400000);
 
+    for (int i = 0 ; i < GetTrainNumber();i++){
+        if (GetCluster(i) != -1)
+            continue;
+        double Min = static_cast<double>(MAXSIZE);
+        int MinPos = -1;
+        for (int j = 0; j < K;j++){
+            double  e = Euclidean(MyClusters[j]->GetCentroid(),GetRepresenation(i),DIMENSION);
+            if ( e < Min){
+                Min = e;
+                MinPos = j;
+            }
+        }
+        MyClusters[MinPos]->InsertMember(i);
+        SetCluster(i,MinPos);
+    }    
+}
+
+
+void KMeans :: Silhouette(void){
+    double * A = new double [GetTrainNumber()], * B =new double [GetTrainNumber()], * S = new double[GetTrainNumber()] ;
+    double * SAvergae = new double [K];
+    double STotal = 0;
+    for (int i = 0 ; i < K ; i++)
+        SAvergae[i] = 0;
+    for (int i = 0 ; i < GetTrainNumber();i++){
+        A[i] = GetMean(i,GetCluster(i));
+        double Min = static_cast <double> (MAXSIZE);
+        int MinPos = -1;
+        for (int j = 0; j < K ; j++){
+            if (GetCluster(i) == j )
+                continue;
+            double e = Euclidean(MyClusters[j]->GetCentroid(),GetRepresenation(i),DIMENSION);
+            if (e < Min){
+                MinPos = j;
+                Min = e;
+            }
+        }
+        B[i] = GetMean(i,MinPos);
+        if (A[i] < B[i])
+            S[i] = 1 - A[i]/B[i];
+        else if (A[i] > B[i])
+            S[i] = B[i]/A[i] -1;
+        else
+            S[i] = 0;
+        SAvergae[GetCluster(i)] += S[i]/(double)MyClusters[GetCluster(i)]->GetSize();
+        STotal += S[i];
+
+    }
+    STotal/=(double)GetTrainNumber();
+    cout << "Silhouette: [ ";
+    for (int i = 0 ; i< K; i++)
+        cout <<SAvergae[i] <<", ";
+    cout << STotal << " ]\n";
+}
+
+double KMeans :: GetMean(int i,int ClusterIndex){
+    double ToReturn = 0;
+    for (int j = 0 ; j < MyClusters[ClusterIndex]->GetSize();j++){
+        if (MyClusters[ClusterIndex]->GetMember(j) == i)
+            continue;
+        ToReturn+= Euclidean(GetRepresenation(MyClusters[ClusterIndex]->GetMember(j)),GetRepresenation(i),DIMENSION)/(double)MyClusters[ClusterIndex]->GetSize();
+    }
+    return ToReturn;
 }

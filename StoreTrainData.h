@@ -14,15 +14,11 @@
             bool GetChecked(void);
             int GetCluster(void);
             void SetCluster(int NewCluster);
-            bool GetFlag();
-            void SetFlag();
-            void UnsetFlag();
         private :
             uint8_t * Pixels;
             int NumberOfPixels;
             bool checked;
             int cluster;
-            bool Flag;
         
     };
 
@@ -38,9 +34,7 @@
             bool GetChecked(int Position);
             int GetCluster(int Position);
             void SetCluster(int Position,int NewCluster);
-            void SetFlag (int Position);
-            void UnsetFlag(int Position);
-            bool GetFlag(int Position);
+
         private :
             Image ** AllImages;
             int NumberOfImages;
