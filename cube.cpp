@@ -11,7 +11,7 @@
 
 int main(int argc, char* argv[]) {
     const char * outputfileName;
-    std::string inputFile, queryFile;
+    std::string inputFile, queryFile,answer;
     std::ofstream outputFile;
 
     int K = 14;          
@@ -69,6 +69,8 @@ int main(int argc, char* argv[]) {
         cout << "Please insert path to query file\n";
         cin >> queryFile;
     }
+
+    do{
     
     if ( ReadQueryData(queryFile) == ERROR)
         return ERROR;
@@ -135,7 +137,18 @@ int main(int argc, char* argv[]) {
 
     outputFile.close();
 
-    return 0;
+    std::cout<<"Terminate program? (y/n)\n";
+    std::cin>>answer;
+    if (answer=="y")
+        exit(0);
+    else
+    {
+        std::cout<<"Give queryfile\n";
+
+        std::cin >> queryFile;
+    }
+    } while(answer=="n");
+
 
     return 0;
 }

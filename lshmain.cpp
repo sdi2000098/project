@@ -11,7 +11,7 @@
 int main(int argc, char* argv[]) {
     const char * outputfileName;
     std::ofstream outputFile;
-    std::string inputFile , queryFile;
+    std::string inputFile , queryFile, answer;
 
 
     //Initialize default values
@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
             return ERROR;
         }
     }
+
     
     if (inputFile.empty()){         //Input file not initialized by command line
         cout << "Please insert path to dataset :\n";
@@ -64,6 +65,8 @@ int main(int argc, char* argv[]) {
         cout << "Please insert path to query file\n";
         cin >> queryFile;
     }
+
+    do{
     
     if ( ReadQueryData(queryFile) == ERROR)
         return ERROR;
@@ -128,6 +131,18 @@ int main(int argc, char* argv[]) {
     }
 
     outputFile.close();
+
+    std::cout<<"Terminate program? (y/n)\n";
+    std::cin>>answer;
+    if (answer=="y")
+        exit(0);
+    else
+    {
+        std::cout<<"Give queryfile\n";
+
+        std::cin >> queryFile;
+    }
+    } while(answer=="n");
 
     return 0;
 }

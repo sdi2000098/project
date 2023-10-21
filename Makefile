@@ -16,7 +16,7 @@ EXEC2 = cube
 EXEC3 = cluster
 
 # Default target
-lsh: $(EXEC)
+lshh: $(EXEC)
 projection: $(EXEC2)
 kmeans: $(EXEC3)
 

@@ -1,357 +1,210 @@
 Query : 0
-Nearest neighbor-1: 5255
-distanceHypercube: 2308.58
+yNearest neighbor-1: 4661
+distanceLSH: 1323.86
 distanceTrue: 1034.78
-tHypercube: 0.016113
-tTrue: 0.091517
+Nearest neighbor-2: 2348
+distanceLSH: 1408.8
+distanceTrue: 1047.63
+Nearest neighbor-3: 1619
+distanceLSH: 1420.27
+distanceTrue: 1095.86
+Nearest neighbor-4: 8718
+distanceLSH: 1423.23
+distanceTrue: 1097.3
+Nearest neighbor-5: 5657
+distanceLSH: 1444.88
+distanceTrue: 1121.85
+Nearest neighbor-6: 5146
+distanceLSH: 1488.26
+distanceTrue: 1123.16
+Nearest neighbor-7: 636
+distanceLSH: 1499.95
+distanceTrue: 1139.6
+Nearest neighbor-8: 3059
+distanceLSH: 1514.11
+distanceTrue: 1165.95
+Nearest neighbor-9: 7959
+distanceLSH: 1522.89
+distanceTrue: 1175.03
+Nearest neighbor-10: 6740
+distanceLSH: 1562.48
+distanceTrue: 1182.56
+tLSH: 0.16032
+tTrue: 13.2892
 R-near neighbors:
-3744
-5255
-6086
-6423
-6541
-7891
-8094
-332
-516
-568
-614
-625
-927
-1449
-1542
-1613
-1738
-2077
-2620
-2671
-2883
-2911
-2934
-3032
-3256
-3725
-3811
-4218
-4248
-4623
-4712
-4907
-5128
-5249
-5577
-5623
-5692
-6612
-6763
-7306
-7388
-7565
-7814
-7936
-8030
-8051
-8554
-8675
-8885
-9066
-9109
-9246
-9319
-9486
-9533
-9620
-9753
-9961
-9967
+3059
+6740
+7959
+2348
+5146
+636
+5657
+1619
+4661
+8718
 Query : 1
-Nearest neighbor-1: 602
-distanceHypercube: 2068.66
+Nearest neighbor-1: 1330
+distanceLSH: 1958.5
 distanceTrue: 1554.42
-tHypercube: 0.011484
-tTrue: 0.107698
+Nearest neighbor-2: 7554
+distanceLSH: 2064.16
+distanceTrue: 1664.16
+Nearest neighbor-3: 1143
+distanceLSH: 2094.66
+distanceTrue: 1698.03
+Nearest neighbor-4: 6246
+distanceLSH: 2111.03
+distanceTrue: 1719.08
+Nearest neighbor-5: 7860
+distanceLSH: 2151.42
+distanceTrue: 1741.09
+Nearest neighbor-6: 732
+distanceLSH: 2169.03
+distanceTrue: 1741.45
+Nearest neighbor-7: 9816
+distanceLSH: 2177.84
+distanceTrue: 1830.26
+Nearest neighbor-8: 9004
+distanceLSH: 2197.79
+distanceTrue: 1835.82
+Nearest neighbor-9: 5314
+distanceLSH: 2201.12
+distanceTrue: 1836.55
+Nearest neighbor-10: 4836
+distanceLSH: 2215.57
+distanceTrue: 1953.48
+tLSH: 0.145952
+tTrue: 14.4222
 R-near neighbors:
-303
-3107
-3173
-6729
-7534
-8806
-602
-699
-794
-841
-1586
-1687
-1706
-1777
-1829
-2010
-2076
-2123
-2751
-2866
-3152
-3808
-3841
-4176
-4220
-4453
-4577
-4729
-5334
-5730
-6107
-6235
-6253
-6890
-6997
-7369
-7799
-7828
-7940
-8253
-8467
-8937
-8990
-9204
-9215
-9795
-9917
-9941
-9954
 Query : 2
-Nearest neighbor-1: 871
-distanceHypercube: 1460.42
+Nearest neighbor-1: 3771
+distanceLSH: 646.662
 distanceTrue: 497.042
-tHypercube: 0.010044
-tTrue: 0.086898
+Nearest neighbor-2: 3966
+distanceLSH: 660.978
+distanceTrue: 547.098
+Nearest neighbor-3: 2177
+distanceLSH: 835.687
+distanceTrue: 569.867
+Nearest neighbor-4: 5176
+distanceLSH: 951.945
+distanceTrue: 572.729
+Nearest neighbor-5: 2938
+distanceLSH: 961.073
+distanceTrue: 582.955
+Nearest neighbor-6: 9292
+distanceLSH: 982.828
+distanceTrue: 595.124
+Nearest neighbor-7: 174
+distanceLSH: 1039.68
+distanceTrue: 595.793
+Nearest neighbor-8: 1607
+distanceLSH: 1080.08
+distanceTrue: 605.664
+Nearest neighbor-9: 4913
+distanceLSH: 1097.65
+distanceTrue: 617.898
+Nearest neighbor-10: 3373
+distanceLSH: 1206.76
+distanceTrue: 620.096
+tLSH: 0.124755
+tTrue: 12.9775
 R-near neighbors:
-8841
-550
-871
-1434
-1736
-3337
-4029
-5032
-6258
-9234
-13
-25
-64
-158
-254
-355
-444
-685
-901
-910
-1127
-1245
-1339
-1534
-1563
-1634
-1858
-1981
-2038
-2058
-2425
-2548
-2575
-2638
-2660
-2739
-2800
-2857
-2987
-3161
-3300
-3322
-3411
-3412
-3454
-3538
-3612
-3796
-4530
-4681
-4752
-4811
-4869
-5021
-5251
-5259
-5424
-5507
-5591
-5709
-5733
-5922
-6025
-6035
-6066
-6446
-6656
-6703
-6812
-6960
-7625
-7791
-7962
-8039
-8428
-8556
-8574
-9285
-9370
-9394
-9434
-9968
+3831
+4913
+443
+2583
+3966
+5176
+9181
+9415
+174
+2177
+3771
+4507
+8373
+8625
+180
+864
+1607
+3373
+3549
+2938
+4291
+5245
+6816
+9292
 Query : 3
-Nearest neighbor-1: 1404
-distanceHypercube: 2445.38
+Nearest neighbor-1: 451
+distanceLSH: 1394.31
 distanceTrue: 1297.79
-tHypercube: 0.012853
-tTrue: 0.1021
+Nearest neighbor-2: 3667
+distanceLSH: 1467.85
+distanceTrue: 1304.55
+Nearest neighbor-3: 8369
+distanceLSH: 1546.89
+distanceTrue: 1325.31
+Nearest neighbor-4: 3160
+distanceLSH: 1821.48
+distanceTrue: 1335.96
+Nearest neighbor-5: 1606
+distanceLSH: 1876.65
+distanceTrue: 1394.31
+Nearest neighbor-6: 7664
+distanceLSH: 1911.36
+distanceTrue: 1413.33
+Nearest neighbor-7: 3434
+distanceLSH: 1938.44
+distanceTrue: 1419.34
+Nearest neighbor-8: 395
+distanceLSH: 1942.48
+distanceTrue: 1465.03
+Nearest neighbor-9: 8885
+distanceLSH: 1999.21
+distanceTrue: 1465.17
+Nearest neighbor-10: 4181
+distanceLSH: 2011.83
+distanceTrue: 1467.85
+tLSH: 0.13398
+tTrue: 14.4171
 R-near neighbors:
-2029
-3274
-5196
-7814
-9387
-91
-417
-1028
-1110
-1404
-1417
-1522
-1721
-1798
-2053
-2286
-2444
-2470
-2528
-2897
-3040
-3044
-3071
-3150
-3249
-3261
-3438
-3640
-3648
-3937
-4195
-4281
-5060
-5115
-5255
-5581
-5666
-5804
-5954
-6096
-6449
-6736
-6863
-6956
-7406
-7438
-7549
-7843
-7856
-8403
-8468
-8498
-8687
-8710
-8793
-8868
-9766
-9931
+451
+8369
+3667
 Query : 4
-Nearest neighbor-1: 9855
-distanceHypercube: 2222.66
+Nearest neighbor-1: 8580
+distanceLSH: 1498.55
 distanceTrue: 1322.51
-tHypercube: 0.012539
-tTrue: 0.094214
+Nearest neighbor-2: 6092
+distanceLSH: 1524.93
+distanceTrue: 1335.51
+Nearest neighbor-3: 194
+distanceLSH: 1575.79
+distanceTrue: 1346.48
+Nearest neighbor-4: 4593
+distanceLSH: 1622.79
+distanceTrue: 1365.74
+Nearest neighbor-5: 7186
+distanceLSH: 1637.6
+distanceTrue: 1382.04
+Nearest neighbor-6: 2829
+distanceLSH: 1786.94
+distanceTrue: 1394.33
+Nearest neighbor-7: 5792
+distanceLSH: 1801.93
+distanceTrue: 1409.61
+Nearest neighbor-8: 1038
+distanceLSH: 1813.64
+distanceTrue: 1410.3
+Nearest neighbor-9: 1632
+distanceLSH: 1819.46
+distanceTrue: 1461.43
+Nearest neighbor-10: 4494
+distanceLSH: 1843.98
+distanceTrue: 1461.9
+tLSH: 0.192414
+tTrue: 13.615
 R-near neighbors:
-7718
-377
-799
-878
-923
-6260
-7618
-7944
-9855
-215
-310
-575
-821
-833
-1062
-1470
-1711
-1716
-1823
-1843
-1872
-1905
-1988
-2197
-2234
-2490
-2869
-3087
-3201
-3298
-3441
-3565
-3687
-3889
-4027
-4122
-4183
-4198
-4223
-4363
-4372
-4540
-4591
-5157
-5182
-5211
-5230
-5278
-5497
-5555
-5563
-5852
-5875
-6129
-6239
-6315
-6645
-6706
-6707
-6995
-7462
-7945
-8082
-8107
-8144
-8297
-8405
-8426
-8489
-9214
-9509
-9751
-9925
-9990
+194
+6092
+8580
