@@ -119,6 +119,24 @@ KMeans :: KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int prob
         cout << " }\n";
     }
     cout <<"clustering_time: " << Time <<"\n";
+
+    //for (int i = 0;i< K ; i ++ ){
+        ///cout << "For cluster " << i << "\n";
+        for (int j = 0 ; j < 300; j++){
+            for (int x = 0 ; x < 28 ; x++){
+                for (int y = 0 ; y < 28 ; y++){
+                    if ((int)GetRepresenation(MyClusters[0]->GetMember(j))[28*x + y] > 128) {
+                        std::cout << "#"; // Print a character for dark pixels
+                    } else {
+                        std::cout << " "; // Print a space for light pixels
+                    }
+                }
+                cout << "\n";
+            }
+            cout << "\n\n";
+        }
+    //}
+
     Silhouette();
     for (int i = 0 ; i < GetTrainNumber() ; i++)
         SetCluster(i,-1);
@@ -200,6 +218,7 @@ void KMeans :: Lloyds(void){
                 MyClusters[GetCluster(i)]->DeleteMember(i);
             MyClusters[Position]->InsertMember(i);
             SetCluster(i,Position);
+            
         }
     } while (SmtChanged);
 
@@ -233,7 +252,7 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
     bool SmtChanged;
     do
     {
-        R*=2;
+        R*=200;
         SmtChanged = false;
         vector <int> * Neighbors;
         Neighbors = new vector <int>[K];
@@ -250,13 +269,16 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
             if (Neighbors->size() == 0 )
                 continue;
             for (int j = 0 ; j <(int) Neighbors[i].size(); j++){
-                int Pos = i;
+                int Pos = GetCluster(Neighbors[i][j]);
+                if (Pos == -1)
+                    Pos = i;
                 for (int x = 0 ; x < K ; x++){
-                    if (x == i)
+                    if (x == Pos)
                         continue;
                     if(find(Neighbors[x].begin(), Neighbors[x].end(), Neighbors[i][j]) != Neighbors[x].end()) {
-                        if (Euclidean(MyClusters[x]->GetCentroid(),GetRepresenation(Neighbors[i][j]),DIMENSION) < Euclidean(MyClusters[Pos]->GetCentroid(),GetRepresenation(Neighbors[i][j]),DIMENSION))
+                        if (Euclidean(MyClusters[x]->GetCentroid(),GetRepresenation(Neighbors[i][j]),DIMENSION) < Euclidean(MyClusters[Pos]->GetCentroid(),GetRepresenation(Neighbors[i][j]),DIMENSION)){
                             Pos = x;
+                        }
                     }
                 }
                 if (Pos == GetCluster(Neighbors[i][j]))
@@ -268,8 +290,7 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
                 SmtChanged = true;
             }
         }
-        fprintf(stderr,"%f\n",R);
-    } while ( (R < R_THRESHHOLD || SmtChanged ) && R < 400000);
+    } while ( (R < R_THRESHHOLD || SmtChanged ) && R < 4000000000 );
 
     for (int i = 0 ; i < GetTrainNumber();i++){
         if (GetCluster(i) != -1)
@@ -310,14 +331,14 @@ void KMeans :: Silhouette(void){
         }
         B[i] = GetMean(i,MinPos);
         if (A[i] < B[i])
-            S[i] = 1 - A[i]/B[i];
-        else if (A[i] > B[i])
+            S[i] = 1  - A[i]/B[i];
+        else if (A[i] > B[i]){
             S[i] = B[i]/A[i] -1;
+        }
         else
             S[i] = 0;
         SAvergae[GetCluster(i)] += S[i]/(double)MyClusters[GetCluster(i)]->GetSize();
         STotal += S[i];
-
     }
     STotal/=(double)GetTrainNumber();
     cout << "Silhouette: [ ";
@@ -331,7 +352,7 @@ double KMeans :: GetMean(int i,int ClusterIndex){
     for (int j = 0 ; j < MyClusters[ClusterIndex]->GetSize();j++){
         if (MyClusters[ClusterIndex]->GetMember(j) == i)
             continue;
-        ToReturn+= Euclidean(GetRepresenation(MyClusters[ClusterIndex]->GetMember(j)),GetRepresenation(i),DIMENSION)/(double)MyClusters[ClusterIndex]->GetSize();
+        ToReturn+= Euclidean(GetRepresenation(MyClusters[ClusterIndex]->GetMember(j)),GetRepresenation(i),DIMENSION);
     }
-    return ToReturn;
+    return ToReturn/(double)MyClusters[ClusterIndex]->GetSize();
 }
