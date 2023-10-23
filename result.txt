@@ -1,210 +1,480 @@
 Query : 0
-yNearest neighbor-1: 4661
-distanceLSH: 1323.86
+Nearest neighbor-1: 2579
+distanceHypercube: 1686.8
 distanceTrue: 1034.78
-Nearest neighbor-2: 2348
-distanceLSH: 1408.8
+Nearest neighbor-2: 4141
+distanceHypercube: 1687.77
 distanceTrue: 1047.63
-Nearest neighbor-3: 1619
-distanceLSH: 1420.27
+Nearest neighbor-3: 1751
+distanceHypercube: 1914.32
 distanceTrue: 1095.86
-Nearest neighbor-4: 8718
-distanceLSH: 1423.23
+Nearest neighbor-4: 1937
+distanceHypercube: 1924.71
 distanceTrue: 1097.3
-Nearest neighbor-5: 5657
-distanceLSH: 1444.88
+Nearest neighbor-5: 8015
+distanceHypercube: 1985.5
 distanceTrue: 1121.85
-Nearest neighbor-6: 5146
-distanceLSH: 1488.26
+Nearest neighbor-6: 195
+distanceHypercube: 2001.35
 distanceTrue: 1123.16
-Nearest neighbor-7: 636
-distanceLSH: 1499.95
+Nearest neighbor-7: 1023
+distanceHypercube: 2041.3
 distanceTrue: 1139.6
-Nearest neighbor-8: 3059
-distanceLSH: 1514.11
+Nearest neighbor-8: 1088
+distanceHypercube: 2081.17
 distanceTrue: 1165.95
-Nearest neighbor-9: 7959
-distanceLSH: 1522.89
+Nearest neighbor-9: 9188
+distanceHypercube: 2090.68
 distanceTrue: 1175.03
-Nearest neighbor-10: 6740
-distanceLSH: 1562.48
+Nearest neighbor-10: 6264
+distanceHypercube: 2092.79
 distanceTrue: 1182.56
-tLSH: 0.16032
-tTrue: 13.2892
-R-near neighbors:
-3059
-6740
-7959
-2348
-5146
-636
-5657
-1619
-4661
-8718
-Query : 1
-Nearest neighbor-1: 1330
-distanceLSH: 1958.5
-distanceTrue: 1554.42
-Nearest neighbor-2: 7554
-distanceLSH: 2064.16
-distanceTrue: 1664.16
-Nearest neighbor-3: 1143
-distanceLSH: 2094.66
-distanceTrue: 1698.03
-Nearest neighbor-4: 6246
-distanceLSH: 2111.03
-distanceTrue: 1719.08
-Nearest neighbor-5: 7860
-distanceLSH: 2151.42
-distanceTrue: 1741.09
-Nearest neighbor-6: 732
-distanceLSH: 2169.03
-distanceTrue: 1741.45
-Nearest neighbor-7: 9816
-distanceLSH: 2177.84
-distanceTrue: 1830.26
-Nearest neighbor-8: 9004
-distanceLSH: 2197.79
-distanceTrue: 1835.82
-Nearest neighbor-9: 5314
-distanceLSH: 2201.12
-distanceTrue: 1836.55
-Nearest neighbor-10: 4836
-distanceLSH: 2215.57
-distanceTrue: 1953.48
-tLSH: 0.145952
-tTrue: 14.4222
-R-near neighbors:
-Query : 2
-Nearest neighbor-1: 3771
-distanceLSH: 646.662
-distanceTrue: 497.042
-Nearest neighbor-2: 3966
-distanceLSH: 660.978
-distanceTrue: 547.098
-Nearest neighbor-3: 2177
-distanceLSH: 835.687
-distanceTrue: 569.867
-Nearest neighbor-4: 5176
-distanceLSH: 951.945
-distanceTrue: 572.729
-Nearest neighbor-5: 2938
-distanceLSH: 961.073
-distanceTrue: 582.955
-Nearest neighbor-6: 9292
-distanceLSH: 982.828
-distanceTrue: 595.124
-Nearest neighbor-7: 174
-distanceLSH: 1039.68
-distanceTrue: 595.793
-Nearest neighbor-8: 1607
-distanceLSH: 1080.08
-distanceTrue: 605.664
-Nearest neighbor-9: 4913
-distanceLSH: 1097.65
-distanceTrue: 617.898
-Nearest neighbor-10: 3373
-distanceLSH: 1206.76
-distanceTrue: 620.096
-tLSH: 0.124755
-tTrue: 12.9775
-R-near neighbors:
-3831
-4913
-443
-2583
-3966
-5176
-9181
-9415
-174
-2177
-3771
-4507
-8373
-8625
-180
-864
-1607
-3373
-3549
-2938
-4291
-5245
-6816
-9292
-Query : 3
-Nearest neighbor-1: 451
-distanceLSH: 1394.31
-distanceTrue: 1297.79
-Nearest neighbor-2: 3667
-distanceLSH: 1467.85
-distanceTrue: 1304.55
-Nearest neighbor-3: 8369
-distanceLSH: 1546.89
-distanceTrue: 1325.31
-Nearest neighbor-4: 3160
-distanceLSH: 1821.48
-distanceTrue: 1335.96
-Nearest neighbor-5: 1606
-distanceLSH: 1876.65
-distanceTrue: 1394.31
-Nearest neighbor-6: 7664
-distanceLSH: 1911.36
-distanceTrue: 1413.33
-Nearest neighbor-7: 3434
-distanceLSH: 1938.44
-distanceTrue: 1419.34
-Nearest neighbor-8: 395
-distanceLSH: 1942.48
-distanceTrue: 1465.03
-Nearest neighbor-9: 8885
-distanceLSH: 1999.21
-distanceTrue: 1465.17
-Nearest neighbor-10: 4181
-distanceLSH: 2011.83
-distanceTrue: 1467.85
-tLSH: 0.13398
-tTrue: 14.4171
-R-near neighbors:
-451
-8369
-3667
-Query : 4
-Nearest neighbor-1: 8580
-distanceLSH: 1498.55
-distanceTrue: 1322.51
-Nearest neighbor-2: 6092
-distanceLSH: 1524.93
-distanceTrue: 1335.51
-Nearest neighbor-3: 194
-distanceLSH: 1575.79
-distanceTrue: 1346.48
-Nearest neighbor-4: 4593
-distanceLSH: 1622.79
-distanceTrue: 1365.74
-Nearest neighbor-5: 7186
-distanceLSH: 1637.6
-distanceTrue: 1382.04
-Nearest neighbor-6: 2829
-distanceLSH: 1786.94
-distanceTrue: 1394.33
-Nearest neighbor-7: 5792
-distanceLSH: 1801.93
-distanceTrue: 1409.61
-Nearest neighbor-8: 1038
-distanceLSH: 1813.64
-distanceTrue: 1410.3
-Nearest neighbor-9: 1632
-distanceLSH: 1819.46
-distanceTrue: 1461.43
-Nearest neighbor-10: 4494
-distanceLSH: 1843.98
-distanceTrue: 1461.9
-tLSH: 0.192414
-tTrue: 13.615
+tHypercube: 0.060323
+tTrue: 0.929806
 R-near neighbors:
 194
-6092
-8580
+1023
+1088
+1442
+2179
+3347
+7516
+7839
+9225
+9509
+31
+38
+59
+195
+314
+667
+801
+1018
+1531
+1543
+1751
+1937
+1967
+2172
+2351
+2545
+2579
+2581
+2698
+2759
+2763
+3065
+3176
+3307
+3309
+3353
+3883
+3905
+3906
+4141
+4621
+4666
+5095
+5218
+5551
+5554
+5638
+6199
+6264
+6445
+6539
+6573
+6735
+6882
+6910
+7104
+7341
+7422
+7772
+8015
+8858
+9147
+9188
+9416
+9482
+9672
+9776
+9812
+9845
+Query : 1
+Nearest neighbor-1: 1435
+distanceHypercube: 2248.79
+distanceTrue: 1554.42
+Nearest neighbor-2: 8984
+distanceHypercube: 2319.53
+distanceTrue: 1664.16
+Nearest neighbor-3: 7921
+distanceHypercube: 2395.16
+distanceTrue: 1698.03
+Nearest neighbor-4: 6856
+distanceHypercube: 2414.47
+distanceTrue: 1719.08
+Nearest neighbor-5: 2310
+distanceHypercube: 2417.19
+distanceTrue: 1741.09
+Nearest neighbor-6: 2910
+distanceHypercube: 2426.05
+distanceTrue: 1741.45
+Nearest neighbor-7: 9389
+distanceHypercube: 2444.54
+distanceTrue: 1830.26
+Nearest neighbor-8: 8106
+distanceHypercube: 2456.06
+distanceTrue: 1835.82
+Nearest neighbor-9: 8574
+distanceHypercube: 2457.73
+distanceTrue: 1836.55
+Nearest neighbor-10: 5081
+distanceHypercube: 2463.76
+distanceTrue: 1953.48
+tHypercube: 0.067114
+tTrue: 0.964881
+R-near neighbors:
+6730
+8189
+8518
+9527
+9648
+17
+24
+308
+349
+520
+796
+866
+1435
+1536
+1720
+1950
+2310
+2639
+2833
+2910
+3020
+3031
+3106
+3173
+3427
+3635
+3783
+3784
+3817
+4050
+4521
+4636
+5070
+5081
+5475
+5501
+5641
+5642
+5739
+5958
+6759
+6856
+6928
+7045
+7052
+7325
+7364
+7432
+7634
+7771
+7803
+7833
+7921
+7948
+8002
+8106
+8197
+8574
+8622
+8984
+9034
+9072
+9389
+9441
+Query : 2
+Nearest neighbor-1: 1658
+distanceHypercube: 617.898
+distanceTrue: 497.042
+Nearest neighbor-2: 4166
+distanceHypercube: 997.926
+distanceTrue: 547.098
+Nearest neighbor-3: 5530
+distanceHypercube: 1187.37
+distanceTrue: 569.867
+Nearest neighbor-4: 5483
+distanceHypercube: 1220.25
+distanceTrue: 572.729
+Nearest neighbor-5: 7253
+distanceHypercube: 1326.93
+distanceTrue: 582.955
+Nearest neighbor-6: 4900
+distanceHypercube: 1495.44
+distanceTrue: 595.124
+Nearest neighbor-7: 6678
+distanceHypercube: 1555.01
+distanceTrue: 595.793
+Nearest neighbor-8: 3004
+distanceHypercube: 1662.55
+distanceTrue: 605.664
+Nearest neighbor-9: 6809
+distanceHypercube: 1809.64
+distanceTrue: 617.898
+Nearest neighbor-10: 8218
+distanceHypercube: 1816.76
+distanceTrue: 620.096
+tHypercube: 0.05507
+tTrue: 0.871946
+R-near neighbors:
+2432
+2826
+3985
+4664
+5292
+5421
+6272
+6753
+6809
+7885
+8714
+469
+631
+1440
+1658
+1705
+1886
+2443
+2624
+2925
+3004
+3491
+3685
+3744
+3975
+4036
+4166
+4806
+4844
+4861
+4900
+4901
+5104
+5256
+5483
+5530
+5741
+5777
+6096
+6438
+6481
+6678
+7231
+7253
+7271
+7811
+7895
+7986
+8030
+8117
+8120
+8218
+8325
+8437
+8442
+8544
+8594
+9014
+9360
+9679
+9926
+Query : 3
+Nearest neighbor-1: 662
+distanceHypercube: 1933.8
+distanceTrue: 1297.79
+Nearest neighbor-2: 9209
+distanceHypercube: 2053.23
+distanceTrue: 1304.55
+Nearest neighbor-3: 7957
+distanceHypercube: 2234.29
+distanceTrue: 1325.31
+Nearest neighbor-4: 2011
+distanceHypercube: 2247.74
+distanceTrue: 1335.96
+Nearest neighbor-5: 699
+distanceHypercube: 2269.98
+distanceTrue: 1394.31
+Nearest neighbor-6: 5393
+distanceHypercube: 2333.34
+distanceTrue: 1413.33
+Nearest neighbor-7: 106
+distanceHypercube: 2350.7
+distanceTrue: 1419.34
+Nearest neighbor-8: 1993
+distanceHypercube: 2418.04
+distanceTrue: 1465.03
+Nearest neighbor-9: 1719
+distanceHypercube: 2428.17
+distanceTrue: 1465.17
+Nearest neighbor-10: 2114
+distanceHypercube: 2452.41
+distanceTrue: 1467.85
+tHypercube: 0.06247
+tTrue: 0.948941
+R-near neighbors:
+9631
+370
+1790
+3159
+4283
+6559
+9029
+9821
+106
+184
+440
+662
+699
+704
+897
+1019
+1191
+1205
+1719
+1874
+1993
+2011
+2114
+2124
+2194
+2379
+2819
+2891
+3026
+3071
+3246
+3547
+3597
+3707
+4069
+4168
+4463
+4602
+4736
+4920
+4994
+5237
+5254
+5261
+5282
+5393
+5430
+5785
+5849
+6377
+6652
+6979
+7382
+7957
+7983
+8034
+8170
+8432
+8628
+8670
+8784
+8840
+8890
+9209
+9216
+9236
+9318
+9622
+9893
+9955
+Query : 4
+Nearest neighbor-1: 2800
+distanceHypercube: 2038.25
+distanceTrue: 1322.51
+Nearest neighbor-2: 5526
+distanceHypercube: 2214.68
+distanceTrue: 1335.51
+Nearest neighbor-3: 6547
+distanceHypercube: 2234.49
+distanceTrue: 1346.48
+Nearest neighbor-4: 3009
+distanceHypercube: 2274.35
+distanceTrue: 1365.74
+Nearest neighbor-5: 7264
+distanceHypercube: 2282.96
+distanceTrue: 1382.04
+Nearest neighbor-6: 7906
+distanceHypercube: 2309.8
+distanceTrue: 1394.33
+Nearest neighbor-7: 4273
+distanceHypercube: 2329.54
+distanceTrue: 1409.61
+Nearest neighbor-8: 3816
+distanceHypercube: 2340.98
+distanceTrue: 1410.3
+Nearest neighbor-9: 5659
+distanceHypercube: 2350.15
+distanceTrue: 1461.43
+Nearest neighbor-10: 444
+distanceHypercube: 2366.11
+distanceTrue: 1461.9
+tHypercube: 0.041615
+tTrue: 0.906729
+R-near neighbors:
+2800
+4031
+5344
+83
+335
+444
+737
+774
+1029
+1312
+1581
+1780
+2529
+3009
+3332
+3513
+3581
+3646
+3816
+4221
+4273
+4291
+4561
+4640
+4927
+5526
+5659
+5740
+5743
+5775
+6001
+6017
+6043
+6062
+6398
+6547
+6641
+7264
+7420
+7424
+7711
+7906
+8181
+8607
+9254
+9970

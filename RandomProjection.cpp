@@ -329,7 +329,6 @@ vector <int> RandomProjection :: RangeSearch(double R,uint8_t * Query){
                 double e = Euclidean(Query,temp->GetPixels(),DIMENSION);
                 if (e <= R)
                     ToReturn.push_back(temp->GetPosition());
-                
             }
             temp=temp->Next;
         }

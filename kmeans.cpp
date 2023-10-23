@@ -12,7 +12,7 @@
 #define WINDOW 5
 #define ERROR -1
 #define R_THRESHHOLD 2000
-static int times=0;
+
 
 double Euclidean(double * x, uint8_t * y, int D){      //Simple euclidean implementation
 //Arguments two vectors and their dimension
@@ -52,7 +52,7 @@ class Cluster{
             return Centroid;
         }
         void DeleteMember(int ToDelete){
-            times++;
+
             Members.erase(std::remove(Members.begin(), Members.end(), ToDelete), Members.end());
             for (int i = 0 ; i < DIMENSION; i++){
                 Centroid[i] = ( (Centroid[i]* (Members.size()+1)) - (double)GetRepresenation(ToDelete)[i]) / (Members.size());
@@ -252,8 +252,10 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
     bool SmtChanged;
     do
     {
-        R*=200;
         SmtChanged = false;
+        if (!SmtChanged)
+            R*=200;
+        
         vector <int> * Neighbors;
         Neighbors = new vector <int>[K];
         for (int i = 0 ; i < K ; i ++){
@@ -284,13 +286,16 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
                 if (Pos == GetCluster(Neighbors[i][j]))
                     continue;
                 if (GetCluster(Neighbors[i][j]) != -1)
-                     MyClusters[GetCluster(Neighbors[i][j])]->DeleteMember(Neighbors[i][j]);
+                    MyClusters[GetCluster(Neighbors[i][j])]->DeleteMember(Neighbors[i][j]);
                 MyClusters[Pos]->InsertMember(Neighbors[i][j]);
                 SetCluster(Neighbors[i][j],Pos);
                 SmtChanged = true;
+                break;
             }
+            if (SmtChanged)
+                break;
         }
-    } while ( (R < R_THRESHHOLD || SmtChanged ) && R < 4000000000 );
+    } while ((R < R_THRESHHOLD || SmtChanged) && R < 400000  );
 
     for (int i = 0 ; i < GetTrainNumber();i++){
         if (GetCluster(i) != -1)

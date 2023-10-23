@@ -55,7 +55,7 @@ int main (void){
     int probes = arguments["number_of_probes"];
 
     ReadTrainData("dataset.dat");
-    char * x = new char[sizeof("Classic")];
-    strcpy(x,"Classic");
+    char * x = new char[sizeof("Hypercube")];
+    strcpy(x,"Hypercube");
     KMeans * MyCluster = new KMeans(K,x,KLSH,L,Kcube,M,probes);
 }

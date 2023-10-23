@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
 
     // Check if the file exists and delete it if it does
     
-    
+    cout << outputfileName;
     if (std::ifstream(outputfileName)) {
         std::remove(outputfileName);
     }
