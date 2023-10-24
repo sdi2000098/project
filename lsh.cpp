@@ -11,7 +11,7 @@
 //Define some hyperparameters
 
 #define TABLE_SIZE 5
-#define M 100
+#define M 20
 #define MAXSIZE 1215752202
 #define DIMENSION 784
 #define WINDOW 5
@@ -80,6 +80,8 @@ class Bucket{
             //array[1] is the position to the dataset of the nearest neighbor
             //This function is used only from the first bucket of the cell
             //If next bucket exists, it calls the InnerNearestNeighbour that iterates the remaining buckets of the cell
+            if (Data == NULL)
+                return NULL;
             double * ToReturn = new double[2];
             ToReturn[0] = MAXSIZE;
             ToReturn[1] = -1;
@@ -110,6 +112,8 @@ class Bucket{
         }
 
         double * AccurateNearestNeighbour(uint8_t * Query){
+            if (Data == NULL)
+                return NULL;
             double * ToReturn = new double[2];
                 ToReturn[0] = Euclidean(Query,Data,DIMENSION);
                 ToReturn[1] = (double)position;
@@ -195,6 +199,7 @@ class HashTable {
         HashTable(int K,int dimension,int window,int Size){
             TableSize = Size;
             HashBuckets = new Bucket *[TableSize];
+
             for (int i = 0 ; i < TableSize; i ++)
                 HashBuckets[i] = new Bucket();
             MyG = new gFunction(K,dimension,window);
@@ -226,7 +231,10 @@ class HashTable {
                 if (i == 0 )
                     ToReturn = HashBuckets[i]->AccurateNearestNeighbour(Query);
                 else{
+                    
                     temp = HashBuckets[i]->AccurateNearestNeighbour(Query);
+                    if (temp  == NULL)
+                        continue;
                     if (temp[0] < ToReturn[0]){
                         ToReturn = temp;
                     }
@@ -280,6 +288,8 @@ double * LSH ::NearestNeighbour(uint8_t * Query){
     for (int i = 0 ; i < L; i++){
         //Get the NearestNeghbor from all hash table using the correspondin function and store the one with the smallest dist
         ptr = MyHash[i]->NearestNeighbour(Query);
+        if (ptr == NULL)
+            continue;
         if (ptr[0] < MinSize){
             MinSize = ptr[0];
             MinPos = (int)ptr[1];
@@ -296,7 +306,8 @@ vector <double>  LSH ::KNN(int K,uint8_t * Query){
     for (int i = 0 ; i < K ;i++){
         //Get K nearest neighbors by calling NearestNeighbor K times and each time set as checked the point that was returned
         Result = NearestNeighbour(Query);
-        SetChecked((int)Result[1]);
+        if (Result[1] != -1)
+            SetChecked((int)Result[1]);
         ToReturn.push_back(Result[0]);
         ToReturn.push_back(Result[1]);
         delete Result;
@@ -310,17 +321,22 @@ vector <double>  LSH ::KNN(int K,uint8_t * Query){
 double * LSH ::AccurateNearestNeighbour(uint8_t * Query){
     //Same implementation as aboce but now using the AKNN of hash table
     int  MinPos = -1;
-    double MinSize = (double)MAXSIZE,  *ptr; 
+    double MinSize = (double)MAXSIZE,  *ptr;
+    
     for (int i = 0 ; i < L; i++){
         ptr = MyHash[i]->AccurateNearestNeighbour(Query);
+        if (ptr == NULL)
+            continue;
         if (ptr[0] < MinSize){
             MinSize = ptr[0];
             MinPos = (int)ptr[1];
         }
     }
+    
     double * ToReturn = new double[2];
     ToReturn[0]=MinSize;
     ToReturn[1]=MinPos;
+    
     return ToReturn; 
 }
 vector <double>  LSH ::AccurateKNN(int K,uint8_t * Query){
@@ -328,7 +344,8 @@ vector <double>  LSH ::AccurateKNN(int K,uint8_t * Query){
     double * Result;
     for (int i = 0 ; i < K ;i++){
         Result = AccurateNearestNeighbour(Query);
-        SetChecked((int)Result[1]);
+        if (Result[1] != -1)
+            SetChecked((int)Result[1]);
         ToReturn.push_back(Result[0]);
         ToReturn.push_back(Result[1]);
         delete Result;

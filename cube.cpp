@@ -55,7 +55,10 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    
+    if (K<= 0 || M <= 0 || N <= 0 || R <=0 || probes < 0){
+        cout << "K,L,N,R need to be positive integers\n";
+        return ERROR;
+    }
 
     if (inputFile.empty()){         //Input file not initialized by command line
         cout << "Please insert path to dataset :\n";
@@ -83,14 +86,13 @@ int main(int argc, char* argv[]) {
 
     // Check if the file exists and delete it if it does
     
-    cout << outputfileName;
     if (std::ifstream(outputfileName)) {
         std::remove(outputfileName);
     }
     outputFile.open(outputfileName, std::ios::app);
     // // Check if the file is opened successfully
     if (!outputFile.is_open()) {
-        std::cerr << "Error: Could not open the file." << std::endl;
+        std::cerr << "Error: Could not open the output file." << std::endl;
         return ERROR;
     }
 

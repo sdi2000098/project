@@ -31,6 +31,7 @@ int ReadTrainData(string path){
         Magic= reverseInt(Magic);
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
         NumberOfImages = reverseInt(NumberOfImages);
+        //TrainNumber = NumberOfImages;
         TrainNumber = 10000;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
@@ -53,8 +54,8 @@ int ReadTrainData(string path){
         cout << "Could not open file " << path << "\n";
         return ERROR;
     }
+    file.close();
     return 0;
-
 }    
 
 
