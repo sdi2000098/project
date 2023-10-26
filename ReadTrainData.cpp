@@ -31,8 +31,7 @@ int ReadTrainData(string path){
         Magic= reverseInt(Magic);
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
         NumberOfImages = reverseInt(NumberOfImages);
-        //TrainNumber = NumberOfImages;
-        TrainNumber = 10000;
+        TrainNumber = NumberOfImages;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));

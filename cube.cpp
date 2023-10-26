@@ -81,8 +81,8 @@ int main(int argc, char* argv[]) {
     RandomProjection * MyCube = new RandomProjection(K,M,probes);
     
     MyCube->Train();
-    
-    int limit = 5;
+    int limit = GetQueryNumber();
+    //int limit = 5;
 
     // Check if the file exists and delete it if it does
     

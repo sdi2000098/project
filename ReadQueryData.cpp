@@ -37,7 +37,7 @@ int ReadQueryData(string path){
                 file.read((char*)&temp,sizeof(temp));
                 ImageToInsert->Insert(temp);
             }
-            //Aftere reading each image we insert it to QuryStore
+            //After reading each image we insert it to QuryStore
             MyQueryData->Insert(ImageToInsert);
         }
     }
