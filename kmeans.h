@@ -1,4 +1,4 @@
-#ifndef K_MEANS
+    #ifndef K_MEANS
     #include <iostream>
     #define K_MEANS
 

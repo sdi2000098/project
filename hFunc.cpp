@@ -4,11 +4,14 @@
 //Source file for h function from LSH
 //Arguments dimension of each point-vector (784 for images) and window
 
-hFunction ::hFunction(int dimension, int window) : dimension_(dimension), window_(window){
+hFunction ::hFunction(int dimension, int UpperWindow) : dimension_(dimension){
 
-
+            std::random_device rd;  
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> distrib(2, UpperWindow);
+            window_ = distrib(gen);
             std::normal_distribution<float> v_distribution(0.0, 1.0);
-            std::uniform_real_distribution<float> t_distribution(0.0,static_cast<float>(window));
+            std::uniform_real_distribution<float> t_distribution(0.0,static_cast<float>(window_));
 
             std::random_device rd_v;
             std::random_device rd_t;

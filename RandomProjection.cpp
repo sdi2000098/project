@@ -5,7 +5,7 @@
 #include <bits/stdc++.h>
 
 #define DIMENSION 784
-#define WINDOW 5
+#define WINDOW 50
 #define MAXSIZE 1215752202
 
 using namespace std;
