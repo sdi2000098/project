@@ -160,6 +160,14 @@ RandomProjection :: ~RandomProjection(){
     for (int i = 0 ; i < K ; i ++)
         delete MyF[i];
     delete []MyF;
+    HypercubePoint * Next= TrainData,*Temp;
+    while (Next != NULL)
+    {
+        Temp = Next;
+        Next = Next->Next;
+        delete Temp;
+    }
+    
 }
 
 
@@ -205,6 +213,7 @@ double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
             double * ToReturn = new double[2];
             ToReturn[0] = e;
             ToReturn[1]=(double)temp->GetPosition();
+            delete QueryPoint;
             return ToReturn;
         }
         temp = temp->Next;
@@ -212,6 +221,7 @@ double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
     double * ToReturn = new double[2];
     ToReturn[0] = -1;
     ToReturn[1]=(double)-1;
+    delete QueryPoint;
     return ToReturn;
     
 }
@@ -222,9 +232,11 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
     int i = 0;
     for (int CurrentHamming = 0; CurrentHamming <= Probes;CurrentHamming++){
         //We keep searching until we reach probes or we find M canditates
-        double * Result;
+        double * Result= NULL;
         do
         {
+            if (Result != NULL)
+                delete []Result;
             if (i == this->M ){
                 //We need to stop, CurrentHamming = Probes +1 makes the outer loop stop
                 CurrentHamming = Probes +1;
@@ -294,9 +306,11 @@ double * RandomProjection :: AccurateNearestNeighbour(uint8_t * Query){
 vector <double> RandomProjection :: AccurateKNN(int K,uint8_t * Query){
     vector <double> ToReturn;
     int i = 0;
-    double * Result;
+    double * Result= NULL;
     do
     {
+        if (Result != NULL)
+            delete [] Result;
         //Loop untill we get K neighbors or no neighbor exists Result[1] will be -1
         if (i == K)
             break;
@@ -333,5 +347,6 @@ vector <int> RandomProjection :: RangeSearch(double R,uint8_t * Query){
             temp=temp->Next;
         }
     }
+    delete QueryPoint;
     return ToReturn;
 }

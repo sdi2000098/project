@@ -47,7 +47,7 @@ class Cluster{
             Members.push_back(NewCentroid);
         }
         ~Cluster(){
-            delete Centroid;
+            delete [] Centroid;
         };
         void InsertMember(int NewMember){
             //Insert function with update, used in Lloyds
@@ -226,6 +226,7 @@ void KMeans :: Initialize(){
             temp += AllEuclideans[i];
         }
     }
+    delete []AllEuclideans;
 }
 
 void KMeans :: Lloyds(void){
@@ -313,7 +314,7 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
                 Neighbors[i] = MyLsh->RangeSearch(R,temp);
             else
                 Neighbors[i] = MyCube->RangeSearch(R,temp);
-            delete temp;
+            delete []temp;
         }
         for (int i = 0 ; i < K ; i++){
             if (Neighbors[i].size() == 0 )
@@ -342,11 +343,17 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
             }
             
         }
+        delete []Neighbors;
         for (int i = 0 ; i < K ; i ++ ) // Update centroids
             MyClusters[i]->Update();
         epochs++;
     } while ((R < R_THRESHHOLD || SmtChanged) && epochs < 4);
-
+    if (strcmp(Method,"LSH") == 0 ){
+       delete MyLsh;
+    }
+    else{
+        delete MyCube;
+    }
     for (int i = 0 ; i < GetTrainNumber();i++){ 
         //Use Lloyds for the datapoints with no cluster
         if (GetCluster(i) != -1)
@@ -402,6 +409,10 @@ void KMeans :: Silhouette(void){
     for (int i = 0 ; i< K; i++)
         outputFile <<SAvergae[i] <<", ";
     outputFile << STotal << " ]\n";
+    delete []A;
+    delete []B;
+    delete []S;
+    delete []SAvergae;
 }
 
 double KMeans :: GetMean(int i,int ClusterIndex){

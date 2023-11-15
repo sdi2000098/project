@@ -7,4 +7,5 @@
     int ReadQueryData(string path);
     int GetQueryNumber(void);
     uint8_t *  GetQueryRepresentation(int Position);
+    void DeleteQueries(void);
 #endif

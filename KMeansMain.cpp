@@ -68,7 +68,7 @@ int main (int argc, char * argv[]){
             flag = true;
         }
         else if (arg == "-m" && i + 1 < argc) {
-            Method = (char*)malloc(sizeof(argv[i+1]));
+            Method = (char*)malloc(strlen(argv[i+1])*sizeof(char));
             strcpy(Method,argv[i+1]);
             i++;
         }
@@ -109,4 +109,7 @@ int main (int argc, char * argv[]){
         return ERROR;
     }
     KMeans * MyCluster = new KMeans(K,Method,KLSH,L,Kcube,M,probes,outputfileName,flag);
+    free(Method);
+    delete MyCluster;
+    DeleteTrain();
 }

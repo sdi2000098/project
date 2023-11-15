@@ -13,4 +13,5 @@
     bool GetChecked(int Position);
     void SetCluster(int Position,int NewCluster);
     int GetCluster(int Position);
+    void DeleteTrain(void);
 #endif

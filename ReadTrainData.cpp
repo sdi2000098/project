@@ -30,7 +30,8 @@ int ReadTrainData(string path){
         file.read((char*)&Magic,sizeof(Magic)); 
         Magic= reverseInt(Magic);
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
-        NumberOfImages = reverseInt(NumberOfImages);
+        //NumberOfImages = reverseInt(NumberOfImages);
+        NumberOfImages = 200;
         TrainNumber = NumberOfImages;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
@@ -84,3 +85,6 @@ int GetCluster(int Position){
     return MyTrainData->GetCluster(Position);
 }
 
+void DeleteTrain(void){
+    delete MyTrainData;
+}

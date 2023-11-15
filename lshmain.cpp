@@ -133,11 +133,11 @@ int main(int argc, char* argv[]) {
         }
 
         outputFile.close();
-
+        delete MyLsh;
         std::cout<<"Terminate program? (y/n)\n";
         std::cin>>answer;
         if (answer=="y")
-            exit(0);
+            break;
         else
         {
             std::cout<<"Give queryfile\n";
@@ -145,7 +145,8 @@ int main(int argc, char* argv[]) {
             std::cin >> queryFile;
         }
     } while(answer=="n");
-
+    DeleteQueries();
+    DeleteTrain();
     return 0;
 }
 

@@ -39,7 +39,10 @@ class Bucket{
             NextBucket = NULL;
             ID = -1;
         }
-        ~Bucket(){}
+        ~Bucket(){
+            if (NextBucket != NULL)
+                delete NextBucket;
+        }
         void Insert(uint8_t * NewData,int NewID,int NewPosition){
             //Function that inserts a new point to the correct bucket
             //We need to reach the end of the linked list, create a new bucket and link it to the prev bucket
@@ -185,6 +188,7 @@ class gFunction{
                 delete HashFunctions[i];
             }
             delete [] HashFunctions;
+            delete []r;
         }
 
 };
@@ -214,6 +218,7 @@ class HashTable {
             for(int i =0;i<TableSize;i++)
                 delete HashBuckets[i];
             delete [] HashBuckets;
+            delete MyG;
         }
         double *NearestNeighbour(uint8_t * Query){
             int ID = MyG->FindPosition(Query);
@@ -233,10 +238,15 @@ class HashTable {
                 else{
                     
                     temp = HashBuckets[i]->AccurateNearestNeighbour(Query);
-                    if (temp  == NULL)
+                    if (temp  == NULL){
                         continue;
+                    }
                     if (temp[0] < ToReturn[0]){
+                        delete []ToReturn;
                         ToReturn = temp;
+                    }
+                    else{
+                        delete []temp;
                     }
                 }
             }
@@ -294,6 +304,7 @@ double * LSH ::NearestNeighbour(uint8_t * Query){
             MinSize = ptr[0];
             MinPos = (int)ptr[1];
         }
+        delete []ptr;
     }
     double * ToReturn = new double[2];
     ToReturn[0]=MinSize;
@@ -310,7 +321,7 @@ vector <double>  LSH ::KNN(int K,uint8_t * Query){
             SetChecked((int)Result[1]);
         ToReturn.push_back(Result[0]);
         ToReturn.push_back(Result[1]);
-        delete Result;
+        delete []Result;
     }
     for (int i = 1 ; i < (int)ToReturn.size() ;i +=2)
         SetUnchecked(ToReturn[i]);
@@ -331,6 +342,7 @@ double * LSH ::AccurateNearestNeighbour(uint8_t * Query){
             MinSize = ptr[0];
             MinPos = (int)ptr[1];
         }
+        delete [] ptr;
     }
     
     double * ToReturn = new double[2];
@@ -348,7 +360,7 @@ vector <double>  LSH ::AccurateKNN(int K,uint8_t * Query){
             SetChecked((int)Result[1]);
         ToReturn.push_back(Result[0]);
         ToReturn.push_back(Result[1]);
-        delete Result;
+        delete []Result;
     }
     for (int i = 1 ; i <(int) ToReturn.size() ;i +=2)
         SetUnchecked(ToReturn[i]);

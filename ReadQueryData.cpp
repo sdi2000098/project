@@ -21,7 +21,8 @@ int ReadQueryData(string path){
         file.read((char*)&Magic,sizeof(Magic)); 
         Magic= reverseInt(Magic);
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
-        NumberOfImages= reverseInt(NumberOfImages);
+        //NumberOfImages= reverseInt(NumberOfImages);
+        NumberOfImages = 2;
         QueryNumber = NumberOfImages;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
@@ -56,4 +57,7 @@ int GetQueryNumber(void){
 
 uint8_t *  GetQueryRepresentation(int Position){
     return MyQueryData->GetRepresentation(Position);
+}
+void DeleteQueries(void){
+    delete MyQueryData;
 }
