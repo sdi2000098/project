@@ -6,7 +6,62 @@
 #include <fstream> // For file stream operations
 #define ERROR -1
 
+// Structure to represent a node in the adjacency list
+struct Node {
+    int data;
+    struct Node* next;
+};
 
+// Structure to represent the graph
+struct Graph {
+    int vertices;
+    struct Node** adjList; // Array of adjacency lists
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to create a graph with a given number of vertices
+struct Graph* createGraph(int vertices) {
+    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+    graph->vertices = vertices;
+
+    // Create an array of adjacency lists
+    graph->adjList = (struct Node**)malloc(vertices * sizeof(struct Node*));
+
+    // Initialize each adjacency list as empty by default
+    for (int i = 0; i < vertices; ++i) {
+        graph->adjList[i] = NULL;
+    }
+
+    return graph;
+}
+
+// Function to add an edge to the graph
+void addEdge(struct Graph* graph, int src, int dest) {
+    // Add an edge from src to dest
+    struct Node* newNode = createNode(dest);
+    newNode->next = graph->adjList[src];
+    graph->adjList[src] = newNode;
+}
+
+// Function to print the adjacency list representation of the graph
+void printGraph(struct Graph* graph) {
+    for (int i = 0; i < graph->vertices; ++i) {
+        struct Node* temp = graph->adjList[i];
+        printf("Adjacency list of vertex %d: ", i);
+        while (temp) {
+            printf("%d -> ", temp->data);
+            temp = temp->next;
+        }
+        printf("NULL\n");
+    }
+}
 
 int main(int argc, char* argv[]) {
     const char * outputfileName;
@@ -77,8 +132,11 @@ int main(int argc, char* argv[]) {
 
         vector <double> KNNResult; 
 
+        // Create a graph with 5 vertices
+        struct Graph* graph = createGraph(limit);
+
         for (int i = 0 ; i < limit ; i++){
-            cout << "Query : "<<i<<std::endl;
+           // cout << "Query : "<<i<<std::endl;
 
             KNNResult = MyLsh->KNN(k,GetRepresenation(i));
 
@@ -86,12 +144,13 @@ int main(int argc, char* argv[]) {
                 
                 if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 ){
                     cout << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
-                    cout << "distanceLSH: " << KNNResult[j] <<"\n";
+                    addEdge(graph, i, KNNResult[j+1]);
                 }
                 else
                     cout << "Could not find Nearest neighbor " << j/2 << " using aproximate KNN\n";
             }
         }
+        printGraph(graph);
 
 
     //     std::cout<<"Terminate program? (y/n)\n";
