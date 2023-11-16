@@ -34,6 +34,7 @@
             bool GetChecked(int Position);
             int GetCluster(int Position);
             void SetCluster(int Position,int NewCluster);
+            void SetAllUnchecked(void);
 
         private :
             Image ** AllImages;

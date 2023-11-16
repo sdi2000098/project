@@ -82,3 +82,7 @@ int TrainStore :: GetCluster(int Position){
 void TrainStore :: SetCluster (int Position,int NewCluster){
     AllImages[Position]->SetCluster(NewCluster);
 }
+void TrainStore :: SetAllUnchecked(void){
+    for(int i = 0 ; i<NumberOfImages;i++)
+        AllImages[i]->SetUnchecked();
+}

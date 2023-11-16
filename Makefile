@@ -2,6 +2,9 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -g
 
+# Add the -fopenmp flag for OpenMP support
+CXXFLAGS += -fopenmp
+
 # Source files
 SRCS =  StoreTrainData.cpp ReadTrainData.cpp lshmain.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp
 SRCS2 =  StoreTrainData.cpp ReadTrainData.cpp cube.cpp StoreQueryData.cpp ReadQueryData.cpp RandomProjection.cpp hFunc.cpp
@@ -37,6 +40,7 @@ $(EXEC3): $(OBJS3)
 
 $(EXEC4): $(OBJS4)
 	$(CXX) $(CXXFLAGS) -o $@ $^
+
 # Rule to build object files
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<

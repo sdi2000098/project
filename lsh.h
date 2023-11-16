@@ -19,7 +19,9 @@
             //The neighbours in the vector come in pairs, first is the distance and second position
             //So the nearest neighobur's  distance is ReturnedArray[0] and position ReturnedArray[1]
             double * NearestNeighbour(uint8_t * Query);
+            double * NearestNeighbour(uint8_t * Query,vector <double> * CurrentVector,int chekced);
             vector <double>  KNN(int K,uint8_t * Query);
+            vector <double>  KNN(int K,uint8_t * Query,int checked);
             void Train(void);           //Train lsh based on the dataset that is stored in file StoreTrainData
             LSH(int K, int L);
             ~LSH();

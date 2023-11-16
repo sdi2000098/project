@@ -14,4 +14,5 @@
     void SetCluster(int Position,int NewCluster);
     int GetCluster(int Position);
     void DeleteTrain(void);
+    void SetAllUnchecked(void);
 #endif

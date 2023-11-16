@@ -4,8 +4,10 @@
 #include <cmath>
 #include "lsh.h"
 #include <fstream> // For file stream operations
+#include <omp.h>
 #define ERROR -1
-
+#define KLSH 5
+#define LLSH 5
 // Structure to represent a node in the adjacency list
 struct Node {
     int data;
@@ -14,54 +16,54 @@ struct Node {
 
 // Structure to represent the graph
 struct Graph {
-    int vertices;
-    struct Node** adjList; // Array of adjacency lists
+    int vertices,k;
+    int ** adjList; // Array of adjacency lists
 };
 
 // Function to create a new node
 struct Node* createNode(int data) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = data;
-    newNode->next = NULL;
     return newNode;
 }
 
 // Function to create a graph with a given number of vertices
-struct Graph* createGraph(int vertices) {
+struct Graph* createGraph(int vertices,int NewK) {
+
     struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
     graph->vertices = vertices;
-
+    graph->k = NewK;
     // Create an array of adjacency lists
-    graph->adjList = (struct Node**)malloc(vertices * sizeof(struct Node*));
+    graph->adjList = (int **)malloc(vertices * sizeof(int *));
 
     // Initialize each adjacency list as empty by default
     for (int i = 0; i < vertices; ++i) {
-        graph->adjList[i] = NULL;
+        graph->adjList[i] = (int*)malloc(NewK * sizeof(int));
     }
 
     return graph;
 }
 
 // Function to add an edge to the graph
-void addEdge(struct Graph* graph, int src, int dest) {
+void addEdge(struct Graph* graph, int src, int dest,int Position) {
     // Add an edge from src to dest
-    struct Node* newNode = createNode(dest);
+    /*struct Node* newNode = createNode(dest);
     newNode->next = graph->adjList[src];
-    graph->adjList[src] = newNode;
+    graph->adjList[src] = newNode;*/
+    graph->adjList[src][Position] = dest;
+
 }
 
 // Function to print the adjacency list representation of the graph
 void printGraph(struct Graph* graph) {
     for (int i = 0; i < graph->vertices; ++i) {
-        struct Node* temp = graph->adjList[i];
         printf("Adjacency list of vertex %d: ", i);
-        while (temp) {
-            printf("%d -> ", temp->data);
-            temp = temp->next;
-        }
-        printf("NULL\n");
+        for(int j =0;j<graph->k;j++)
+            printf("%d  ",graph->adjList[i][j]);
+        printf("\n");
     }
 }
+
 
 int main(int argc, char* argv[]) {
     const char * outputfileName;
@@ -70,11 +72,9 @@ int main(int argc, char* argv[]) {
 
 
     //Initialize default values
-    int K = 4;
-    int L = 5;
     
 
-    int k=5;
+    int k=50;
     int E=30;
     double R = 1;
     int N=1;
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
             queryFile = argv[i + 1];
             i++;
         } else if (arg == "-k" && i + 1 < argc) {
-            K = std::stoi(argv[i + 1]);
+            k = std::stoi(argv[i + 1]);
             i++;
         } else if (arg == "-E" && i + 1 < argc) {
             E = std::stoi(argv[i + 1]);
@@ -120,50 +120,45 @@ int main(int argc, char* argv[]) {
         cout << "Please insert path to dataset :\n";
         cin >> inputFile;
     }
-
+    if (std::ifstream(outputfileName)) {
+            std::remove(outputfileName);
+        }
+    outputFile.open(outputfileName, std::ios::app);
+    if (!outputFile.is_open()) {
+        std::cerr << "Error: Could not open the output file." << std::endl;
+        return ERROR;
+    }
     if ( ReadTrainData(inputFile) == ERROR)
         return ERROR;
 
-    // do{
-        LSH * MyLsh = new LSH(K,L);
-        MyLsh->Train();
+    LSH * MyLsh = new LSH(KLSH,LLSH);
+    MyLsh->Train();
 
-        int limit = GetTrainNumber();
-
-        vector <double> KNNResult; 
+    int limit = GetTrainNumber();
+    
+    vector <double> KNNResult; 
 
         // Create a graph with 5 vertices
-        struct Graph* graph = createGraph(limit);
-
-        for (int i = 0 ; i < limit ; i++){
-           // cout << "Query : "<<i<<std::endl;
-
-            KNNResult = MyLsh->KNN(k,GetRepresenation(i));
-
+    struct Graph* graph = createGraph(limit,k);
+    clock_t start = clock(), end;
+    double time;
+    #pragma omp parallel for
+    for (int i = 0 ; i < limit ; i++){
+        fprintf(stderr,"%d\n",i);
+            KNNResult = MyLsh->KNN(k,GetRepresenation(i),i);
             for (int j = 0 ; j < 2*k ; j+=2 ){
                 
-                if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 ){
-                    cout << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
-                    addEdge(graph, i, KNNResult[j+1]);
-                }
+                if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 )
+                    addEdge(graph, i, KNNResult[j+1],j/2);
                 else
-                    cout << "Could not find Nearest neighbor " << j/2 << " using aproximate KNN\n";
+                    addEdge(graph, i, ERROR,j/2);
             }
-        }
-        printGraph(graph);
-
-
-    //     std::cout<<"Terminate program? (y/n)\n";
-    //     std::cin>>answer;
-    //     if (answer=="y")
-    //         exit(0);
-    //     else
-    //     {
-    //         std::cout<<"Give queryfile\n";
-
-    //         std::cin >> queryFile;
-    //     }
-    // } while(answer=="n");
+    }
+    end = clock();
+    time = double(end - start) / double(CLOCKS_PER_SEC);
+    outputFile << "time = " << time << "\n";
+    outputFile.flush();
+    printGraph(graph);
 
     return 0;
 }

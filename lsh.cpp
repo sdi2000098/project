@@ -11,7 +11,7 @@
 //Define some hyperparameters
 
 #define TABLE_SIZE 5
-#define M 20        // Upper bound for M
+#define M 1000        // Upper bound for M
 #define MAXSIZE 1215752202
 #define DIMENSION 784
 #define WINDOW 5
@@ -77,6 +77,35 @@ class Bucket{
                 return ToReturn;
             return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
         }
+        double * InnerNearestNeighbour(uint8_t * Query,int QueryId,double * ToReturn,vector <double> * CurrentVector,int chekced){
+            //Iteretates buckets and returns ToReturn argument
+            if (NextBucket == NULL)
+                return ToReturn;
+            //The Getchecked function is a fucntion of StoreTrainData, 
+            //it indicates whether data point is already included in kNN, if so we dont check it again
+            if (ID == QueryId ){
+                //Simple implementation of slides
+                bool flag = true;
+                for (int i =1 ; i < (int)CurrentVector->size() ; i ++){
+                    if ((int) (*CurrentVector)[i] == position){
+                        flag = false;
+                        break;
+                    }
+                }
+                if (position == chekced)
+                    flag = false;
+                if (flag){
+                    double e = Euclidean(Query,Data,DIMENSION);
+                    if (e < ToReturn[0]){
+                        ToReturn[0] = e;
+                        ToReturn[1] = (double)position;
+                    }
+                }
+            }
+            if (NextBucket == NULL)     //Reached last bucket
+                return ToReturn;
+            return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn,CurrentVector,chekced);
+        }
 
         double * NearestNeighbour(uint8_t * Query, int QueryId){
             //Returns a an array of two elements, array[0] is the Disntance to the nearest neighbor
@@ -88,7 +117,7 @@ class Bucket{
             double * ToReturn = new double[2];
             ToReturn[0] = MAXSIZE;
             ToReturn[1] = -1;
-            if (ID == QueryId){
+            if (ID == QueryId && !GetChecked(position)){
                 ToReturn[0] = Euclidean(Query,Data,DIMENSION);
                 ToReturn[1] = (double)position;
             }
@@ -96,6 +125,36 @@ class Bucket{
                 return ToReturn;
             //Passes pointer to the array that is going to be returned after iteration of all buckets
             return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
+        }
+        double * NearestNeighbour(uint8_t * Query, int QueryId,vector <double> * CurrentVector,int chekced){
+            //Returns a an array of two elements, array[0] is the Disntance to the nearest neighbor
+            //array[1] is the position to the dataset of the nearest neighbor
+            //This function is used only from the first bucket of the cell
+            //If next bucket exists, it calls the InnerNearestNeighbour that iterates the remaining buckets of the cell
+            if (Data == NULL)
+                return NULL;
+            double * ToReturn = new double[2];
+            ToReturn[0] = MAXSIZE;
+            ToReturn[1] = -1;
+            if (ID == QueryId){
+                bool flag = true;
+                for (int i =1 ; i < (int)CurrentVector->size() ; i ++){
+                    if ((int) (*CurrentVector)[i] == position){
+                        flag = false;
+                        break;
+                    }
+                }
+                if (position == chekced)
+                    flag = false;
+                if (flag){
+                    ToReturn[0] = Euclidean(Query,Data,DIMENSION);
+                    ToReturn[1] = (double)position;
+                }
+            }
+            if (NextBucket == NULL)
+                return ToReturn;
+            //Passes pointer to the array that is going to be returned after iteration of all buckets
+            return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn,CurrentVector,chekced);
         }
 
         double * AccurateInnerNearestNeighbour(uint8_t * Query,double * ToReturn){
@@ -225,7 +284,11 @@ class HashTable {
             //Returns aproximate nearest neighbor that is returned by nearest neighbor function of the correct bucket
             return (HashBuckets[ID%TableSize]->NearestNeighbour(Query,ID));
         }
-
+        double *NearestNeighbour(uint8_t * Query,vector <double> * CurrentVector,int chekced){
+            int ID = MyG->FindPosition(Query);
+            //Returns aproximate nearest neighbor that is returned by nearest neighbor function of the correct bucket
+            return (HashBuckets[ID%TableSize]->NearestNeighbour(Query,ID,CurrentVector,chekced));
+        }
         
         double *AccurateNearestNeighbour(uint8_t * Query){
             //Returns accurate nearet neighbor, to do so we get the nearest neighbor of all buckets at hash table
@@ -311,9 +374,33 @@ double * LSH ::NearestNeighbour(uint8_t * Query){
     ToReturn[1]=MinPos;
     return ToReturn; 
 }
+
+double * LSH ::NearestNeighbour(uint8_t * Query,vector <double> * CurrentVector,int chekced){
+    //Returns distance (DoubleArrayReturned[0]) and position (DoubleArrayReturned[1]) of the nearest neighbor
+    //Note that already checked neighbors are not taken into account
+    int  MinPos = -1;
+    double MinSize = (double)MAXSIZE,  *ptr; 
+    for (int i = 0 ; i < L; i++){
+        //Get the NearestNeghbor from all hash table using the correspondin function and store the one with the smallest dist
+        ptr = MyHash[i]->NearestNeighbour(Query,CurrentVector,chekced);
+        if (ptr == NULL)
+            continue;
+        if (ptr[0] < MinSize){
+            MinSize = ptr[0];
+            MinPos = (int)ptr[1];
+        }
+        delete []ptr;
+    }
+    double * ToReturn = new double[2];
+    ToReturn[0]=MinSize;
+    ToReturn[1]=MinPos;
+    return ToReturn; 
+}
+
 vector <double>  LSH ::KNN(int K,uint8_t * Query){
     vector <double> ToReturn;
     double * Result;
+
     for (int i = 0 ; i < K ;i++){
         //Get K nearest neighbors by calling NearestNeighbor K times and each time set as checked the point that was returned
         Result = NearestNeighbour(Query);
@@ -324,7 +411,22 @@ vector <double>  LSH ::KNN(int K,uint8_t * Query){
         delete []Result;
     }
     for (int i = 1 ; i < (int)ToReturn.size() ;i +=2)
-        SetUnchecked(ToReturn[i]);
+        SetUnchecked((int)ToReturn[i]);
+    
+    return ToReturn;
+}
+
+vector <double>  LSH ::KNN(int K,uint8_t * Query,int cheked){
+    vector <double> ToReturn;
+    double * Result;
+    
+    for (int i = 0 ; i < K ;i++){
+        //Get K nearest neighbors by calling NearestNeighbor K times and each time set as checked the point that was returned
+        Result = NearestNeighbour(Query,&ToReturn,cheked);
+        ToReturn.push_back(Result[0]);
+        ToReturn.push_back(Result[1]);
+        delete []Result;
+    }
     
     return ToReturn;
 }
