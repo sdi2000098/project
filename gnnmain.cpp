@@ -5,14 +5,16 @@
 #include "lsh.h"
 #include <fstream> // For file stream operations
 #include <omp.h>
+#include <random>
+#include <algorithm>
 #define ERROR -1
 #define KLSH 5
 #define LLSH 5
-// Structure to represent a node in the adjacency list
-struct Node {
-    int data;
-    struct Node* next;
-};
+// // Structure to represent a node in the adjacency list
+// struct Node {
+//     int data;
+//     struct Node* next;
+// };
 
 // Structure to represent the graph
 struct Graph {
@@ -20,12 +22,12 @@ struct Graph {
     int ** adjList; // Array of adjacency lists
 };
 
-// Function to create a new node
-struct Node* createNode(int data) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = data;
-    return newNode;
-}
+// // Function to create a new node
+// struct Node* createNode(int data) {
+//     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+//     newNode->data = data;
+//     return newNode;
+// }
 
 // Function to create a graph with a given number of vertices
 struct Graph* createGraph(int vertices,int NewK) {
@@ -62,6 +64,43 @@ void printGraph(struct Graph* graph) {
             printf("%d  ",graph->adjList[i][j]);
         printf("\n");
     }
+}
+
+
+
+// Function to perform the GNNS algorithm
+std::vector<int> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E) {
+    std::vector<int> result;
+    vector <int>  S;
+
+    for (int r = 0; r < R; ++r) {
+
+        // Seed the random number generator
+        std::random_device rd;
+        std::mt19937 gen(rd());
+
+        // Generate random x and y coordinates
+        std::uniform_int_distribution<int> distributionX(0, GetTrainNumber());
+        int Yt = distributionX(gen);
+
+        for (int t = 0; t < T; ++t) {
+            // S = S ∪ N(Yt−1, E, G)
+            
+           // N=Eneighbors(graph->adjList[Yt],E);
+            std::vector<int> N(graph->adjList[Yt], graph->adjList[Yt] + E);
+
+            S.insert(S.end(), N.begin(), N.end());
+
+            // Yt = arg minY∈N(Yt−1,E,G) δ(Y, Q)
+            Yt = NearestNeighbor(N, Query);
+        }
+    }
+
+    // Sort the distances in S
+    std::sort(S.begin(), S.end());
+    //Return L points in S with smallest distances.
+
+    return result;
 }
 
 
@@ -136,10 +175,11 @@ int main(int argc, char* argv[]) {
 
     int limit = GetTrainNumber();
     
+
     vector <double> KNNResult; 
 
-        // Create a graph with 5 vertices
     struct Graph* graph = createGraph(limit,k);
+
     clock_t start = clock(), end;
     double time;
     #pragma omp parallel for
@@ -160,6 +200,12 @@ int main(int argc, char* argv[]) {
     outputFile.flush();
     printGraph(graph);
 
+    int limit2 = GetQueryNumber();
+
+    for (int i = 0 ; i < limit ; i++){
+    vector<int> result = GNNS(graph, GetQueryRepresentation(i), R, 50, E);
+    
+    }
     return 0;
 }
 
