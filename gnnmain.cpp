@@ -7,9 +7,11 @@
 #include <omp.h>
 #include <random>
 #include <algorithm>
+#include "hFunc.h"
 #define ERROR -1
 #define KLSH 5
 #define LLSH 5
+#define DIMENSION 784
 // // Structure to represent a node in the adjacency list
 // struct Node {
 //     int data;
@@ -68,6 +70,32 @@ void printGraph(struct Graph* graph) {
 
 
 
+int NearestNeighbor(vector<int> N, uint8_t * Query){
+if (N.empty()) {
+        // Handle the case when the vector is empty
+        std::cerr << "Error: Vector N is empty." << std::endl;
+        return -1; // or any other appropriate value indicating an error
+    }
+
+    int nearestIndex = 0;
+    double minDistance = std::numeric_limits<double>::max(); // Initialize to a large value
+
+    for (size_t i = 0; i < N.size(); i++) {
+        if (N[i]==-1)
+            break;
+        uint8_t* x= GetRepresenation(N[i]);
+        double distance = Euclidean(x, Query, DIMENSION);
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearestIndex = static_cast<int>(i);
+        }
+    }
+
+    return nearestIndex;
+}
+
+
+
 // Function to perform the GNNS algorithm
 std::vector<int> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E) {
     std::vector<int> result;
@@ -88,7 +116,6 @@ std::vector<int> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E
             
            // N=Eneighbors(graph->adjList[Yt],E);
             std::vector<int> N(graph->adjList[Yt], graph->adjList[Yt] + E);
-
             S.insert(S.end(), N.begin(), N.end());
 
             // Yt = arg minY∈N(Yt−1,E,G) δ(Y, Q)
@@ -100,7 +127,8 @@ std::vector<int> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E
     std::sort(S.begin(), S.end());
     //Return L points in S with smallest distances.
 
-    return result;
+    //return result;
+    return S;
 }
 
 
@@ -114,7 +142,7 @@ int main(int argc, char* argv[]) {
     
 
     int k=50;
-    int E=30;
+    int E=3;
     double R = 1;
     int N=1;
 
@@ -174,6 +202,7 @@ int main(int argc, char* argv[]) {
     MyLsh->Train();
 
     int limit = GetTrainNumber();
+
     
 
     vector <double> KNNResult; 
@@ -200,12 +229,24 @@ int main(int argc, char* argv[]) {
     outputFile.flush();
     printGraph(graph);
 
+    if ( ReadQueryData(queryFile) == ERROR)
+        return ERROR;
+
     int limit2 = GetQueryNumber();
 
-    for (int i = 0 ; i < limit ; i++){
-    vector<int> result = GNNS(graph, GetQueryRepresentation(i), R, 50, E);
-    
+    vector<int> result;
+
+    for (int i = 0 ; i < limit2 ; i++){
+    std::vector<int> currentResult = GNNS(graph, GetQueryRepresentation(i), R, 50, E);
+
+    result.insert(result.end(), currentResult.begin(), currentResult.end());
     }
+
+    for (size_t i=0; i<result.size(); i++)
+    {
+        std::cout << result[i] << " ";
+    }
+
     return 0;
 }
 
