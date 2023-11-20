@@ -11,7 +11,7 @@
 //Define some hyperparameters
 
 #define TABLE_SIZE 5
-#define M 1000        // Upper bound for M
+#define M 100        // Upper bound for M
 #define MAXSIZE 1215752202
 #define DIMENSION 784
 #define WINDOW 5
