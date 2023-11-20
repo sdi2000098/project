@@ -12,11 +12,7 @@
 #define KLSH 5
 #define LLSH 5
 #define DIMENSION 784
-// // Structure to represent a node in the adjacency list
-// struct Node {
-//     int data;
-//     struct Node* next;
-// };
+
 
 // Structure to represent the graph
 struct Graph {
@@ -24,12 +20,6 @@ struct Graph {
     int ** adjList; // Array of adjacency lists
 };
 
-// // Function to create a new node
-// struct Node* createNode(int data) {
-//     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-//     newNode->data = data;
-//     return newNode;
-// }
 
 // Function to create a graph with a given number of vertices
 struct Graph* createGraph(int vertices,int NewK) {
@@ -50,12 +40,7 @@ struct Graph* createGraph(int vertices,int NewK) {
 
 // Function to add an edge to the graph
 void addEdge(struct Graph* graph, int src, int dest,int Position) {
-    // Add an edge from src to dest
-    /*struct Node* newNode = createNode(dest);
-    newNode->next = graph->adjList[src];
-    graph->adjList[src] = newNode;*/
     graph->adjList[src][Position] = dest;
-
 }
 
 // Function to print the adjacency list representation of the graph
@@ -77,7 +62,7 @@ if (N.empty()) {
         return -1; // or any other appropriate value indicating an error
     }
 
-    int nearestIndex = 0;
+    int nearestIndex = -1;
     double minDistance = std::numeric_limits<double>::max(); // Initialize to a large value
 
     for (size_t i = 0; i < N.size(); i++) {
@@ -120,6 +105,8 @@ std::vector<int> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E
 
             // Yt = arg minY∈N(Yt−1,E,G) δ(Y, Q)
             Yt = NearestNeighbor(N, Query);
+            if (Yt == -1)
+                break;
         }
     }
 
@@ -237,9 +224,8 @@ int main(int argc, char* argv[]) {
     vector<int> result;
 
     for (int i = 0 ; i < limit2 ; i++){
-    std::vector<int> currentResult = GNNS(graph, GetQueryRepresentation(i), R, 50, E);
-
-    result.insert(result.end(), currentResult.begin(), currentResult.end());
+        std::vector<int> currentResult = GNNS(graph, GetQueryRepresentation(i), R, 50, E);
+        result.insert(result.end(), currentResult.begin(), currentResult.end());
     }
 
     for (size_t i=0; i<result.size(); i++)

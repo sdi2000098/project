@@ -46,9 +46,10 @@ class Bucket{
         void Insert(uint8_t * NewData,int NewID,int NewPosition){
             //Function that inserts a new point to the correct bucket
             //We need to reach the end of the linked list, create a new bucket and link it to the prev bucket
-            if (NextBucket == NULL)     //Reached the end
+            if (NextBucket == NULL)    //Reached the end
                 NextBucket = new Bucket();
             if (ID == -1){      //By default new buckets have ID = -1, so if ID ==-1 this is the bucket to insert to
+                
                 //The reason we dont just use a constructor with data,id,pos parametres, is because the first bucket
                 //will be created from hash table's constructor and will be empty, so the first point will go to that bucket
                 //So we need a way to identify the empty buckets
@@ -238,7 +239,10 @@ class gFunction{
             for (int i = 0 ; i < K ; i++){
                 temp = r[i] % M;
                 temp2 = HashFunctions[i]->operator()(p) %M;
-                accumulator += (temp * temp2) % M;
+                long long int ToAdd = (long long int)temp * (long long int)temp2;
+                ToAdd %=M;
+
+                accumulator += ToAdd;
             }
             return accumulator % M;
         }
@@ -269,9 +273,10 @@ class HashTable {
         }
         void Insert(uint8_t * NewData,int position){
             //Calculate Data's id, get modulo table size and insert to the correspodning bucket
-            int ID = MyG->FindPosition(NewData);
             
+            int ID = MyG->FindPosition(NewData);
             HashBuckets[ID%TABLE_SIZE]->Insert(NewData,ID,position);
+            
         }
         ~HashTable(){
             for(int i =0;i<TableSize;i++)
@@ -285,9 +290,18 @@ class HashTable {
             return (HashBuckets[ID%TableSize]->NearestNeighbour(Query,ID));
         }
         double *NearestNeighbour(uint8_t * Query,vector <double> * CurrentVector,int chekced){
-            int ID = MyG->FindPosition(Query);
+            int ID;
+            
+        
+            ID = MyG->FindPosition(Query);
+
             //Returns aproximate nearest neighbor that is returned by nearest neighbor function of the correct bucket
-            return (HashBuckets[ID%TableSize]->NearestNeighbour(Query,ID,CurrentVector,chekced));
+            double * ToReturn;
+            #pragma omp critical
+            {
+                ToReturn = HashBuckets[ID%TableSize]->NearestNeighbour(Query,ID,CurrentVector,chekced);
+            }
+            return (ToReturn);
         }
         
         double *AccurateNearestNeighbour(uint8_t * Query){
@@ -382,7 +396,8 @@ double * LSH ::NearestNeighbour(uint8_t * Query,vector <double> * CurrentVector,
     double MinSize = (double)MAXSIZE,  *ptr; 
     for (int i = 0 ; i < L; i++){
         //Get the NearestNeghbor from all hash table using the correspondin function and store the one with the smallest dist
-        ptr = MyHash[i]->NearestNeighbour(Query,CurrentVector,chekced);
+            ptr = MyHash[i]->NearestNeighbour(Query,CurrentVector,chekced);
+        
         if (ptr == NULL)
             continue;
         if (ptr[0] < MinSize){
@@ -400,7 +415,6 @@ double * LSH ::NearestNeighbour(uint8_t * Query,vector <double> * CurrentVector,
 vector <double>  LSH ::KNN(int K,uint8_t * Query){
     vector <double> ToReturn;
     double * Result;
-
     for (int i = 0 ; i < K ;i++){
         //Get K nearest neighbors by calling NearestNeighbor K times and each time set as checked the point that was returned
         Result = NearestNeighbour(Query);
@@ -410,8 +424,11 @@ vector <double>  LSH ::KNN(int K,uint8_t * Query){
         ToReturn.push_back(Result[1]);
         delete []Result;
     }
-    for (int i = 1 ; i < (int)ToReturn.size() ;i +=2)
-        SetUnchecked((int)ToReturn[i]);
+    
+    for (int i = 1 ; i < (int)ToReturn.size() ;i +=2){
+        if ((int)ToReturn[i] != -1)
+            SetUnchecked((int)ToReturn[i]);
+    }
     
     return ToReturn;
 }
@@ -422,6 +439,7 @@ vector <double>  LSH ::KNN(int K,uint8_t * Query,int cheked){
     
     for (int i = 0 ; i < K ;i++){
         //Get K nearest neighbors by calling NearestNeighbor K times and each time set as checked the point that was returned
+       
         Result = NearestNeighbour(Query,&ToReturn,cheked);
         ToReturn.push_back(Result[0]);
         ToReturn.push_back(Result[1]);

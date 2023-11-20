@@ -97,12 +97,15 @@ int main(int argc, char* argv[]) {
             outputFile << "Query : "<<i<<std::endl;
 
             start = clock();
+            
             KNNResult = MyLsh->KNN(N,GetQueryRepresentation(i));
+            
             end = clock();
             KNNTIme += double(end - start) / double(CLOCKS_PER_SEC);
 
             start = clock();
             AcuurateKNNReult = MyLsh->AccurateKNN(N,GetQueryRepresentation(i));
+
             end = clock();
             AccurateKNNTime += double(end - start) / double(CLOCKS_PER_SEC);
 
