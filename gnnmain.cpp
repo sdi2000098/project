@@ -12,12 +12,13 @@
 #define KLSH 5
 #define LLSH 5
 #define DIMENSION 784
-
+#define POSITION 0
+#define DISTANCE 1
 
 // Structure to represent the graph
 struct Graph {
     int vertices,k;
-    int ** adjList; // Array of adjacency lists
+    double *** adjList; // Array of adjacency lists
 };
 
 
@@ -28,11 +29,13 @@ struct Graph* createGraph(int vertices,int NewK) {
     graph->vertices = vertices;
     graph->k = NewK;
     // Create an array of adjacency lists
-    graph->adjList = (int **)malloc(vertices * sizeof(int *));
+    graph->adjList = (double ***)malloc(vertices * sizeof(int **));
 
     // Initialize each adjacency list as empty by default
     for (int i = 0; i < vertices; ++i) {
-        graph->adjList[i] = (int*)malloc(NewK * sizeof(int));
+        graph->adjList[i] = (double**)malloc(NewK * sizeof(double*));
+        for (int j = 0 ; j < NewK ; j ++)
+            graph->adjList[i][j] = (double*)malloc(sizeof(int)*2);
     }
 
     return graph;
@@ -40,7 +43,7 @@ struct Graph* createGraph(int vertices,int NewK) {
 
 // Function to add an edge to the graph
 void addEdge(struct Graph* graph, int src, int dest,int Position) {
-    graph->adjList[src][Position] = dest;
+    graph->adjList[src][Position][POSITION] = (double)dest;
 }
 
 // Function to print the adjacency list representation of the graph
@@ -48,31 +51,43 @@ void printGraph(struct Graph* graph) {
     for (int i = 0; i < graph->vertices; ++i) {
         printf("Adjacency list of vertex %d: ", i);
         for(int j =0;j<graph->k;j++)
-            printf("%d  ",graph->adjList[i][j]);
+            printf("%d (%f) ",(int)graph->adjList[i][j][POSITION],graph->adjList[i][j][DISTANCE]);
         printf("\n");
     }
 }
 
 
 
-int NearestNeighbor(vector<int> N, uint8_t * Query){
-if (N.empty()) {
+int NearestNeighbor(vector<double *> *N, uint8_t * Query, vector <double *> * S){
+    if ((*N).empty()) {
         // Handle the case when the vector is empty
-        std::cerr << "Error: Vector N is empty." << std::endl;
+        cerr << "Error: Vector N is empty." << endl;
         return -1; // or any other appropriate value indicating an error
     }
 
     int nearestIndex = -1;
-    double minDistance = std::numeric_limits<double>::max(); // Initialize to a large value
+    double minDistance = numeric_limits<double>::max(); // Initialize to a large value
 
-    for (size_t i = 0; i < N.size(); i++) {
-        if (N[i]==-1)
+    for (size_t i = 0; i < N->size(); i++) {
+        if ((*N)[i]==NULL)
             break;
-        uint8_t* x= GetRepresenation(N[i]);
+        bool flag = false;
+        for (int j = 0 ; j < (int)S->size() ; j ++ ){
+            if ((*S)[j][POSITION] == (*N)[i][POSITION]){
+                flag = true;
+                break;
+            }
+        }
+        if (flag)
+            continue;
+        
+        uint8_t* x= GetRepresenation((*N)[i][POSITION]);
         double distance = Euclidean(x, Query, DIMENSION);
-        if (distance < minDistance) {
-            minDistance = distance;
-            nearestIndex = static_cast<int>(i);
+        (*S).push_back((*N)[i]);
+        (*N)[i][DISTANCE] = distance;
+        if ((*N)[i][DISTANCE] < minDistance) {
+            minDistance = (*N)[i][DISTANCE];
+            nearestIndex = (int)(*N)[i][POSITION];
         }
     }
 
@@ -80,63 +95,62 @@ if (N.empty()) {
 }
 
 
-
+bool compareDistances(const double* a, const double* b) {
+    return a[DISTANCE] < b[DISTANCE];
+}
 // Function to perform the GNNS algorithm
-std::vector<int> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E) {
-    std::vector<int> result;
-    vector <int>  S;
-
+vector<double *> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E,int L) {
+    vector <double *>  S;
+    
     for (int r = 0; r < R; ++r) {
 
         // Seed the random number generator
-        std::random_device rd;
-        std::mt19937 gen(rd());
+        random_device rd;
+        mt19937 gen(rd());
 
         // Generate random x and y coordinates
-        std::uniform_int_distribution<int> distributionX(0, GetTrainNumber());
+        uniform_int_distribution<int> distributionX(0, GetTrainNumber());
         int Yt = distributionX(gen);
-
+        
         for (int t = 0; t < T; ++t) {
             // S = S ∪ N(Yt−1, E, G)
-            
+            vector<double *> N(graph->adjList[Yt], graph->adjList[Yt] + E);
+            Yt = NearestNeighbor(&N, Query,&S);
            // N=Eneighbors(graph->adjList[Yt],E);
-            std::vector<int> N(graph->adjList[Yt], graph->adjList[Yt] + E);
-            S.insert(S.end(), N.begin(), N.end());
-
             // Yt = arg minY∈N(Yt−1,E,G) δ(Y, Q)
-            Yt = NearestNeighbor(N, Query);
+            
             if (Yt == -1)
-                break;
+                continue;
         }
     }
-
     // Sort the distances in S
-    std::sort(S.begin(), S.end());
+    sort(S.begin(), S.end(),compareDistances);
+    
     //Return L points in S with smallest distances.
+    vector <double * > result(S.begin(), S.begin() + L);
 
-    //return result;
-    return S;
+    return result;
 }
 
 
 int main(int argc, char* argv[]) {
     const char * outputfileName;
-    std::ofstream outputFile;
-    std::string inputFile , queryFile, answer;
+    ofstream outputFile;
+    string inputFile , queryFile, answer;
 
 
     //Initialize default values
     
 
     int k=50;
-    int E=3;
+    int E=30;
     double R = 1;
-    int N=1;
+    int N=5;
 
 
 
    for (int i = 1; i < argc; i++) {
-        std::string arg = argv[i];
+        string arg = argv[i];
         //Check for flags and change values if needed
         if (arg == "-d" && i + 1 < argc) {
             inputFile = argv[i + 1];
@@ -145,16 +159,16 @@ int main(int argc, char* argv[]) {
             queryFile = argv[i + 1];
             i++;
         } else if (arg == "-k" && i + 1 < argc) {
-            k = std::stoi(argv[i + 1]);
+            k = stoi(argv[i + 1]);
             i++;
         } else if (arg == "-E" && i + 1 < argc) {
-            E = std::stoi(argv[i + 1]);
+            E = stoi(argv[i + 1]);
             i++;
         } else if (arg == "-R" && i + 1 < argc) {
-            R = std::stoi(argv[i + 1]);
+            R = stoi(argv[i + 1]);
             i++;
         } else if (arg == "-N" && i + 1 < argc) {
-            N = std::stoi(argv[i + 1]);
+            N = stoi(argv[i + 1]);
             i++;
         } else if (arg == "-o" && i + 1 < argc) {
             outputfileName = argv[i + 1];
@@ -174,12 +188,12 @@ int main(int argc, char* argv[]) {
         cout << "Please insert path to dataset :\n";
         cin >> inputFile;
     }
-    if (std::ifstream(outputfileName)) {
-            std::remove(outputfileName);
+    if (ifstream(outputfileName)) {
+            remove(outputfileName);
         }
-    outputFile.open(outputfileName, std::ios::app);
+    outputFile.open(outputfileName, ios::app);
     if (!outputFile.is_open()) {
-        std::cerr << "Error: Could not open the output file." << std::endl;
+        cerr << "Error: Could not open the output file." << endl;
         return ERROR;
     }
     if ( ReadTrainData(inputFile) == ERROR)
@@ -200,37 +214,33 @@ int main(int argc, char* argv[]) {
     double time;
     #pragma omp parallel for
     for (int i = 0 ; i < limit ; i++){
-        fprintf(stderr,"%d\n",i);
             KNNResult = MyLsh->KNN(k,GetRepresenation(i),i);
             for (int j = 0 ; j < 2*k ; j+=2 ){
                 
                 if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 )
-                    addEdge(graph, i, KNNResult[j+1],j/2);
+                    addEdge(graph, i,(int) KNNResult[j+1],j/2);
                 else
                     addEdge(graph, i, ERROR,j/2);
             }
     }
     end = clock();
     time = double(end - start) / double(CLOCKS_PER_SEC);
-    outputFile << "time = " << time << "\n";
-    outputFile.flush();
-    printGraph(graph);
+    //printGraph(graph);
 
     if ( ReadQueryData(queryFile) == ERROR)
         return ERROR;
 
-    int limit2 = GetQueryNumber();
-
-    vector<int> result;
+    //int limit2 = GetQueryNumber();
+    int limit2 = 5;
 
     for (int i = 0 ; i < limit2 ; i++){
-        std::vector<int> currentResult = GNNS(graph, GetQueryRepresentation(i), R, 50, E);
-        result.insert(result.end(), currentResult.begin(), currentResult.end());
-    }
-
-    for (size_t i=0; i<result.size(); i++)
-    {
-        std::cout << result[i] << " ";
+        vector<double *> currentResult = GNNS(graph, GetQueryRepresentation(i), R, 50, E,N);
+        outputFile << "Query : " << i <<"\n";
+        for (int j = 0 ; j < (int)currentResult.size();j++){
+            outputFile << "Nearest neighbor-" << j+1 << " : " << currentResult[j][POSITION] << "\n";
+            outputFile << "distanceApproximate : " << currentResult[j][DISTANCE] <<"\n";
+        }
+        outputFile << "\n";
     }
 
     return 0;
