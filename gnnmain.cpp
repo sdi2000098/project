@@ -56,6 +56,33 @@ void printGraph(struct Graph* graph) {
     }
 }
 
+double * FindTrue(uint8_t * Query,int N){
+    double * ToReturn = new double [N];
+    for (int n = 0 ; n < N; n++){
+
+        double minDistance = numeric_limits<double>::max();
+        for (int i = 0 ; i < GetTrainNumber() ;i ++){
+            double e = Euclidean(GetRepresenation(i),Query,DIMENSION);
+            if ( e < minDistance){
+                bool flag = false;
+                for (int j = 0 ; j < n ; j++){
+                    if (ToReturn[j] == e){
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag)
+                    continue;
+                minDistance = e ;
+            }
+        }
+        ToReturn[n] = minDistance;
+
+    }
+    return ToReturn;
+
+
+}
 
 
 int NearestNeighbor(vector<double *> *N, uint8_t * Query, vector <double *> * S){
@@ -210,8 +237,6 @@ int main(int argc, char* argv[]) {
 
     struct Graph* graph = createGraph(limit,k);
 
-    clock_t start = clock(), end;
-    double time;
     #pragma omp parallel for
     for (int i = 0 ; i < limit ; i++){
             KNNResult = MyLsh->KNN(k,GetRepresenation(i),i);
@@ -223,26 +248,35 @@ int main(int argc, char* argv[]) {
                     addEdge(graph, i, ERROR,j/2);
             }
     }
-    end = clock();
-    time = double(end - start) / double(CLOCKS_PER_SEC);
-    //printGraph(graph);
 
     if ( ReadQueryData(queryFile) == ERROR)
         return ERROR;
 
     //int limit2 = GetQueryNumber();
     int limit2 = 5;
-
+    clock_t start, end;
+    double GNNtime ,AccurateTime ;
     for (int i = 0 ; i < limit2 ; i++){
+        start = clock();
         vector<double *> currentResult = GNNS(graph, GetQueryRepresentation(i), R, 50, E,N);
+        end = clock();
+        GNNtime = double(end - start) / double(CLOCKS_PER_SEC);
+
+        start = clock();
+        double * TrueNeighbor = FindTrue(GetQueryRepresentation(i),N);
+        end = clock();
+        AccurateTime = double(end - start) / double(CLOCKS_PER_SEC);
+
         outputFile << "Query : " << i <<"\n";
         for (int j = 0 ; j < (int)currentResult.size();j++){
             outputFile << "Nearest neighbor-" << j+1 << " : " << currentResult[j][POSITION] << "\n";
             outputFile << "distanceApproximate : " << currentResult[j][DISTANCE] <<"\n";
+            outputFile << "distanceTrue : " << TrueNeighbor[j] <<"\n";
         }
-        outputFile << "\n";
+        outputFile << "tAverageApproximate : " << GNNtime <<"\n";
+        outputFile << "tAverageTrue : " << AccurateTime << "\n\n";
+        outputFile << "------------------------------------------------\n";
     }
 
     return 0;
 }
-
