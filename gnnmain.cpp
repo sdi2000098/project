@@ -82,8 +82,6 @@ double * FindTrue(uint8_t * Query,int N){
 
     }
     return ToReturn;
-
-
 }
 
 
