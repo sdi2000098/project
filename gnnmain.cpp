@@ -29,13 +29,15 @@ struct Graph* createGraph(int vertices,int NewK) {
     graph->vertices = vertices;
     graph->k = NewK;
     // Create an array of adjacency lists
-    graph->adjList = (double ***)malloc(vertices * sizeof(int **));
+    graph->adjList = (double ***)malloc(vertices * sizeof(double **));
 
     // Initialize each adjacency list as empty by default
     for (int i = 0; i < vertices; ++i) {
         graph->adjList[i] = (double**)malloc(NewK * sizeof(double*));
-        for (int j = 0 ; j < NewK ; j ++)
-            graph->adjList[i][j] = (double*)malloc(sizeof(int)*2);
+        for (int j = 0 ; j < NewK ; j ++){
+            graph->adjList[i][j] = (double*)malloc(sizeof(double)*2);
+             graph->adjList[i][j][POSITION] = ERROR;
+        }
     }
 
     return graph;
@@ -51,7 +53,7 @@ void printGraph(struct Graph* graph) {
     for (int i = 0; i < graph->vertices; ++i) {
         printf("Adjacency list of vertex %d: ", i);
         for(int j =0;j<graph->k;j++)
-            printf("%d (%f) ",(int)graph->adjList[i][j][POSITION],graph->adjList[i][j][DISTANCE]);
+            printf("%d ",(int)graph->adjList[i][j][POSITION]);
         printf("\n");
     }
 }
@@ -86,17 +88,18 @@ double * FindTrue(uint8_t * Query,int N){
 
 
 int NearestNeighbor(vector<double *> *N, uint8_t * Query, vector <double *> * S){
+    
     if ((*N).empty()) {
         // Handle the case when the vector is empty
         cerr << "Error: Vector N is empty." << endl;
         return -1; // or any other appropriate value indicating an error
     }
-
+    
     int nearestIndex = -1;
     double minDistance = numeric_limits<double>::max(); // Initialize to a large value
-
+    
     for (size_t i = 0; i < N->size(); i++) {
-        if ((*N)[i]==NULL)
+        if ((*N)[i][POSITION]==ERROR)
             break;
         bool flag = false;
         for (int j = 0 ; j < (int)S->size() ; j ++ ){
@@ -117,6 +120,7 @@ int NearestNeighbor(vector<double *> *N, uint8_t * Query, vector <double *> * S)
             nearestIndex = (int)(*N)[i][POSITION];
         }
     }
+    
 
     return nearestIndex;
 }
@@ -128,7 +132,6 @@ bool compareDistances(const double* a, const double* b) {
 // Function to perform the GNNS algorithm
 vector<double *> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E,int L) {
     vector <double *>  S;
-    
     for (int r = 0; r < R; ++r) {
 
         // Seed the random number generator
@@ -150,6 +153,7 @@ vector<double *> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E
                 continue;
         }
     }
+     
     // Sort the distances in S
     sort(S.begin(), S.end(),compareDistances);
     
@@ -261,18 +265,30 @@ int main(int argc, char* argv[]) {
         vector<double *> currentResult = GNNS(graph, GetQueryRepresentation(i), R, 50, E,N);
         end = clock();
         GNNtime = double(end - start) / double(CLOCKS_PER_SEC);
-
+        
         start = clock();
         double * TrueNeighbor = FindTrue(GetQueryRepresentation(i),N);
         end = clock();
         AccurateTime = double(end - start) / double(CLOCKS_PER_SEC);
 
-        outputFile << "Query : " << i <<"\n";
+        
+
         for (int j = 0 ; j < (int)currentResult.size();j++){
+            if (currentResult[j][POSITION] == ERROR){
+                outputFile << "Could not fine approximate nearest neighbor" << j  <<"\n";
+                continue;
+            }
+            if (TrueNeighbor[j] == NULL){
+                outputFile << "Could not fine accuate nearest neighbor" << j  <<"\n";
+                continue;
+            }
             outputFile << "Nearest neighbor-" << j+1 << " : " << currentResult[j][POSITION] << "\n";
+            
             outputFile << "distanceApproximate : " << currentResult[j][DISTANCE] <<"\n";
+            
             outputFile << "distanceTrue : " << TrueNeighbor[j] <<"\n";
         }
+        
         outputFile << "tAverageApproximate : " << GNNtime <<"\n";
         outputFile << "tAverageTrue : " << AccurateTime << "\n\n";
         outputFile << "------------------------------------------------\n";

@@ -1,6 +1,6 @@
 # Compiler and compiler flags
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -g
+CXXFLAGS = -std=c++11 -Wall -g -O3
 
 # Add the -fopenmp flag for OpenMP support
 CXXFLAGS += -fopenmp
