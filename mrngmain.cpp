@@ -70,12 +70,44 @@ double * FindTrue(uint8_t * Query,int N){
     return ToReturn;
 }
 
+bool compareDistances(const double* a, const double* b) {
+    return a[DISTANCE] < b[DISTANCE];
+}
+#define CHECKED 2
 vector <double *> GenericGraphSearch(Graph * graph,int p, uint8_t * q,int L,int N){
     vector <double *> R;
-    double * ToPush = new double[2];
+    double * ToPush = new double[3];
     ToPush[POSITION] = p;
     ToPush[DISTANCE] = Euclidean(GetRepresenation(p),q,DIMENSION);
-    
+    ToPush[CHECKED] = 0;
+    R.push_back(ToPush);
+    for (int i = 1 ; i < L ; i++){
+        for (p = 0;p<(int)R.size();p++)
+            if (R[p][CHECKED] == 0)
+                break;
+        R[p][CHECKED] = 1;
+        //R[p][POSITION] position in dataser
+        for (int j = 0 ; j < EdgesNumber(graph,R[p][POSITION]);j++){
+            bool flag = true;
+            double * N = GetEdge(graph,R[p][POSITION],j);
+            for (int k = 0 ; k < (int)R.size() ; k++){
+                if (R[k][POSITION] == N[POSITION]){
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag){
+                ToPush = new double[3];
+                ToPush[POSITION] = N[POSITION];
+                ToPush[DISTANCE] = Euclidean(GetRepresenation(N[POSITION]),q,DIMENSION);
+                ToPush[CHECKED] = 0;
+                R.push_back(ToPush);
+            }
+            sort(R.begin(),R.end(),compareDistances);
+        }
+    }
+    vector <double *> result(R.begin(),R.begin()+N);
+    return result;
 }
 
 
@@ -231,7 +263,7 @@ int main (int argc, char* argv[]){
                 outputFile << "Could not fine approximate nearest neighbor" << j  <<"\n";
                 continue;
             }
-            if (TrueNeighbor[j] == NULL){
+            if (TrueNeighbor[j] == ERROR){
                 outputFile << "Could not fine accuate nearest neighbor" << j  <<"\n";
                 continue;
             }

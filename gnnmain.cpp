@@ -276,7 +276,7 @@ int main(int argc, char* argv[]) {
                 outputFile << "Could not fine approximate nearest neighbor" << j  <<"\n";
                 continue;
             }
-            if (TrueNeighbor[j] == NULL){
+            if (TrueNeighbor[j] == ERROR){
                 outputFile << "Could not fine accuate nearest neighbor" << j  <<"\n";
                 continue;
             }
