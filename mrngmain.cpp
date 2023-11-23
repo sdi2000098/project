@@ -226,7 +226,7 @@ int main (int argc, char* argv[]){
     for (int i = 0 ;i<limit;i++){
         uint8_t * temp = GetRepresenation(i);
         for (int j = 0 ; j < DIMENSION;j++)
-            Centroid[j]+=temp[j];
+            Centroid[j]+=temp[j]/limit;
     }
     uint8_t * BytesCentroid = new uint8_t[DIMENSION];
     for (int i = 0 ; i < DIMENSION;i++){
