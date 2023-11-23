@@ -202,7 +202,7 @@ int main (int argc, char* argv[]){
                     flag = false;
                     break;
                 }
-                double pq = Euclidean(GetRepresenation((int)Rp[q]),GetRepresenation(p),DIMENSION);
+                double pq=Rp[q-1];
                 double * Neighbor = GetEdge(graph,p,r);
                 double pr = Neighbor[DISTANCE];
                 double qr = Euclidean(GetRepresenation((int)Rp[q]),GetRepresenation(Neighbor[POSITION]),DIMENSION);
