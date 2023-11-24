@@ -2,15 +2,13 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -g -O3
 
-# Add the -fopenmp flag for OpenMP support
-CXXFLAGS += -fopenmp
 
 # Source files
 SRCS =  StoreTrainData.cpp ReadTrainData.cpp lshmain.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp
 SRCS2 =  StoreTrainData.cpp ReadTrainData.cpp cube.cpp StoreQueryData.cpp ReadQueryData.cpp RandomProjection.cpp hFunc.cpp
 SRCS3 =  StoreTrainData.cpp ReadTrainData.cpp hFunc.cpp  lsh.cpp RandomProjection.cpp kmeans.cpp KMeansMain.cpp 
-SRCS4 =  StoreTrainData.cpp ReadTrainData.cpp gnnmain.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp 
-SRCS5 =  StoreTrainData.cpp ReadTrainData.cpp mrngmain.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp 
+SRCS4 =  StoreTrainData.cpp ReadTrainData.cpp gnnmain.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp gnn.cpp
+SRCS5 =  StoreTrainData.cpp ReadTrainData.cpp mrngmain.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp mrng.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
@@ -53,6 +51,6 @@ $(EXEC5): $(OBJS5)
 
 # Clean target to remove object files and the executable
 clean:
-	rm -f $(OBJS) $(EXEC) $(OBJS2) $(EXEC2) $(OBJS3) $(EXEC3) $(EXEC4) $(OBJS4) $(OBJS5) 
+	rm -f $(OBJS) $(EXEC) $(OBJS2) $(EXEC2) $(OBJS3) $(EXEC3) $(EXEC4) $(OBJS4) $(OBJS5) $(EXEC5)
 
 .PHONY: all clean

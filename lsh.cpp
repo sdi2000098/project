@@ -297,10 +297,10 @@ class HashTable {
 
             //Returns aproximate nearest neighbor that is returned by nearest neighbor function of the correct bucket
             double * ToReturn;
-            #pragma omp critical
-            {
-                ToReturn = HashBuckets[ID%TableSize]->NearestNeighbour(Query,ID,CurrentVector,chekced);
-            }
+
+            
+            ToReturn = HashBuckets[ID%TableSize]->NearestNeighbour(Query,ID,CurrentVector,chekced);
+            
             return (ToReturn);
         }
         
