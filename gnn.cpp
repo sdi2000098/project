@@ -1,16 +1,15 @@
 #include "gnn.h"
 
 // Structure to represent the graph
-struct Graph {
+struct GraphGNN {
     int vertices,k;
     double *** adjList; // Array of adjacency lists
 };
 
-
 // Function to create a graph with a given number of vertices
-struct Graph* createGraph(int vertices,int NewK) {
+struct GraphGNN* createGraphGNN(int vertices,int NewK) {
 
-    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+    struct GraphGNN* graph = (struct GraphGNN*)malloc(sizeof(struct GraphGNN));
     graph->vertices = vertices;
     graph->k = NewK;
     // Create an array of adjacency lists
@@ -30,12 +29,12 @@ struct Graph* createGraph(int vertices,int NewK) {
 }
 
 // Function to add an edge to the graph
-void addEdge(struct Graph* graph, int src, int dest,int Position) {
+void addEdge(struct GraphGNN* graph, int src, int dest,int Position) {
     graph->adjList[src][Position][POSITION] = (double)dest;
 }
 
 // Function to print the adjacency list representation of the graph
-void printGraph(struct Graph* graph) {
+void printGraph(struct GraphGNN* graph) {
     for (int i = 0; i < graph->vertices; ++i) {
         printf("Adjacency list of vertex %d: ", i);
         for(int j =0;j<graph->k;j++)
@@ -114,7 +113,7 @@ bool compareDistances(const double* a, const double* b) {
     return a[DISTANCE] < b[DISTANCE];
 }
 // Function to perform the GNNS algorithm
-vector<double *> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E,int L) {
+vector<double *> GNNS(struct GraphGNN * graph, uint8_t * Query, int R, int T, int E,int L) {
     vector <double *>  S;
     for (int r = 0; r < R; ++r) {
 
@@ -147,7 +146,7 @@ vector<double *> GNNS(struct Graph * graph, uint8_t * Query, int R, int T, int E
     return result;
 }
 
-void CreateGnn(Graph * graph,int k){
+void CreateGnn(GraphGNN * graph,int k){
     LSH * MyLsh = new LSH(KLSH,LLSH);
     MyLsh->Train();
     int limit = GetTrainNumber();
@@ -165,7 +164,7 @@ void CreateGnn(Graph * graph,int k){
     delete MyLsh;
 }
 
-void DeleteGraph(Graph *graph){
+void DeleteGraph(GraphGNN *graph){
     for (int i = 0 ; i < graph->vertices;i++){
         for (int j = 0 ; j < graph->k;j++)
             free(graph->adjList[i][j]);

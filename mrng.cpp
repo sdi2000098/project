@@ -1,27 +1,27 @@
 #include "mrng.h"
 
-struct Graph {
+struct GraphMRNG {
     int vertices;
     vector <double *> * adjList; // Array of adjacency lists
 };
-struct Graph* createGraph(int vertices) {
+struct GraphMRNG* createGraphMRNG(int vertices) {
 
-    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+    struct GraphMRNG* graph = (struct GraphMRNG*)malloc(sizeof(struct GraphMRNG));
     graph->vertices = vertices;
 
     graph->adjList = new vector <double *> [vertices];
     return graph;
 }
-void addEdge(struct Graph* graph, int src, double * NewNeighbor) {
+void addEdge(struct GraphMRNG* graph, int src, double * NewNeighbor) {
     graph->adjList[src].push_back(NewNeighbor);
 }
-double * GetEdge(struct Graph* graph, int src,int Position){
+double * GetEdge(struct GraphMRNG* graph, int src,int Position){
     return graph->adjList[src][Position];
 }
-int EdgesNumber(struct Graph* graph, int src){
+int EdgesNumber(struct GraphMRNG* graph, int src){
     return (int)graph->adjList[src].size();
 }
-void PrintGraph(Graph * graph){
+void PrintGraph(GraphMRNG * graph){
     for (int i = 0 ; i < graph->vertices;i++){
         cout << "Adjacency list for " << i << " : ";
         for (int j = 0; j < (int)graph->adjList[i].size() ; j++)
@@ -29,37 +29,11 @@ void PrintGraph(Graph * graph){
     }
 }
 
-double * FindTrue(uint8_t * Query,int N){
-    double * ToReturn = new double [N];
-    for (int n = 0 ; n < N; n++){
-
-        double minDistance = numeric_limits<double>::max();
-        for (int i = 0 ; i < GetTrainNumber() ;i ++){
-            double e = Euclidean(GetRepresenation(i),Query,DIMENSION);
-            if ( e < minDistance){
-                bool flag = false;
-                for (int j = 0 ; j < n ; j++){
-                    if (ToReturn[j] == e){
-                        flag = true;
-                        break;
-                    }
-                }
-                if (flag)
-                    continue;
-                minDistance = e ;
-            }
-        }
-        ToReturn[n] = minDistance;
-
-    }
-    return ToReturn;
-}
-
-bool compareDistances(const double* a, const double* b) {
+bool compareDistances2(const double* a, const double* b) {
     return a[DISTANCE] < b[DISTANCE];
 }
 
-vector <double *> GenericGraphSearch(Graph * graph,int p, uint8_t * q,int L,int N){
+vector <double *> GenericGraphSearch(GraphMRNG * graph,int p, uint8_t * q,int L,int N){
     vector <double *> R;
     double * ToPush = new double[3];
     ToPush[POSITION] = p;
@@ -88,7 +62,7 @@ vector <double *> GenericGraphSearch(Graph * graph,int p, uint8_t * q,int L,int 
                 ToPush[CHECKED] = 0;
                 R.push_back(ToPush);
             }
-            sort(R.begin(),R.end(),compareDistances);
+            sort(R.begin(),R.end(),compareDistances2);
         }
     }
     for (size_t i = N; i < R.size(); ++i) {
@@ -99,7 +73,7 @@ vector <double *> GenericGraphSearch(Graph * graph,int p, uint8_t * q,int L,int 
 }
 
 
-void CreateMrng(Graph * graph){
+void CreateMrng(GraphMRNG * graph){
     int j;
     int limit = GetTrainNumber();
     LSH * MyLsh = new LSH(KLSH,LLSH);
@@ -181,7 +155,7 @@ int FindNavigating(void){
     return Navigating;
 }
 
-void DeleteGraph(Graph *graph){
+void DeleteGraph(GraphMRNG *graph){
     for (int i = 0 ; i < graph->vertices;i++){
         for (int j = 0 ; j < (int)graph->adjList[i].size();j++)
             delete [] graph->adjList[i][j];

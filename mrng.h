@@ -19,15 +19,14 @@
     #include "lsh.h"
     using namespace std;
 
-    struct Graph;
-    struct Graph* createGraph(int vertices);
-    void addEdge(struct Graph* graph, int src, double * NewNeighbor);
-    double * GetEdge(struct Graph* graph, int src,int Position);
-    int EdgesNumber(struct Graph* graph, int src);
-    void PrintGraph(Graph * graph);
-    double * FindTrue(uint8_t * Query,int N);
-    vector <double *> GenericGraphSearch(Graph * graph,int p, uint8_t * q,int L,int N);
-    void CreateMrng(Graph * graph);
+    struct GraphMRNG;
+    struct GraphMRNG* createGraphMRNG(int vertices);
+    void addEdge(struct GraphMRNG* graph, int src, double * NewNeighbor);
+    double * GetEdge(struct GraphMRNG* graph, int src,int Position);
+    int EdgesNumber(struct GraphMRNG* graph, int src);
+    void PrintGraph(GraphMRNG * graph);
+    vector <double *> GenericGraphSearch(GraphMRNG * graph,int p, uint8_t * q,int L,int N);
+    void CreateMrng(GraphMRNG * graph);
     int FindNavigating(void);
-    void DeleteGraph(Graph *graph);
+    void DeleteGraph(GraphMRNG *graph);
 #endif
