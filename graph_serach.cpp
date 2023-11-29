@@ -73,43 +73,47 @@ int main (int argc, char* argv[]){
         cout << "Please insert output file\n";
         return ERROR;
     }
-    if (ifstream(outputfileName)) {
-        remove(outputfileName);
-    }
     
-    outputFile.open(outputfileName, ios::app);
-    if (!outputFile.is_open()) {
-        cerr << "Error: Could not open the output file." << endl;
-        return ERROR;
-    }
     if ( ReadTrainData(inputFile) == ERROR)
         return ERROR;
     int limit = GetTrainNumber(),Navigating;
 
-    GraphGNN * graph1;
-    GraphMRNG * graph2;
-
-    if (m == 1){
-        graph1 = createGraphGNN(limit,k);
-        CreateGnn(graph1,k);
-    }
-    else{
-        graph2 = createGraphMRNG(limit);
-        CreateMrng(graph2);
-        Navigating = FindNavigating();
-    }
-    if ( ReadQueryData(queryFile) == ERROR)
-        return ERROR;
-    //int limit2 = GetQueryNumber();
-    int limit2 = 5;
-    clock_t start, end;
-    if (m == 1)
-        outputFile << "GNN Results\n";
-    else
-        outputFile << "MRNG Results\n";
-    double GraphSearchTime =0 ,AccurateTime =0;
-    double MAF[limit2];
+    
+    
     do{
+        if ( ReadQueryData(queryFile) == ERROR)
+            return ERROR;
+        
+        GraphGNN * graph1;
+        GraphMRNG * graph2;
+
+        if (m == 1){
+            graph1 = createGraphGNN(limit,k);
+            CreateGnn(graph1,k);
+        }
+        else{
+            graph2 = createGraphMRNG(limit);
+            CreateMrng(graph2);
+            Navigating = FindNavigating();
+        }
+        
+        if (std::ifstream(outputfileName)) {
+            std::remove(outputfileName);
+        }
+        outputFile.open(outputfileName, std::ios::app);
+        if (!outputFile.is_open()) {
+            std::cerr << "Error: Could not open the output file." << std::endl;
+            return ERROR;
+        }
+        //int limit2 = GetQueryNumber();
+        int limit2 = 5;
+        clock_t start, end;
+        if (m == 1)
+            outputFile << "GNN Results\n";
+        else
+            outputFile << "MRNG Results\n";
+        double GraphSearchTime =0 ,AccurateTime =0;
+        double MAF[limit2];
         for (int i = 0 ; i < limit2;i++){
             outputFile << "Query : " << i << "\n";
             vector<double *> currentResult;
@@ -162,6 +166,7 @@ int main (int argc, char* argv[]){
         outputFile << "tAverageTrue : " << AccurateTime/limit2 << "\n";
         outputFile << "MAF : " << maxmaf << "\n";
         outputFile.close();
+        
         cout<<"Terminate program? (y/n)\n";
         cin>>answer;
         while (answer != "n" && answer != "y")
@@ -169,18 +174,27 @@ int main (int argc, char* argv[]){
             cout << "Wrong input, please insert y to terminate or n to continue\n";
             cin >> answer;
         }
-        if (answer=="y")
+        if (answer=="y"){
+            if (m == 1)
+                DeleteGraph(graph1);
+            else
+                DeleteGraph(graph2);
             break;
+        }
         else
         {
             cout<<"Give queryfile\n";
             cin >> queryFile;
         }
+        if (m == 1)
+            DeleteGraph(graph1);
+        else
+            DeleteGraph(graph2);
+        outputFile.close();
+        DeleteQueries();
     }while(answer=="n");
-    if (m == 1)
-        DeleteGraph(graph1);
-    else
-        DeleteGraph(graph2);
+    
     DeleteQueries();
     DeleteTrain();
+    
 }

@@ -5,7 +5,7 @@
 #define ERROR -1
 
 using namespace std;
-static QueryStore * MyQueryData = NULL;
+QueryStore * MyQueryData = NULL;
 static int QueryNumber;
 
 //File that is responsible to read query data
@@ -27,8 +27,6 @@ int ReadQueryData(string path){
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));
         Columns= reverseInt(Columns);
-        if (MyQueryData != NULL)
-            delete MyQueryData;
         MyQueryData = new QueryStore;
         for (int i = 0 ; i < NumberOfImages; i++){
             Image * ImageToInsert = new Image;
