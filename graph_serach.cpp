@@ -10,6 +10,7 @@
 #include "gnn.h"
 #include "mrng.h"
 #include <string.h>
+using namespace std;
 int main (int argc, char* argv[]){
     const char * outputfileName = NULL;
     ofstream outputFile;
@@ -107,6 +108,7 @@ int main (int argc, char* argv[]){
     else
         outputFile << "MRNG Results\n";
     double GraphSearchTime =0 ,AccurateTime =0;
+    double MAF = 0;
     do{
         for (int i = 0 ; i < limit2;i++){
             outputFile << "Query : " << i << "\n";
@@ -127,6 +129,8 @@ int main (int argc, char* argv[]){
             end = clock();
             AccurateTime += double(end - start) / double(CLOCKS_PER_SEC);
             for (int j = 0 ; j < (int)currentResult.size();j++){
+                if ( j == 0 )
+                    MAF += currentResult[j][DISTANCE]/TrueNeighbor[j];
                 if (currentResult[j][POSITION] == ERROR){
                     outputFile << "Could not fine approximate nearest neighbor" << j  <<"\n";
                     continue;
@@ -141,8 +145,6 @@ int main (int argc, char* argv[]){
                 
                 outputFile << "distanceTrue : " << TrueNeighbor[j] <<"\n";
             }
-            
-            
             outputFile << "------------------------------------------------\n";
             if (m == 2)
                 for (int j = 0 ; j < (int)currentResult.size();j++)
@@ -151,6 +153,7 @@ int main (int argc, char* argv[]){
         }
         outputFile << "tAverageApproximate : " << GraphSearchTime/limit2 <<"\n";
         outputFile << "tAverageTrue : " << AccurateTime/limit2 << "\n";
+        outputFile << "MAF : " << MAF/limit2 << "\n";
         outputFile.close();
         cout<<"Terminate program? (y/n)\n";
         cin>>answer;
