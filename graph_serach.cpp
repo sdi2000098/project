@@ -108,7 +108,7 @@ int main (int argc, char* argv[]){
     else
         outputFile << "MRNG Results\n";
     double GraphSearchTime =0 ,AccurateTime =0;
-    double MAF = 0;
+    double MAF[limit2];
     do{
         for (int i = 0 ; i < limit2;i++){
             outputFile << "Query : " << i << "\n";
@@ -130,7 +130,7 @@ int main (int argc, char* argv[]){
             AccurateTime += double(end - start) / double(CLOCKS_PER_SEC);
             for (int j = 0 ; j < (int)currentResult.size();j++){
                 if ( j == 0 )
-                    MAF += currentResult[j][DISTANCE]/TrueNeighbor[j];
+                    MAF[i]= currentResult[j][DISTANCE]/TrueNeighbor[j];
                 if (currentResult[j][POSITION] == ERROR){
                     outputFile << "Could not fine approximate nearest neighbor" << j  <<"\n";
                     continue;
@@ -151,9 +151,16 @@ int main (int argc, char* argv[]){
                     delete [] currentResult[j];
             delete []TrueNeighbor;
         }
+
+        double maxmaf=MAF[0];
+
+        for (int i=1;i<limit2;i++)
+            if (MAF[i] > maxmaf)
+                maxmaf = MAF[i];
+
         outputFile << "tAverageApproximate : " << GraphSearchTime/limit2 <<"\n";
         outputFile << "tAverageTrue : " << AccurateTime/limit2 << "\n";
-        outputFile << "MAF : " << MAF/limit2 << "\n";
+        outputFile << "MAF : " << maxmaf << "\n";
         outputFile.close();
         cout<<"Terminate program? (y/n)\n";
         cin>>answer;
