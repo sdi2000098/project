@@ -9,6 +9,7 @@ struct GraphGNN {
 // Function to create a graph with a given number of vertices
 struct GraphGNN* createGraphGNN(int vertices,int NewK) {
 
+
     struct GraphGNN* graph = (struct GraphGNN*)malloc(sizeof(struct GraphGNN));
     graph->vertices = vertices;
     graph->k = NewK;
@@ -76,7 +77,7 @@ int NearestNeighbor(vector<double *> *N, uint8_t * Query, vector <double *> * S)
             break;
         bool flag = false;
         for (int j = 0 ; j < (int)S->size() ; j ++ ){
-            if ((*S)[j][POSITION] == (*N)[i][POSITION]){
+            if ((*S)[j][POSITION] == (*N)[i][POSITION]){ //if its already in s
                 flag = true;
                 break;
             }
@@ -85,10 +86,10 @@ int NearestNeighbor(vector<double *> *N, uint8_t * Query, vector <double *> * S)
             continue;
         
         uint8_t* x= GetRepresenation((*N)[i][POSITION]);
-        double distance = Euclidean(x, Query, DIMENSION);
+        double distance = Euclidean(x, Query, DIMENSION); //find distance between x and query
         (*S).push_back((*N)[i]);
         (*N)[i][DISTANCE] = distance;
-        if ((*N)[i][DISTANCE] < minDistance) {
+        if ((*N)[i][DISTANCE] < minDistance) { //find closest distance to query
             minDistance = (*N)[i][DISTANCE];
             nearestIndex = (int)(*N)[i][POSITION];
         }

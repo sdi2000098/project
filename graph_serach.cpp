@@ -74,26 +74,24 @@ int main (int argc, char* argv[]){
         return ERROR;
     }
     
-    if ( ReadTrainData(inputFile) == ERROR)
+    if ( ReadTrainData(inputFile) == ERROR) //read dataset
         return ERROR;
     int limit = GetTrainNumber(),Navigating;
-
-    
     
     do{
-        if ( ReadQueryData(queryFile) == ERROR)
+        if ( ReadQueryData(queryFile) == ERROR) //read query file
             return ERROR;
         
         GraphGNN * graph1;
         GraphMRNG * graph2;
 
         if (m == 1){
-            graph1 = createGraphGNN(limit,k);
-            CreateGnn(graph1,k);
+            graph1 = createGraphGNN(limit,k);  //for gnn algorithm
+            CreateGnn(graph1,k); //initialization and creation of graph
         }
         else{
-            graph2 = createGraphMRNG(limit);
-            CreateMrng(graph2);
+            graph2 = createGraphMRNG(limit); //for mrng algorithm
+            CreateMrng(graph2); //initialization and creation of graph
             Navigating = FindNavigating();
         }
         if (std::ifstream(outputfileName)) {
@@ -137,7 +135,7 @@ int main (int argc, char* argv[]){
             for (int j = 0 ; j < (int)currentResult.size();j++){
                 
                 if ( j == 0 )
-                    MAF[i]= currentResult[j][DISTANCE]/TrueNeighbor[j];
+                    MAF[i]= currentResult[j][DISTANCE]/TrueNeighbor[j]; //store in a table all mafs in order to take the max later
                 if (currentResult[j][POSITION] == ERROR){
                     outputFile << "Could not fine approximate nearest neighbor" << j  <<"\n";
                     continue;
@@ -180,7 +178,7 @@ int main (int argc, char* argv[]){
             cout << "Wrong input, please insert y to terminate or n to continue\n";
             cin >> answer;
         }
-        if (answer=="y"){
+        if (answer=="y"){          //free variables
             if (m == 1)
                 DeleteGraph(graph1);
             else
