@@ -96,7 +96,6 @@ int main (int argc, char* argv[]){
             CreateMrng(graph2);
             Navigating = FindNavigating();
         }
-        
         if (std::ifstream(outputfileName)) {
             std::remove(outputfileName);
         }
@@ -114,6 +113,7 @@ int main (int argc, char* argv[]){
             outputFile << "MRNG Results\n";
         double GraphSearchTime =0 ,AccurateTime =0;
         double MAF[limit2];
+        
         for (int i = 0 ; i < limit2;i++){
             outputFile << "Query : " << i << "\n";
             vector<double *> currentResult;
@@ -127,12 +127,15 @@ int main (int argc, char* argv[]){
                 currentResult = GenericGraphSearch(graph2,Navigating,GetQueryRepresentation(i),L,N);
                 end = clock();
             }
+            
             GraphSearchTime += double(end - start) / double(CLOCKS_PER_SEC);
             start = clock();
             double * TrueNeighbor = FindTrue(GetQueryRepresentation(i),N);
             end = clock();
             AccurateTime += double(end - start) / double(CLOCKS_PER_SEC);
+            
             for (int j = 0 ; j < (int)currentResult.size();j++){
+                
                 if ( j == 0 )
                     MAF[i]= currentResult[j][DISTANCE]/TrueNeighbor[j];
                 if (currentResult[j][POSITION] == ERROR){
@@ -143,6 +146,7 @@ int main (int argc, char* argv[]){
                     outputFile << "Could not fine accuate nearest neighbor" << j  <<"\n";
                     continue;
                 }
+                
                 outputFile << "Nearest neighbor-" << j+1 << " : " << currentResult[j][POSITION] << "\n";
                 
                 outputFile << "distanceApproximate : " << currentResult[j][DISTANCE] <<"\n";
@@ -150,9 +154,11 @@ int main (int argc, char* argv[]){
                 outputFile << "distanceTrue : " << TrueNeighbor[j] <<"\n";
             }
             outputFile << "------------------------------------------------\n";
+            
             if (m == 2)
                 for (int j = 0 ; j < (int)currentResult.size();j++)
                     delete [] currentResult[j];
+            
             delete []TrueNeighbor;
         }
 

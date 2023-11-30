@@ -129,11 +129,12 @@ vector<double *> GNNS(struct GraphGNN * graph, uint8_t * Query, int R, int T, in
             // S = S ∪ N(Yt−1, E, G)
             vector<double *> N(graph->adjList[Yt], graph->adjList[Yt] + E);
             Yt = NearestNeighbor(&N, Query,&S);
+            
            // N=Eneighbors(graph->adjList[Yt],E);
             // Yt = arg minY∈N(Yt−1,E,G) δ(Y, Q)
             
             if (Yt == -1)
-                continue;
+                break;
         }
     }
      
@@ -154,7 +155,6 @@ void CreateGnn(GraphGNN * graph,int k){
     for (int i = 0 ; i < limit ; i++){
             KNNResult = MyLsh->KNN(k,GetRepresenation(i),i);
             for (int j = 0 ; j < 2*k ; j+=2 ){
-                
                 if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 )
                     addEdge(graph, i,(int) KNNResult[j+1],j/2);
                 else

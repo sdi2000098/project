@@ -34,18 +34,24 @@ bool compareDistances2(const double* a, const double* b) {
 }
 
 vector <double *> GenericGraphSearch(GraphMRNG * graph,int p, uint8_t * q,int L,int N){
+    
     vector <double *> R;
     double * ToPush = new double[3];
     ToPush[POSITION] = p;
     ToPush[DISTANCE] = Euclidean(GetRepresenation(p),q,DIMENSION);
     ToPush[CHECKED] = 0;
     R.push_back(ToPush);
+    
     for (int i = 1 ; i < L ; i++){
+        
         for (p = 0;p<(int)R.size();p++)
             if (R[p][CHECKED] == 0)
                 break;
+        if (p == (int)R.size())
+            break;
         R[p][CHECKED] = 1;
         //R[p][POSITION] position in dataser
+        
         for (int j = 0 ; j < EdgesNumber(graph,R[p][POSITION]);j++){
             bool flag = true;
             double * N = GetEdge(graph,R[p][POSITION],j);
@@ -64,11 +70,15 @@ vector <double *> GenericGraphSearch(GraphMRNG * graph,int p, uint8_t * q,int L,
             }
             sort(R.begin(),R.end(),compareDistances2);
         }
+        
     }
+    
     for (size_t i = N; i < R.size(); ++i) {
         delete[] R[i];
     }
+    
     vector <double *> result(R.begin(),R.begin()+N);
+    
     return result;
 }
 
