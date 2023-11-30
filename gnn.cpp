@@ -3,7 +3,7 @@
 // Structure to represent the graph
 struct GraphGNN {
     int vertices,k;
-    double *** adjList; // Array of adjacency lists
+    double *** adjList; // Array of adjacency lists (a table of pointers to adjacency list where every adjacency list is a 2d array)
 };
 
 // Function to create a graph with a given number of vertices
@@ -15,7 +15,7 @@ struct GraphGNN* createGraphGNN(int vertices,int NewK) {
     // Create an array of adjacency lists
     graph->adjList = (double ***)malloc(vertices * sizeof(double **));
 
-    // Initialize each adjacency list as empty by default
+    // Initialize each adjacency list 
     for (int i = 0; i < vertices; ++i) {
         graph->adjList[i] = (double**)malloc(NewK * sizeof(double*));
         for (int j = 0 ; j < NewK ; j ++){
@@ -33,17 +33,7 @@ void addEdge(struct GraphGNN* graph, int src, int dest,int Position) {
     graph->adjList[src][Position][POSITION] = (double)dest;
 }
 
-// Function to print the adjacency list representation of the graph
-void printGraph(struct GraphGNN* graph) {
-    for (int i = 0; i < graph->vertices; ++i) {
-        printf("Adjacency list of vertex %d: ", i);
-        for(int j =0;j<graph->k;j++)
-            printf("%d ",(int)graph->adjList[i][j][POSITION]);
-        printf("\n");
-    }
-}
-
-double * FindTrue(uint8_t * Query,int N){
+double * FindTrue(uint8_t * Query,int N){ //find true nearest neighbors of query
     double * ToReturn = new double [N];
     for (int n = 0 ; n < N; n++){
 
@@ -105,7 +95,7 @@ int NearestNeighbor(vector<double *> *N, uint8_t * Query, vector <double *> * S)
     }
     
 
-    return nearestIndex;
+    return nearestIndex; //neareastIndex = new Yt (its the point in adjlist of previous Yt that is closest to query )
 }
 
 
@@ -129,8 +119,6 @@ vector<double *> GNNS(struct GraphGNN * graph, uint8_t * Query, int R, int T, in
             // S = S ∪ N(Yt−1, E, G)
             vector<double *> N(graph->adjList[Yt], graph->adjList[Yt] + E);
             Yt = NearestNeighbor(&N, Query,&S);
-            
-           // N=Eneighbors(graph->adjList[Yt],E);
             // Yt = arg minY∈N(Yt−1,E,G) δ(Y, Q)
             
             if (Yt == -1)
@@ -148,11 +136,11 @@ vector<double *> GNNS(struct GraphGNN * graph, uint8_t * Query, int R, int T, in
 }
 
 void CreateGnn(GraphGNN * graph,int k){
-    LSH * MyLsh = new LSH(KLSH,LLSH);
+    LSH * MyLsh = new LSH(KLSH,LLSH); //lsh creation
     MyLsh->Train();
     int limit = GetTrainNumber();
     vector <double> KNNResult; 
-    for (int i = 0 ; i < limit ; i++){
+    for (int i = 0 ; i < limit ; i++){ //for every image get its nearest neighbohrs and put them in an adjacency list
             KNNResult = MyLsh->KNN(k,GetRepresenation(i),i);
             for (int j = 0 ; j < 2*k ; j+=2 ){
                 if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 )
@@ -164,7 +152,7 @@ void CreateGnn(GraphGNN * graph,int k){
     delete MyLsh;
 }
 
-void DeleteGraph(GraphGNN *graph){
+void DeleteGraph(GraphGNN *graph){ //free the gnn graph
     for (int i = 0 ; i < graph->vertices;i++){
         for (int j = 0 ; j < graph->k;j++)
             free(graph->adjList[i][j]);
