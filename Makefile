@@ -7,7 +7,7 @@ CXXFLAGS = -std=c++11 -Wall -g -O3
 SRCS =  StoreTrainData.cpp ReadTrainData.cpp lshmain.cpp StoreQueryData.cpp ReadQueryData.cpp lsh.cpp hFunc.cpp
 SRCS2 =  StoreTrainData.cpp ReadTrainData.cpp cube.cpp StoreQueryData.cpp ReadQueryData.cpp RandomProjection.cpp hFunc.cpp
 SRCS3 =  StoreTrainData.cpp ReadTrainData.cpp hFunc.cpp  lsh.cpp RandomProjection.cpp kmeans.cpp KMeansMain.cpp 
-SRCS4 =  StoreTrainData.cpp ReadTrainData.cpp StoreQueryData.cpp ReadQueryData.cpp gnn.cpp lsh.cpp hFunc.cpp mrng.cpp graph_serach.cpp
+SRCS4 =  StoreTrainData.cpp ReadTrainData.cpp StoreQueryData.cpp ReadQueryData.cpp gnn.cpp lsh.cpp hFunc.cpp mrng.cpp graph_search.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
