@@ -16,7 +16,7 @@ int main (int argc, char* argv[]){
     ofstream outputFile;
     string inputFile , queryFile,answer;
 
-    int L = 20,N = 5,k=50, E=30,R = 1, m = 0;
+    int L = 20,N = 1,k=50, E=30,R = 1, m = 0;
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
         //Check for flags and change values if needed

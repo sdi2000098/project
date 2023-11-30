@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
         
         MyCube->Train();
         int limit = GetQueryNumber();
-        //int limit = 5;
+        limit = 5;
 
         // Check if the file exists and delete it if it does
         
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
         vector <double> KNNResult, AcuurateKNNReult;    
         clock_t start, end;
         double KNNTIme = 0,AccurateKNNTime = 0;
-
+        double MAF[limit];
         for (int i = 0 ; i < limit ; i++){
             outputFile << "Query : "<<i<<std::endl;
 
@@ -114,6 +114,8 @@ int main(int argc, char* argv[]) {
             AccurateKNNTime = double(end - start) / double(CLOCKS_PER_SEC);
 
             for (int j = 0 ; j < 2*N ; j+=2 ){
+                if ( j == 0 )
+                    MAF[i]= KNNResult[j]/AcuurateKNNReult[j];
                 if ( j < (int)KNNResult.size()){
                     outputFile << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
                     outputFile << "distanceHypercube: " << KNNResult[j] <<"\n";
@@ -136,7 +138,12 @@ int main(int argc, char* argv[]) {
 
             
         }
+        double maxmaf=MAF[0];
 
+        for (int i=1;i<limit;i++)
+            if (MAF[i] > maxmaf)
+                maxmaf = MAF[i];
+        outputFile << "MAF : " << maxmaf << "\n";
         outputFile.close();
         delete MyCube;
         std::cout<<"Terminate program? (y/n)\n";

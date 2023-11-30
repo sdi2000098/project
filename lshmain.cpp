@@ -78,6 +78,7 @@ int main(int argc, char* argv[]) {
         LSH * MyLsh = new LSH(K,L);
         MyLsh->Train();
         int limit = GetQueryNumber();
+        limit = 5;
         // Check if the file exists and delete it if it does
         if (std::ifstream(outputfileName)) {
             std::remove(outputfileName);
@@ -91,6 +92,7 @@ int main(int argc, char* argv[]) {
         vector <double> KNNResult, AcuurateKNNReult;    
         clock_t start, end;
         double KNNTIme ,AccurateKNNTime ;
+        double MAF[limit];
         for (int i = 0 ; i < limit ; i++){
             KNNTIme = 0;
             AccurateKNNTime = 0; 
@@ -112,6 +114,9 @@ int main(int argc, char* argv[]) {
             for (int j = 0 ; j < 2*N ; j+=2 ){
                 //Note that KNN and AKNN return a 2*N arrray, distance and position
                 //Also if Position is -1, that means no nearest neighbour was found
+                if ( j == 0 )
+                    MAF[i]= KNNResult[j]/AcuurateKNNReult[j];
+
                 if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 ){
                     outputFile << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
                     outputFile << "distanceLSH: " << KNNResult[j] <<"\n";
@@ -124,7 +129,7 @@ int main(int argc, char* argv[]) {
                     outputFile << "Could not find Nearest neighbor " << j/2 << " using exhaustive KNN\n";
 
             }
-
+            
             outputFile << "tLSH: " << KNNTIme << "\ntTrue: " << AccurateKNNTime <<"\n";
 
             vector <int> Range = MyLsh->RangeSearch(R,GetQueryRepresentation(i));
@@ -134,7 +139,12 @@ int main(int argc, char* argv[]) {
 
             
         }
+        double maxmaf=MAF[0];
 
+        for (int i=1;i<limit;i++)
+            if (MAF[i] > maxmaf)
+                maxmaf = MAF[i];
+        outputFile << "MAF : " << maxmaf << "\n";
         outputFile.close();
         delete MyLsh;
         std::cout<<"Terminate program? (y/n)\n";
