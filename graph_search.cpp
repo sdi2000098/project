@@ -153,9 +153,8 @@ int main (int argc, char* argv[]){
             }
             outputFile << "------------------------------------------------\n";
             
-            if (m == 2)
-                for (int j = 0 ; j < (int)currentResult.size();j++)
-                    delete [] currentResult[j];
+            for (int j = 0 ; j < (int)currentResult.size();j++)
+                delete [] currentResult[j];
             
             delete []TrueNeighbor;
         }

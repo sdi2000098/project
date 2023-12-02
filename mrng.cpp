@@ -2,7 +2,7 @@
 
 struct GraphMRNG {
     int vertices;
-    vector <double *> * adjList; // Array of adjacency lists
+    vector <double *> * adjList; 
 };
 struct GraphMRNG* createGraphMRNG(int vertices) {
 
@@ -33,12 +33,12 @@ bool compareDistances2(const double* a, const double* b) {
     return a[DISTANCE] < b[DISTANCE];
 }
 
-vector <double *> GenericGraphSearch(GraphMRNG * graph,int p, uint8_t * q,int L,int N){
+vector <double *> GenericGraphSearch(GraphMRNG * graph,int p, uint8_t * r,int L,int N){
     
     vector <double *> R;
     double * ToPush = new double[3];
     ToPush[POSITION] = p;
-    ToPush[DISTANCE] = Euclidean(GetRepresenation(p),q,DIMENSION);
+    ToPush[DISTANCE] = Euclidean(GetRepresenation(p),r,DIMENSION);
     ToPush[CHECKED] = 0;
     R.push_back(ToPush);
     
@@ -64,7 +64,7 @@ vector <double *> GenericGraphSearch(GraphMRNG * graph,int p, uint8_t * q,int L,
             if (flag){
                 ToPush = new double[3];
                 ToPush[POSITION] = N[POSITION];
-                ToPush[DISTANCE] = Euclidean(GetRepresenation(N[POSITION]),q,DIMENSION);
+                ToPush[DISTANCE] = Euclidean(GetRepresenation(N[POSITION]),r,DIMENSION);
                 ToPush[CHECKED] = 0;
                 R.push_back(ToPush);
             }
@@ -89,19 +89,20 @@ void CreateMrng(GraphMRNG * graph){
     LSH * MyLsh = new LSH(KLSH,LLSH);
     MyLsh->Train();
     double * ToPush;
-    for (int p = 0 ; p < limit ; p++){
+    for (int p = 0 ; p < limit ; p++){  //for every point in dataset
         vector <double> Rp; 
         
-        Rp = MyLsh->KNN(CANDITATES,GetRepresenation(p),p);
+        Rp = MyLsh->KNN(CANDITATES,GetRepresenation(p),p);  //get its neighbors from lsh
         
-        ToPush = new double[2];
-        ToPush[POSITION] = Rp[1];
+        ToPush = new double[2]; //add the nearest neighbor
+        ToPush[POSITION] = Rp[1]; 
         ToPush[DISTANCE] = Rp[0];
         
-        addEdge(graph,p,ToPush);
-        
-        for (j = 2; j < 2*CANDITATES;j+=2){
+        addEdge(graph,p,ToPush);    
+        int index = 3;
+        for (j = 2; j < 2*CANDITATES;j+=2){     // Check if more than one neighbors are at the same distance
             if (Rp[j]==Rp[0]){
+                index +=2;
                 ToPush = new double[2];
                 ToPush[POSITION] = Rp[j+1];
                 ToPush[DISTANCE] = Rp[j];
@@ -109,27 +110,27 @@ void CreateMrng(GraphMRNG * graph){
             }
         }
         
-        for (int q = 3 ; q <(int) Rp.size();q+=2){
+        for (int r = index ; r <(int) Rp.size();r+=2){  // for r ∈ Rp − Lp 
             
             bool flag = true;
-            for (int r = 0 ; r <EdgesNumber(graph,p);r++){
-                if ((int)Rp[q] == ERROR){
+            for (int t = 0 ; t <EdgesNumber(graph,p);t++){      // this is for all t in Lp
+                if ((int)Rp[r] == ERROR){
                     flag = false;
                     break;
                 }
-                double pq=Rp[q-1];
-                double * Neighbor = GetEdge(graph,p,r);
-                double pr = Neighbor[DISTANCE];
-                double qr = Euclidean(GetRepresenation((int)Rp[q]),GetRepresenation(Neighbor[POSITION]),DIMENSION);
-                if (pq > pr && pq >qr){
+                double pr=Rp[r-1];      // pr = dist(p, r)
+                double * Neighbor = GetEdge(graph,p,t); // pt = dist(p, t)
+                double pt = Neighbor[DISTANCE];
+                double rt = Euclidean(GetRepresenation((int)Rp[r]),GetRepresenation(Neighbor[POSITION]),DIMENSION);
+                if (pr > pt && pr >rt){
                     flag = false;
                     break;
                 }
             }
             if (flag){
                 ToPush = new double[2];
-                ToPush[POSITION] = Rp[q];
-                ToPush[DISTANCE] = Rp[q-1];
+                ToPush[POSITION] = Rp[r];
+                ToPush[DISTANCE] = Rp[r-1];
                 addEdge(graph,p,ToPush);
             }
         }

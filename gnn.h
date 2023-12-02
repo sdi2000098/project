@@ -18,7 +18,6 @@
     struct GraphGNN;
     struct GraphGNN* createGraphGNN(int vertices,int NewK);
     void addEdge(struct GraphGNN* graph, int src, int dest,int Position);
-    void printGraph(struct GraphGNN* graph);
     double * FindTrue(uint8_t * Query,int N);
     int NearestNeighbor(vector<double *> *N, uint8_t * Query, vector <double *> * S);
     vector<double *> GNNS(struct GraphGNN * graph, uint8_t * Query, int R, int T, int E,int L);
