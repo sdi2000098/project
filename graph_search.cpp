@@ -10,6 +10,7 @@
 #include "gnn.h"
 #include "mrng.h"
 #include <string.h>
+#define GREEDY_STEPS 50
 using namespace std;
 int main (int argc, char* argv[]){
     const char * outputfileName = NULL;
@@ -115,9 +116,10 @@ int main (int argc, char* argv[]){
         for (int i = 0 ; i < limit2;i++){
             outputFile << "Query : " << i << "\n";
             vector<double *> currentResult;
+            //Current result is a vector of double arrays, each array has 2 values : position in dataset, distance of point from query
             if (m == 1){
                 start = clock();
-                currentResult = GNNS(graph1, GetQueryRepresentation(i), R, 50, E,N);
+                currentResult = GNNS(graph1, GetQueryRepresentation(i), R, GREEDY_STEPS, E,N);
                 end = clock();
             }
             else{
