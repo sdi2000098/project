@@ -10,7 +10,7 @@
 #include "gnn.h"
 #include "mrng.h"
 #include <string.h>
-#define GREEDY_STEPS 50
+#define GREEDY_STEPS 50 //define t
 using namespace std;
 int main (int argc, char* argv[]){
     const char * outputfileName = NULL;
@@ -77,7 +77,7 @@ int main (int argc, char* argv[]){
     
     if ( ReadTrainData(inputFile) == ERROR) //read dataset
         return ERROR;
-    int limit = GetTrainNumber(),Navigating;
+    int limit = GetTrainNumber(),Navigating; //limit = number of images
     
     do{
         if ( ReadQueryData(queryFile) == ERROR) //read query file
@@ -103,7 +103,7 @@ int main (int argc, char* argv[]){
             std::cerr << "Error: Could not open the output file." << std::endl;
             return ERROR;
         }
-        //int limit2 = GetQueryNumber();
+        //int limit2 = GetQueryNumber(); //limit2 number of queries
         int limit2 = 5;
         clock_t start, end;
         if (m == 1)
@@ -113,26 +113,26 @@ int main (int argc, char* argv[]){
         double GraphSearchTime =0 ,AccurateTime =0;
         double MAF[limit2];
         
-        for (int i = 0 ; i < limit2;i++){
+        for (int i = 0 ; i < limit2;i++){ //for all queries
             outputFile << "Query : " << i << "\n";
             vector<double *> currentResult;
             //Current result is a vector of double arrays, each array has 2 values : position in dataset, distance of point from query
             if (m == 1){
                 start = clock();
-                currentResult = GNNS(graph1, GetQueryRepresentation(i), R, GREEDY_STEPS, E,N);
+                currentResult = GNNS(graph1, GetQueryRepresentation(i), R, GREEDY_STEPS, E,N); //gnn algorithm
                 end = clock();
             }
             else{
                 start = clock();
-                currentResult = GenericGraphSearch(graph2,Navigating,GetQueryRepresentation(i),L,N);
+                currentResult = GenericGraphSearch(graph2,Navigating,GetQueryRepresentation(i),L,N); //mrng algorithm
                 end = clock();
             }
             
-            GraphSearchTime += double(end - start) / double(CLOCKS_PER_SEC);
+            GraphSearchTime += double(end - start) / double(CLOCKS_PER_SEC); //approximate time
             start = clock();
             double * TrueNeighbor = FindTrue(GetQueryRepresentation(i),N); //find true neighbors
             end = clock();
-            AccurateTime += double(end - start) / double(CLOCKS_PER_SEC);
+            AccurateTime += double(end - start) / double(CLOCKS_PER_SEC); //accurate time
             
             for (int j = 0 ; j < (int)currentResult.size();j++){
                 
@@ -147,7 +147,7 @@ int main (int argc, char* argv[]){
                     continue;
                 }
                 
-                outputFile << "Nearest neighbor-" << j+1 << " : " << currentResult[j][POSITION] << "\n";
+                outputFile << "Nearest neighbor-" << j+1 << " : " << currentResult[j][POSITION] << "\n"; //print in file
                 
                 outputFile << "distanceApproximate : " << currentResult[j][DISTANCE] <<"\n";
                 
@@ -155,7 +155,7 @@ int main (int argc, char* argv[]){
             }
             outputFile << "------------------------------------------------\n";
             
-            for (int j = 0 ; j < (int)currentResult.size();j++)
+            for (int j = 0 ; j < (int)currentResult.size();j++) //free this array
                 delete [] currentResult[j];
             
             delete []TrueNeighbor;
@@ -163,25 +163,25 @@ int main (int argc, char* argv[]){
 
         double maxmaf=MAF[0];
 
-        for (int i=1;i<limit2;i++)
+        for (int i=1;i<limit2;i++) //maxmax is the max number in array MAF
             if (MAF[i] > maxmaf)
                 maxmaf = MAF[i];
 
-        outputFile << "tAverageApproximate : " << GraphSearchTime/limit2 <<"\n";
+        outputFile << "tAverageApproximate : " << GraphSearchTime/limit2 <<"\n"; //print time and maf in file
         outputFile << "tAverageTrue : " << AccurateTime/limit2 << "\n";
         outputFile << "MAF : " << maxmaf << "\n";
         outputFile.close();
         
-        cout<<"Terminate program? (y/n)\n";
+        cout<<"Terminate program? (y/n)\n";  //y for terminate / n for no and give a query file
         cin>>answer;
-        while (answer != "n" && answer != "y")
+        while (answer != "n" && answer != "y") 
         {
             cout << "Wrong input, please insert y to terminate or n to continue\n";
             cin >> answer;
         }
         if (answer=="y"){          //free variables
             if (m == 1)
-                DeleteGraph(graph1);
+                DeleteGraph(graph1); //delete graphs
             else
                 DeleteGraph(graph2);
             break;
@@ -197,9 +197,9 @@ int main (int argc, char* argv[]){
             DeleteGraph(graph2);
         outputFile.close();
         DeleteQueries();
-    }while(answer=="n");
+    }while(answer=="n"); //while answer is n run again 
     
-    DeleteQueries();
-    DeleteTrain();
+    DeleteQueries(); //free queries data
+    DeleteTrain(); //free images data
     
 }

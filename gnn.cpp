@@ -37,9 +37,9 @@ double * FindTrue(uint8_t * Query,int N){ //find true nearest neighbors of query
     for (int n = 0 ; n < N; n++){
 
         double minDistance = numeric_limits<double>::max();
-        for (int i = 0 ; i < GetTrainNumber() ;i ++){
-            double e = Euclidean(GetRepresenation(i),Query,DIMENSION);
-            if ( e < minDistance){
+        for (int i = 0 ; i < GetTrainNumber() ;i ++){ //for all images
+            double e = Euclidean(GetRepresenation(i),Query,DIMENSION); //distance of image and query
+            if ( e < minDistance){ 
                 bool flag = false;
                 for (int j = 0 ; j < n ; j++){
                     if (ToReturn[j] == e){
@@ -49,13 +49,13 @@ double * FindTrue(uint8_t * Query,int N){ //find true nearest neighbors of query
                 }
                 if (flag)
                     continue;
-                minDistance = e ;
+                minDistance = e ; //find min distance 
             }
         }
-        ToReturn[n] = minDistance;
+        ToReturn[n] = minDistance; //put it in the array
 
     }
-    return ToReturn;
+    return ToReturn; //return the array of n nearest neighbors
 }
 
 
@@ -142,13 +142,13 @@ vector<double *> GNNS(struct GraphGNN * graph, uint8_t * Query, int R, int T, in
 void CreateGnn(GraphGNN * graph,int k){
     LSH * MyLsh = new LSH(KLSH,LLSH); //lsh creation
     MyLsh->Train(); //train lsh
-    int limit = GetTrainNumber();
+    int limit = GetTrainNumber(); //get number of images
     vector <double> KNNResult; 
     for (int i = 0 ; i < limit ; i++){ //for every image get its nearest neighbohrs and put them in an adjacency list
-            KNNResult = MyLsh->KNN(k,GetRepresenation(i),i);
+            KNNResult = MyLsh->KNN(k,GetRepresenation(i),i); //find nearest neighbors
             for (int j = 0 ; j < 2*k ; j+=2 ){
                 if ( j < (int)KNNResult.size() && KNNResult[j+1] != -1 )
-                    addEdge(graph, i,(int) KNNResult[j+1],j/2);
+                    addEdge(graph, i,(int) KNNResult[j+1],j/2); //add in adj list i the neighbor KNNResult[j+1]
                 else
                     addEdge(graph, i, ERROR,j/2);
             }
