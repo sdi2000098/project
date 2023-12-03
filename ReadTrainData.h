@@ -15,4 +15,5 @@
     int GetCluster(int Position);
     void DeleteTrain(void);
     void SetAllUnchecked(void);
+    int GetDimension(void);
 #endif

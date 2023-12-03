@@ -9,7 +9,6 @@
 #include "RandomProjection.h"
 #define TABLE_SIZE 5
 #define MAXSIZE 1215752202
-#define DIMENSION 784
 #define ERROR -1
 #define R_THRESHHOLD 2000
 std::ofstream outputFile; 
@@ -40,6 +39,7 @@ class Cluster{
         Cluster(int  NewCentroid){
             //In the constructor of the cluster, the input is the first member
             //The centroid will be equal to the new member
+            int DIMENSION = GetDimension();
             Centroid = new double [DIMENSION];
             uint8_t * temp = GetRepresenation(NewCentroid);
             for (int i = 0 ; i < DIMENSION ;i ++)
@@ -50,6 +50,7 @@ class Cluster{
             delete [] Centroid;
         };
         void InsertMember(int NewMember){
+            int DIMENSION = GetDimension();
             //Insert function with update, used in Lloyds
             //The idea is that NewMean = PrevMean*PrevSize + NewMember / (PrevSize+1)
             for (int i = 0 ; i < DIMENSION; i++)
@@ -60,7 +61,7 @@ class Cluster{
             return Centroid;
         }
         void DeleteMember(int ToDelete){
-
+            int DIMENSION = GetDimension();
             Members.erase(std::remove(Members.begin(), Members.end(), ToDelete), Members.end());
             for (int i = 0 ; i < DIMENSION; i++){
                 Centroid[i] = ( (Centroid[i]* (Members.size()+1)) - (double)GetRepresenation(ToDelete)[i]) / (double)(Members.size());
@@ -71,6 +72,7 @@ class Cluster{
         uint8_t * CentroidAsBytes(void){
             //This function is used in RangeSearch, where the centroid must be query
             //We need a uint8_t representation of the centroid, we round to the closest int
+            int DIMENSION = GetDimension();
             uint8_t * ToReturn = new uint8_t[DIMENSION];
             for (int i = 0 ; i < DIMENSION;i++)
                 ToReturn[i] = (uint8_t)(round(Centroid[i]));
@@ -88,6 +90,7 @@ class Cluster{
         }
         void PrintCentroid(void){
             outputFile << "[ ";
+            int DIMENSION = GetDimension();
             for (int i = 0 ; i < DIMENSION ; i++){
                 if (i == DIMENSION -1)
                     outputFile << Centroid[i] << " ] ";
@@ -98,6 +101,7 @@ class Cluster{
         void Update(void){
             double accumulator ;
             //Update the center using the current members
+            int DIMENSION = GetDimension();
             for (int j = 0 ; j < DIMENSION ; j ++){
                 accumulator = 0;
                 for (int i =0 ; i < (int)Members.size() ; i ++){
@@ -180,6 +184,7 @@ KMeans :: ~KMeans(){
 
 void KMeans :: Initialize(){
     double * AllEuclideans = new double[GetTrainNumber()];      //D(i)
+    int DIMENSION = GetDimension();
     double Max = -1;        //Stores Max D(i)
     for (int NumberOfCentroids =1;NumberOfCentroids < K;NumberOfCentroids++){
         for (int i = 0 ; i < GetTrainNumber() ;i++){
@@ -230,6 +235,7 @@ void KMeans :: Initialize(){
 }
 
 void KMeans :: Lloyds(void){
+    int DIMENSION = GetDimension();
     int Position;
     double Min;
     bool SmtChanged ;
@@ -265,7 +271,7 @@ void KMeans :: Lloyds(void){
 }
 
 void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Method){
-    
+    int DIMENSION = GetDimension();
     LSH * MyLsh;
     RandomProjection * MyCube;
     if (strcmp(Method,"LSH") == 0 ){
@@ -374,6 +380,7 @@ void KMeans :: RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Meth
 
 
 void KMeans :: Silhouette(void){
+    int DIMENSION = GetDimension();
     // Simple implementation of metric
     double * A = new double [GetTrainNumber()], * B =new double [GetTrainNumber()], * S = new double[GetTrainNumber()] ;
     double * SAvergae = new double [K];
@@ -416,6 +423,7 @@ void KMeans :: Silhouette(void){
 }
 
 double KMeans :: GetMean(int i,int ClusterIndex){
+    int DIMENSION = GetDimension();
     //Function that get Mean distance from point i to all the members that belong to cluster with this index
     double ToReturn = 0;
     for (int j = 0 ; j < MyClusters[ClusterIndex]->GetSize();j++){

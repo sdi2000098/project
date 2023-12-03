@@ -82,7 +82,6 @@ int main(int argc, char* argv[]) {
         
         MyCube->Train();
         int limit = GetQueryNumber();
-        limit = 5;
 
         // Check if the file exists and delete it if it does
         

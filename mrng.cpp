@@ -1,10 +1,10 @@
 #include "mrng.h"
 //Keep in mind that the graph each neighbor is represented by a double array
+
 struct GraphMRNG {
     int vertices;
     vector <double *> * adjList; //Each node in graph has a list of neighbors represented by a double array
-    //This double array has 3 values : position in dataset, distance from node to neighbor, checked
-    //Checked is used in GenericGraphSearch to check if a node has been checked already
+    //This double array has 2 values : position in dataset, distance from node to neighbor
 };
 struct GraphMRNG* createGraphMRNG(int vertices) {
     //Initialize graph, allocate memory for vertices and adjacency list
@@ -35,6 +35,7 @@ vector <double *> GenericGraphSearch(GraphMRNG * graph,int p, uint8_t * r,int L,
     //Checked is used to check if a node has been checked already, and the main function wont use it
     //P is the index of the navigating node
     //R is the query in bytes
+    int DIMENSION = GetDimension();
     vector <double *> R;
     double * ToPush = new double[3];
     ToPush[POSITION] = p;
@@ -92,6 +93,7 @@ void CreateMrng(GraphMRNG * graph){
     //MAF is always less than 1.8
     //In order to use LSH we have defined KLsh and LLsh as 5, cnahgning these values will change the results
     //but the algorithm will still work, theses values are the ones that gave us fast adn good results
+    int DIMENSION = GetDimension();
     LSH * MyLsh = new LSH(KLSH,LLSH);
     MyLsh->Train();
     double * ToPush;
@@ -149,6 +151,7 @@ void CreateMrng(GraphMRNG * graph){
 int FindNavigating(void){
     //Simple function that finds the navigating node
     int limit = GetTrainNumber();
+    int DIMENSION = GetDimension();
     double * Centroid=new double[DIMENSION];
     for (int i = 0 ; i<DIMENSION;i++)
         Centroid[i] = 0;

@@ -77,14 +77,14 @@ int main (int argc, char* argv[]){
     
     if ( ReadTrainData(inputFile) == ERROR) //read dataset
         return ERROR;
-    int limit = GetTrainNumber(),Navigating; //limit = number of images
+    int limit = GetTrainNumber(),Navigating = 0; //limit = number of images
     
     do{
         if ( ReadQueryData(queryFile) == ERROR) //read query file
             return ERROR;
         
-        GraphGNN * graph1;
-        GraphMRNG * graph2;
+        GraphGNN * graph1 = NULL;
+        GraphMRNG * graph2 = NULL;
 
         if (m == 1){
             graph1 = createGraphGNN(limit,k);  //for gnn algorithm
@@ -103,8 +103,7 @@ int main (int argc, char* argv[]){
             std::cerr << "Error: Could not open the output file." << std::endl;
             return ERROR;
         }
-        //int limit2 = GetQueryNumber(); //limit2 number of queries
-        int limit2 = 5;
+        int limit2 = GetQueryNumber(); //limit2 number of queries
         clock_t start, end;
         if (m == 1)
             outputFile << "GNN Results\n";

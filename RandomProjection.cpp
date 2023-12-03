@@ -4,7 +4,6 @@
 #include "ReadTrainData.h"
 #include <bits/stdc++.h>
 
-#define DIMENSION 784
 #define WINDOW 50
 #define MAXSIZE 1215752202
 
@@ -98,6 +97,7 @@ class FunctionF {
         FValues * MyValues;
     public :
         FunctionF(){
+            int DIMENSION = GetDimension();
             MyH = new hFunction(DIMENSION,WINDOW);
             MyValues = NULL;
         }
@@ -206,6 +206,7 @@ double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
     for (int i = 0 ; i < K ; i ++)  
         QueryPoint->Insert(MyF[i]->FindValue(Query),i);
     HypercubePoint * temp = TrainData;
+    int DIMENSION = GetDimension();
     while (temp != NULL)
     {
         if (!GetChecked(temp->GetPosition()) && HammingDistance(QueryPoint->GetRepresentation(),temp->GetRepresentation()) == Hamming){
@@ -283,6 +284,7 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
 
 double * RandomProjection :: AccurateNearestNeighbour(uint8_t * Query){
     //Same as above but now we dont need hamming, we check all
+    int DIMENSION = GetDimension();
     int  MinPos = -1;
     double MinSize = (double)MAXSIZE; 
     HypercubePoint * temp = TrainData;
@@ -330,6 +332,7 @@ vector <double> RandomProjection :: AccurateKNN(int K,uint8_t * Query){
 
 vector <int> RandomProjection :: RangeSearch(double R,uint8_t * Query){
     //Same as KNN but we check range
+    int DIMENSION = GetDimension();
     vector <int> ToReturn;
     HypercubePoint * QueryPoint = new HypercubePoint(Query,K,0);
     for (int i = 0 ; i < K ; i ++)  

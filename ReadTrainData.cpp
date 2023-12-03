@@ -7,6 +7,7 @@
 using namespace std;
 static TrainStore * MyTrainData = NULL;
 static int TrainNumber;
+static int DIMENSION ;;
 int reverseInt (int x)                      //We need to change endian representation
 {
     uint8_t Byte1, Byte2, Byte3, Byte4;     //Store each byte of number
@@ -32,11 +33,11 @@ int ReadTrainData(string path){
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
         NumberOfImages = reverseInt(NumberOfImages);
         TrainNumber = NumberOfImages;
-        TrainNumber = 1500;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));
         Columns= reverseInt(Columns);
+        DIMENSION = Rows*Columns;
         if (MyTrainData != NULL)
             delete MyTrainData;
         MyTrainData = new TrainStore;
@@ -91,4 +92,8 @@ void DeleteTrain(void){
 
 void SetAllUnchecked(void){
     MyTrainData->SetAllUnchecked();
+}
+
+int GetDimension(void){
+    return DIMENSION;
 }

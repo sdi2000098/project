@@ -1,6 +1,5 @@
 #include "hFunc.h"
-#include <random>
-
+#include <random> 
 //Source file for h function from LSH
 //Arguments dimension of each point-vector (784 for images) and window
 

@@ -5,7 +5,6 @@
     #define ERROR -1
     #define KLSH 5
     #define LLSH 5
-    #define DIMENSION 784
     #define POSITION 0
     #define DISTANCE 1
     #include "ReadTrainData.h"

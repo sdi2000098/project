@@ -33,6 +33,7 @@ void addEdge(struct GraphGNN* graph, int src, int dest,int Position) {
 }
 
 double * FindTrue(uint8_t * Query,int N){ //find true nearest neighbors of query
+    int DIMENSION = GetDimension();
     double * ToReturn = new double [N];
     for (int n = 0 ; n < N; n++){
 
@@ -60,7 +61,7 @@ double * FindTrue(uint8_t * Query,int N){ //find true nearest neighbors of query
 
 
 int NearestNeighbor(vector<int > *N, uint8_t * Query, vector <double *> * S){
-    
+    int DIMENSION = GetDimension();
     if ((*N).empty()) {
         // Handle the case when the vector is empty
         cerr << "Error: Vector N is empty." << endl;

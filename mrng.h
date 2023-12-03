@@ -3,8 +3,9 @@
 
     #define POSITION 0
     #define DISTANCE 1
-    #define CHECKED 2
-    #define DIMENSION 784
+    #define CHECKED 2    
+    //Checked is used in GenericGraphSearch to check if a node has been checked already
+    // It is the index of the checked variable in the double array in GenericGraphSearch
     #define CANDITATES 20
     #define KLSH 5
     #define LLSH 5

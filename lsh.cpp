@@ -13,7 +13,6 @@
 #define TABLE_SIZE 5
 #define M 100        // Upper bound for M
 #define MAXSIZE 1215752202
-#define DIMENSION 784
 #define WINDOW 5
 #define ERROR -1
 
@@ -61,6 +60,7 @@ class Bucket{
             NextBucket->Insert(NewData,NewID,NewPosition);
         }
         double * InnerNearestNeighbour(uint8_t * Query,int QueryId,double * ToReturn){
+            int DIMENSION = GetDimension();
             //Iteretates buckets and returns ToReturn argument
             if (NextBucket == NULL)
                 return ToReturn;
@@ -79,6 +79,7 @@ class Bucket{
             return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
         }
         double * InnerNearestNeighbour(uint8_t * Query,int QueryId,double * ToReturn,vector <double> * CurrentVector,int chekced){
+            int DIMENSION = GetDimension();
             //Iteretates buckets and returns ToReturn argument
             if (NextBucket == NULL)
                 return ToReturn;
@@ -109,6 +110,7 @@ class Bucket{
         }
 
         double * NearestNeighbour(uint8_t * Query, int QueryId){
+            int DIMENSION = GetDimension();
             //Returns a an array of two elements, array[0] is the Disntance to the nearest neighbor
             //array[1] is the position to the dataset of the nearest neighbor
             //This function is used only from the first bucket of the cell
@@ -128,6 +130,7 @@ class Bucket{
             return NextBucket->InnerNearestNeighbour(Query,QueryId,ToReturn);
         }
         double * NearestNeighbour(uint8_t * Query, int QueryId,vector <double> * CurrentVector,int chekced){
+            int DIMENSION = GetDimension();
             //Returns a an array of two elements, array[0] is the Disntance to the nearest neighbor
             //array[1] is the position to the dataset of the nearest neighbor
             //This function is used only from the first bucket of the cell
@@ -159,6 +162,7 @@ class Bucket{
         }
 
         double * AccurateInnerNearestNeighbour(uint8_t * Query,double * ToReturn){
+            int DIMENSION = GetDimension();
             //Same logic as aboce but checks all buckets
             if (NextBucket == NULL)
                 return ToReturn;
@@ -175,6 +179,7 @@ class Bucket{
         }
 
         double * AccurateNearestNeighbour(uint8_t * Query){
+            int DIMENSION = GetDimension();
             if (Data == NULL)
                 return NULL;
             double * ToReturn = new double[2];
@@ -186,6 +191,7 @@ class Bucket{
         }
 
         vector <int> RangeSearch(double R,uint8_t * Query,int QueryId){
+            int DIMENSION = GetDimension();
             //Same logic as above, we now return a vector of positions and we check radius
             vector <int> ToReturn;
             if (ID == QueryId && !GetChecked(position)){
@@ -199,6 +205,7 @@ class Bucket{
         }
 
         vector <int> InnerRangeSearch(double R, uint8_t * Query,int QueryId,vector <int> * ToReturn){
+            int DIMENSION = GetDimension();
             if (NextBucket == NULL)
                 return *ToReturn;
             if (ID == QueryId){
@@ -342,6 +349,7 @@ class HashTable {
 //LSH function implementation follow
 
 LSH :: LSH(int K, int L) : L(L){
+    int DIMENSION = GetDimension();
     //Simple contructor
     if ( K < 0  || L <0 ){
         cout << "K and L in LSH have to be positive integers\n";
