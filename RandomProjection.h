@@ -23,7 +23,7 @@
         //Probes, hamiltonian distance
         RandomProjection(int k,int m,int probes);
         ~RandomProjection();
-        double * NearestNeighbour(uint8_t * Query,int Hamming);
+        double * NearestNeighbour(uint8_t * Query,long long unsigned int Hamming);
         std::vector <double> KNN(int K,uint8_t * Query); 
         void Train(void);
         double  *   AccurateNearestNeighbour(uint8_t * Query);

@@ -199,7 +199,7 @@ void RandomProjection ::Train(void){
     }
 }
 
-double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
+double* RandomProjection :: NearestNeighbour(uint8_t * Query,long long unsigned int Hamming){
     //We project the query to the hypercube dimesnion and get its representation
     //Then the implementation is simillar to the LSH but now we use hamming distance
     HypercubePoint * QueryPoint = new HypercubePoint(Query,K,0);
@@ -209,7 +209,7 @@ double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
     int DIMENSION = GetDimension();
     while (temp != NULL)
     {
-        if (!GetChecked(temp->GetPosition()) && HammingDistance(QueryPoint->GetRepresentation(),temp->GetRepresentation()) == Hamming){
+        if (!GetChecked(temp->GetPosition()) && temp->GetRepresentation() == Hamming){
             double e = Euclidean(Query,temp->GetPixels(),DIMENSION);
             double * ToReturn = new double[2];
             ToReturn[0] = e;
@@ -226,11 +226,44 @@ double* RandomProjection :: NearestNeighbour(uint8_t * Query,int Hamming){
     return ToReturn;
     
 }
+void findNumbersWithHammingDistance(unsigned long long x, int d, unsigned long long k, vector<unsigned long long> &result,int N) {
+    unsigned long long maxVal = 1ULL << k;
+    if (d == 0) {
+        result.push_back(x);
+        return;
+    }
+    for (unsigned long long i = 0; i < maxVal; ++i) {
+        if (HammingDistance(x, i) == d && i < maxVal) {
+            result.push_back(i);
+            if ((int)result.size() >= N)
+                return;
+        }
+    }
+}
+std::vector<unsigned long long> findClosestNumbers(unsigned long long x, int N, unsigned long long k) {
+    std::vector<unsigned long long> result;
+    int d = 0; // Start with Hamming distance 0
+
+    while ((int)result.size() < N) {
+        findNumbersWithHammingDistance(x, d, k, result,N-result.size());
+        ++d; // Increase Hamming distance
+    }
+
+    // Sort and select the first N elements
 
 
+    return result;
+}
 vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
     vector <double> ToReturn;
     int i = 0;
+    HypercubePoint * QueryPoint = new HypercubePoint(Query,K,0);
+    for (int i = 0 ; i < K ; i ++)  
+        QueryPoint->Insert(MyF[i]->FindValue(Query),i);
+    
+    //We will use the findClosestNumbers function to get the M closest points to our query
+    vector <unsigned long long> Closest = findClosestNumbers(QueryPoint->GetRepresentation(),Probes,K);
+    delete QueryPoint;
     for (int CurrentHamming = 0; CurrentHamming <= Probes;CurrentHamming++){
         //We keep searching until we reach probes or we find M canditates
         double * Result= NULL;
@@ -243,8 +276,7 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
                 CurrentHamming = Probes +1;
                 break;
             }
-            
-            Result = NearestNeighbour(Query,CurrentHamming);
+            Result = NearestNeighbour(Query,Closest[CurrentHamming]);
             if (Result[1] != -1){
                 SetChecked(Result[1]);
                 ToReturn.push_back(Result[0]);
@@ -253,6 +285,7 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
             }
         } while (Result[1] != -1);  //If result == -1, no neighbor was found for this hamming, we go to the next one
     }
+    
     bool swapped;
     int j;
     for (i = 0; i < (int)ToReturn.size () - 1; i+=2) {
@@ -337,12 +370,13 @@ vector <int> RandomProjection :: RangeSearch(double R,uint8_t * Query){
     HypercubePoint * QueryPoint = new HypercubePoint(Query,K,0);
     for (int i = 0 ; i < K ; i ++)  
         QueryPoint->Insert(MyF[i]->FindValue(Query),i);
+    vector <unsigned long long> Closest = findClosestNumbers(QueryPoint->GetRepresentation(),Probes,K);
     HypercubePoint * temp ;
     for ( int Hamming = 0 ; Hamming <= Probes; Hamming ++){
         temp = TrainData;
         while (temp != NULL)
         {
-            if (HammingDistance(QueryPoint->GetRepresentation(),temp->GetRepresentation()) == Hamming){
+            if (temp->GetRepresentation() == Closest[Hamming]){
                 double e = Euclidean(Query,temp->GetPixels(),DIMENSION);
                 if (e <= R)
                     ToReturn.push_back(temp->GetPosition());

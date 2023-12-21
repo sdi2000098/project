@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
         
         MyCube->Train();
         int limit = GetQueryNumber();
-
+        limit = 5;
         // Check if the file exists and delete it if it does
         
         if (std::ifstream(outputfileName)) {
@@ -102,18 +102,19 @@ int main(int argc, char* argv[]) {
         for (int i = 0 ; i < limit ; i++){
             outputFile << "Query : "<<i<<std::endl;
 
-            start = clock();;
+            start = clock();
             KNNResult = MyCube->KNN(N,GetQueryRepresentation(i));
             end = clock();
             KNNTIme = double(end - start) / double(CLOCKS_PER_SEC);
 
             start = clock();
+            
             AcuurateKNNReult = MyCube->AccurateKNN(N,GetQueryRepresentation(i));
             end = clock();
             AccurateKNNTime = double(end - start) / double(CLOCKS_PER_SEC);
 
             for (int j = 0 ; j < 2*N ; j+=2 ){
-                if ( j == 0 )
+                if ( j == 0 && (int)KNNResult.size() != 0)
                     MAF[i]= KNNResult[j]/AcuurateKNNReult[j];
                 if ( j < (int)KNNResult.size()){
                     outputFile << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
@@ -129,7 +130,6 @@ int main(int argc, char* argv[]) {
             }
 
             outputFile << "tHypercube: " << KNNTIme << "\ntTrue: " << AccurateKNNTime <<"\n";
-
             vector <int> Range = MyCube->RangeSearch(R,GetQueryRepresentation(i));
             outputFile << "R-near neighbors:\n";
             for (int j = 0 ; j < (int)Range.size();j++)
