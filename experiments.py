@@ -2,10 +2,9 @@ import numpy as np
 import struct
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Dense, Dropout, BatchNormalization
+from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Flatten, Reshape, Dense, Dropout, BatchNormalization,GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 import optuna
-from tensorflow.keras.regularizers import l1, l2
 
 def read_mnist_images(filename):
     with open(filename, 'rb') as file:
@@ -20,23 +19,46 @@ def read_mnist_images(filename):
 
 # Usage
 def create_autoencoder(trial, input_dim):
-    n_layers = trial.suggest_int('n_layers', 1, 5)
+    n_conv_layers = trial.suggest_int('n_conv_layers', 1, 5)
     activation = trial.suggest_categorical('activation', ['relu', 'sigmoid', 'tanh'])
     dropout_rate = trial.suggest_float('dropout_rate', 0.0, 0.5)
-    l1_reg = trial.suggest_float('l1_reg', 1e-5, 1e-2, log=True)
-    l2_reg = trial.suggest_float('l2_reg', 1e-5, 1e-2, log=True)
 
-    input_img = Input(shape=(input_dim,))
+    input_img = Input(shape=input_dim)
     x = input_img
+    
+    for i in range(n_conv_layers):  
+        
+        filters = trial.suggest_int(f'filters_layer_{i}', 8, 64)
+        kernel_size = trial.suggest_categorical(f'kernel_size_layer_{i}', [(3, 3), (5, 5)])
 
-    for i in range(n_layers):
-        num_neurons = trial.suggest_int(f'n_units_l{i}', 32, 512, log=True)
-        x = Dense(num_neurons, activation=activation, 
-                  kernel_regularizer=tf.keras.regularizers.l1_l2(l1=l1_reg, l2=l2_reg))(x)
-        x = Dropout(dropout_rate)(x)
+        
+        x = Conv2D(filters, kernel_size, activation=activation, padding='same')(x)
+        x = MaxPooling2D((2, 2), padding='same')(x)
         x = BatchNormalization()(x)
+        x = Dropout(dropout_rate)(x)
 
-    decoded = Dense(input_dim, activation='sigmoid')(x)
+    x = GlobalAveragePooling2D()(x)
+
+    # Dense layer
+    num_neurons = trial.suggest_int('n_units_dense', 32, 128)
+    x = Dense(num_neurons, activation=activation)(x)
+    x = BatchNormalization()(x)
+    x = Dropout(dropout_rate)(x)
+
+    # Decoding part
+    x = Dense(7 * 7 * filters, activation=activation)(x)  # Prepare for reshaping to a 7x7 feature map
+    x = Reshape((7, 7, filters))(x)
+
+    # Upsampling steps to get back to 28x28
+    for _ in range(2):  # Two times upsampling from 7x7 to 28x28
+        x = Conv2D(filters, kernel_size, activation=activation, padding='same')(x)
+        x = UpSampling2D((2, 2))(x)
+        x = BatchNormalization()(x)
+        x = Dropout(dropout_rate)(x)
+
+    # Output layer
+    decoded = Conv2D(1, kernel_size, activation='sigmoid', padding='same')(x)
+
     autoencoder = Model(input_img, decoded)
     return autoencoder
 
@@ -44,11 +66,13 @@ def objective(trial):
     filename = 'dataset.dat'
     images, num_images, rows, cols = read_mnist_images(filename)
     images = images.astype(np.float32) / 255.0
-    flattened_images = images.reshape((num_images, rows*cols))
+    images = np.expand_dims(images, axis=-1)
+    
 
-    X_train, X_test = train_test_split(flattened_images, test_size=0.2)
+    X_train, X_test = train_test_split(images, test_size=0.2)
 
-    autoencoder = create_autoencoder(trial, rows*cols)
+    autoencoder = create_autoencoder(trial, (rows, cols, 1))
+    autoencoder.summary()
     optimizer_name = trial.suggest_categorical('optimizer', ['adam', 'sgd'])
     lr = trial.suggest_float('lr', 1e-5, 1e-1, log=True)
     if optimizer_name == 'adam':
@@ -58,15 +82,16 @@ def objective(trial):
         optimizer = tf.keras.optimizers.SGD(learning_rate=lr, momentum=momentum)
     autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
 
-    batch_size = trial.suggest_int('batch_size', 32, 256, log=True)
-    autoencoder.fit(X_train, X_train, epochs=50, batch_size=batch_size, shuffle=True, 
+    batch_size = trial.suggest_int('batch_size', 64, 512, log=True)
+    epochs = trial.suggest_int('epochs', 5, 15)
+    autoencoder.fit(X_train, X_train, epochs=epochs, batch_size=batch_size, shuffle=True, 
                     validation_data=(X_test, X_test), verbose=0)
 
     test_loss = autoencoder.evaluate(X_test, X_test, verbose=0)
     return test_loss
 
 study = optuna.create_study(direction='minimize')
-study.optimize(objective, n_trials=1000)
+study.optimize(objective, n_trials=100)
 
 print("Study statistics: ")
 print("  Number of finished trials: ", len(study.trials))
