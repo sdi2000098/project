@@ -1,0 +1,57 @@
+Query : 0
+Nearest neighbor-1: 53843
+distance: 676.584
+Nearest neighbor-2: 47003
+distance: 894.7
+Nearest neighbor-3: 16186
+distance: 862.677
+Nearest neighbor-4: 9444
+distance: 1034.78
+Nearest neighbor-5: 17946
+distance: 1058.97
+Query : 1
+Nearest neighbor-1: 49160
+distance: 1211.84
+Nearest neighbor-2: 28882
+distance: 1162.93
+Nearest neighbor-3: 17757
+distance: 1365.37
+Nearest neighbor-4: 31956
+distance: 1374.85
+Nearest neighbor-5: 23468
+distance: 1536.46
+Query : 2
+Nearest neighbor-1: 46512
+distance: 332.464
+Nearest neighbor-2: 15224
+distance: 341.048
+Nearest neighbor-3: 58741
+distance: 321.663
+Nearest neighbor-4: 47333
+distance: 367.715
+Nearest neighbor-5: 42531
+distance: 416.665
+Query : 3
+Nearest neighbor-1: 2806
+distance: 1413.33
+Nearest neighbor-2: 59244
+distance: 1228.23
+Nearest neighbor-3: 4356
+distance: 1325.31
+Nearest neighbor-4: 32708
+distance: 1251.65
+Nearest neighbor-5: 46772
+distance: 1404.01
+Query : 4
+Nearest neighbor-1: 25760
+distance: 1171.88
+Nearest neighbor-2: 24734
+distance: 1239.34
+Nearest neighbor-3: 54048
+distance: 1385.23
+Nearest neighbor-4: 36932
+distance: 1351.13
+Nearest neighbor-5: 32719
+distance: 1194.18
+Time taken: 0.0513044 seconds
+Mean Approximation Factor: 47.2948
