@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
         cout << "Please insert path to query file\n";
         cin >> queryFile;
     }
-
+    double MeanApproximationFactor;
     do{
     
         if ( ReadQueryData(queryFile) == ERROR)
@@ -82,6 +82,7 @@ int main(int argc, char* argv[]) {
         
         MyCube->Train();
         int limit = GetQueryNumber();
+        limit = 20;
         // Check if the file exists and delete it if it does
         
         if (std::ifstream(outputfileName)) {
@@ -97,7 +98,7 @@ int main(int argc, char* argv[]) {
         vector <double> KNNResult, AcuurateKNNReult;    
         clock_t start, end;
         double KNNTIme = 0,AccurateKNNTime = 0;
-        double MAF[limit];
+        MeanApproximationFactor = 0;
         for (int i = 0 ; i < limit ; i++){
             outputFile << "Query : "<<i<<std::endl;
 
@@ -105,16 +106,16 @@ int main(int argc, char* argv[]) {
             KNNResult = MyCube->KNN(N,GetQueryRepresentation(i));
             end = clock();
             KNNTIme = double(end - start) / double(CLOCKS_PER_SEC);
-
             start = clock();
             
             AcuurateKNNReult = MyCube->AccurateKNN(N,GetQueryRepresentation(i));
             end = clock();
             AccurateKNNTime = double(end - start) / double(CLOCKS_PER_SEC);
-
             for (int j = 0 ; j < 2*N ; j+=2 ){
                 if ( j == 0 && (int)KNNResult.size() != 0)
-                    MAF[i]= KNNResult[j]/AcuurateKNNReult[j];
+                    MeanApproximationFactor += KNNResult[j]/AcuurateKNNReult[j];
+                else
+                    MeanApproximationFactor += 10; // Add a big number to the mean approximation factor as a penalty
                 if ( j < (int)KNNResult.size()){
                     outputFile << "Nearest neighbor-"<<j/2 +1<< ": " << KNNResult[j+1] << "\n";
                     outputFile << "distanceHypercube: " << KNNResult[j] <<"\n";
@@ -127,7 +128,6 @@ int main(int argc, char* argv[]) {
                     outputFile << "Could not find Nearest neighbor " << j/2 << " using exhaustive KNN\n";
 
             }
-
             outputFile << "tHypercube: " << KNNTIme << "\ntTrue: " << AccurateKNNTime <<"\n";
             vector <int> Range = MyCube->RangeSearch(R,GetQueryRepresentation(i));
             outputFile << "R-near neighbors:\n";
@@ -136,12 +136,9 @@ int main(int argc, char* argv[]) {
 
             
         }
-        double maxmaf=MAF[0];
 
-        for (int i=1;i<limit;i++)
-            if (MAF[i] > maxmaf)
-                maxmaf = MAF[i];
-        outputFile << "MAF : " << maxmaf << "\n";
+        MeanApproximationFactor = MeanApproximationFactor/(limit*N);
+        outputFile << "Mean Approximation Factor: " << MeanApproximationFactor << endl;
         outputFile.close();
         delete MyCube;
         std::cout<<"Terminate program? (y/n)\n";
@@ -157,5 +154,6 @@ int main(int argc, char* argv[]) {
     } while(answer=="n");
     DeleteQueries();
     DeleteTrain();
-    return 0;
+    
+    return (int)MeanApproximationFactor;
 }

@@ -1,0 +1,42 @@
+Query : 0
+Nearest neighbor-1: 3744
+distanceHypercube: 2823.09
+distanceTrue: 1095.86
+tHypercube: 0.001078
+tTrue: 0.002781
+R-near neighbors:
+2049
+3744
+Query : 1
+Nearest neighbor-1: 3744
+distanceHypercube: 2786.67
+distanceTrue: 1554.42
+tHypercube: 0.001051
+tTrue: 0.002773
+R-near neighbors:
+3744
+Query : 2
+Nearest neighbor-1: 3744
+distanceHypercube: 2693.34
+distanceTrue: 547.098
+tHypercube: 0.001067
+tTrue: 0.002812
+R-near neighbors:
+3744
+Query : 3
+Nearest neighbor-1: 3744
+distanceHypercube: 2877.04
+distanceTrue: 1297.79
+tHypercube: 0.001053
+tTrue: 0.00275
+R-near neighbors:
+3744
+Query : 4
+Nearest neighbor-1: 3744
+distanceHypercube: 2610.71
+distanceTrue: 1322.51
+tHypercube: 0.001091
+tTrue: 0.002791
+R-near neighbors:
+3744
+Mean Approximation Factor: 2.69656

@@ -40,10 +40,6 @@ int ReadTrainData(string path){
         Columns= reverseInt(Columns);
         DIMENSION = Rows*Columns;
         //Print info of file
-        cout << "Magic number: " << Magic << "\n";
-        cout << "Number of images: " << NumberOfImages << "\n";
-        cout << "Rows: " << Rows << "\n";
-        cout << "Columns: " << Columns << "\n";
         if (MyTrainData != NULL)
             delete MyTrainData;
         MyTrainData = new TrainStore;

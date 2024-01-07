@@ -1,57 +1,104 @@
+GNN Results
 Query : 0
-Nearest neighbor-1: 53843
-distance: 676.584
-Nearest neighbor-2: 47003
-distance: 894.7
-Nearest neighbor-3: 16186
-distance: 862.677
-Nearest neighbor-4: 9444
-distance: 1034.78
-Nearest neighbor-5: 17946
-distance: 1058.97
+Nearest neighbor-1 : 773
+distanceApproximate : 1175.03
+distanceTrue : 1175.03
+------------------------------------------------
 Query : 1
-Nearest neighbor-1: 49160
-distance: 1211.84
-Nearest neighbor-2: 28882
-distance: 1162.93
-Nearest neighbor-3: 17757
-distance: 1365.37
-Nearest neighbor-4: 31956
-distance: 1374.85
-Nearest neighbor-5: 23468
-distance: 1536.46
+Nearest neighbor-1 : 76
+distanceApproximate : 2035.79
+distanceTrue : 1830.26
+------------------------------------------------
 Query : 2
-Nearest neighbor-1: 46512
-distance: 332.464
-Nearest neighbor-2: 15224
-distance: 341.048
-Nearest neighbor-3: 58741
-distance: 321.663
-Nearest neighbor-4: 47333
-distance: 367.715
-Nearest neighbor-5: 42531
-distance: 416.665
+Nearest neighbor-1 : 466
+distanceApproximate : 645.058
+distanceTrue : 645.058
+------------------------------------------------
 Query : 3
-Nearest neighbor-1: 2806
-distance: 1413.33
-Nearest neighbor-2: 59244
-distance: 1228.23
-Nearest neighbor-3: 4356
-distance: 1325.31
-Nearest neighbor-4: 32708
-distance: 1251.65
-Nearest neighbor-5: 46772
-distance: 1404.01
+Nearest neighbor-1 : 451
+distanceApproximate : 1394.31
+distanceTrue : 1394.31
+------------------------------------------------
 Query : 4
-Nearest neighbor-1: 25760
-distance: 1171.88
-Nearest neighbor-2: 24734
-distance: 1239.34
-Nearest neighbor-3: 54048
-distance: 1385.23
-Nearest neighbor-4: 36932
-distance: 1351.13
-Nearest neighbor-5: 32719
-distance: 1194.18
-Time taken: 0.0513044 seconds
-Mean Approximation Factor: 47.2948
+Nearest neighbor-1 : 914
+distanceApproximate : 1335.51
+distanceTrue : 1335.51
+------------------------------------------------
+Query : 5
+Nearest neighbor-1 : 466
+distanceApproximate : 757.116
+distanceTrue : 757.116
+------------------------------------------------
+Query : 6
+Nearest neighbor-1 : 54
+distanceApproximate : 1489.44
+distanceTrue : 1489.44
+------------------------------------------------
+Query : 7
+Nearest neighbor-1 : 744
+distanceApproximate : 1844.49
+distanceTrue : 1844.49
+------------------------------------------------
+Query : 8
+Nearest neighbor-1 : 237
+distanceApproximate : 2235
+distanceTrue : 2235
+------------------------------------------------
+Query : 9
+Nearest neighbor-1 : 167
+distanceApproximate : 1391.53
+distanceTrue : 1391.53
+------------------------------------------------
+Query : 10
+Nearest neighbor-1 : 524
+distanceApproximate : 1421.33
+distanceTrue : 1421.33
+------------------------------------------------
+Query : 11
+Nearest neighbor-1 : 488
+distanceApproximate : 2027.42
+distanceTrue : 2027.42
+------------------------------------------------
+Query : 12
+Nearest neighbor-1 : 116
+distanceApproximate : 1215.53
+distanceTrue : 1215.53
+------------------------------------------------
+Query : 13
+Nearest neighbor-1 : 210
+distanceApproximate : 1388.68
+distanceTrue : 1388.68
+------------------------------------------------
+Query : 14
+Nearest neighbor-1 : 678
+distanceApproximate : 872.264
+distanceTrue : 872.264
+------------------------------------------------
+Query : 15
+Nearest neighbor-1 : 50
+distanceApproximate : 1918.04
+distanceTrue : 1918.04
+------------------------------------------------
+Query : 16
+Nearest neighbor-1 : 580
+distanceApproximate : 1831.47
+distanceTrue : 1448.73
+------------------------------------------------
+Query : 17
+Nearest neighbor-1 : 522
+distanceApproximate : 1358.85
+distanceTrue : 1358.85
+------------------------------------------------
+Query : 18
+Nearest neighbor-1 : 924
+distanceApproximate : 2185.63
+distanceTrue : 2185.63
+------------------------------------------------
+Query : 19
+Nearest neighbor-1 : 92
+distanceApproximate : 1257.99
+distanceTrue : 1257.99
+------------------------------------------------
+tAverageApproximate : 0.00069785
+tAverageTrue : 0.00056965
+Mean Approximation Factor: 1.01882

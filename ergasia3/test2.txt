@@ -53,4 +53,4 @@ Nearest neighbour-4: 25760
 distance: 1171.88
 Nearest neighbour-5: 32719
 distance: 1194.18
-Time taken: 0.853156 seconds
+Average time : 0.0339245 seconds

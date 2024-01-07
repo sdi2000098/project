@@ -78,6 +78,7 @@ int main(int argc, char* argv[]) {
         LSH * MyLsh = new LSH(K,L);
         MyLsh->Train();
         int limit = GetQueryNumber();
+        
         // Check if the file exists and delete it if it does
         if (std::ifstream(outputfileName)) {
             std::remove(outputfileName);

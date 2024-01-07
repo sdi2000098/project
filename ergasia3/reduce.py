@@ -41,13 +41,13 @@ def scheduler(epoch, lr):
     else:
         return lr * tf.math.exp(-0.1)
 
-def create_encoder(input_dim,   ) :
-    activation = 'tanh'
-    dropout_rate = 0.03719086178088038
-    filters_layer_0 = 37
-    kernel_size_layer_0 = (3, 3)
-    filters_layer_1 = 30
-    kernel_size_layer_1 = (3, 3)
+def create_encoder(input_dim,bottleneck_size) :
+    activation = 'relu'
+    dropout_rate = 0.00044795018064423126
+    filters_layer_0 = 45
+    kernel_size_layer_0 = (5, 5)
+    filters_layer_1 = 46
+    kernel_size_layer_1 = (5, 5)
     
     input_img = Input(shape=input_dim)
     x = input_img
@@ -86,7 +86,7 @@ def main():
     images = images.astype(np.float32) / 255.0
     images = np.expand_dims(images, axis=-1)
 
-    bottleneck_size = 50
+    bottleneck_size = 15
     encoder = create_encoder((rows, cols, 1), bottleneck_size)
     encoded_images = encoder.predict(images)
     normalized_images = ((encoded_images + 1) / 2) * 255

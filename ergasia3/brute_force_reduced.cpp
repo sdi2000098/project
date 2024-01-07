@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
     
     for (int i = 0;i<limit;i++){
         outputFile << "Query : "<<i<<std::endl;
-        Distances = GetTrueDistances(inputFile,queryFile,indexes[i],GetQueryRepresentation(i));
+        Distances = GetTrueDistances(indexes[i],GetQueryRepresentation(i));
         for (int j = 0;j<K;j++){
             outputFile << "Nearest neighbor-" << j+1 <<": "<<indexes[i][j]<<endl;
             outputFile << "distance: "<<Distances[j]<<endl;
@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
         delete [] Distances;
     }
     chrono::duration<double> duration = stop - start;
-    outputFile << "Time taken: " << duration.count() << " seconds" << std::endl;
+    outputFile << "Average time : " << duration.count()/(limit*K) << " seconds" << endl;
     double MeanApproximationFactor = 0;
     for (int i = 0 ; i < limit ; i ++){
         uint8_t * query = GetQueryRepresentation(i);
@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
                 }
             }
             SetChecked(minIndex);
-            MeanApproximationFactor += indexes[i][j]/minDistance;
+            MeanApproximationFactor += Euclidean(GetRepresenation(indexes[i][j]),query,GetDimension()) /minDistance;
         }
         
     }
@@ -145,5 +145,5 @@ int main(int argc, char* argv[]) {
     outputFile.close();
     DeleteQueries();
     DeleteTrain();
-
+    return (int)MeanApproximationFactor;
 }

@@ -9,5 +9,5 @@
     #include <iostream>
     #include "hFunc.h"
     #define ERROR -1
-    double * GetTrueDistances(string inputFile, string queryFile,vector <int> Indexes,uint8_t * Query  );
+    double * GetTrueDistances(vector <int> Indexes,uint8_t * Query  );
 #endif

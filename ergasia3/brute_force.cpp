@@ -91,8 +91,9 @@ int main(int argc, char* argv[]) {
     }
     auto stop = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = stop - start;
-    outputFile << "Time taken: " << duration.count() << " seconds" << std::endl;
+    outputFile << "Average time : " << duration.count()/(limit*K) << " seconds" << endl;
     outputFile.close();
     DeleteQueries();
     DeleteTrain();
+    return  0;
 }
