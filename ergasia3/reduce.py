@@ -86,7 +86,7 @@ def main():
     images = images.astype(np.float32) / 255.0
     images = np.expand_dims(images, axis=-1)
 
-    bottleneck_size = 15
+    bottleneck_size = 30
     encoder = create_encoder((rows, cols, 1), bottleneck_size)
     encoded_images = encoder.predict(images)
     normalized_images = ((encoded_images + 1) / 2) * 255

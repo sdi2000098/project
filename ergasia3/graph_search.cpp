@@ -194,7 +194,7 @@ int main (int argc, char* argv[]){
         else
             DeleteGraph(graph2);
         outputFile.close();
-        DeleteQueries();
+        //DeleteQueries();
     //}while(answer=="n"); //while answer is n run again 
     
     DeleteQueries(); //free queries data

@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
         return ERROR;
     }
     int limit = GetQueryNumber();
-    limit = 5;
+    limit = 20;
     vector <int> indexes[limit];
     double minDistance;
     int minIndex;
@@ -145,5 +145,6 @@ int main(int argc, char* argv[]) {
     outputFile.close();
     DeleteQueries();
     DeleteTrain();
+    std::cout << "Return Value: " << MeanApproximationFactor << std::endl;
     return (int)MeanApproximationFactor;
 }

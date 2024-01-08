@@ -109,7 +109,6 @@ bool compareDistances(const double* a, const double* b) {
 vector<double *> GNNS(struct GraphGNN * graph, uint8_t * Query, int R, int T, int E,int L) {
     vector <double *>  S;
     for (int r = 0; r < R; ++r) {       // Repeat R times
-
         // Seed the random number generator
         random_device rd;
         mt19937 gen(rd());
@@ -119,16 +118,22 @@ vector<double *> GNNS(struct GraphGNN * graph, uint8_t * Query, int R, int T, in
         int Yt = distributionX(gen);        // Yt = random point in G
         
         for (int t = 0; t < T; ++t) {      
+            
             // S = S ∪ N(Yt−1, E, G)
             if (graph->adjList[Yt] == NULL) {
                 // Handle the case when the adjacency list is empty
                 return S;
             }
+            int max;
+
+            for (max = 0 ;max< graph->k; max++)
+                if (graph->adjList[Yt][max] == ERROR)
+                    break;
+            if (max < E)
+                E = max-1;
             vector<int > N(graph->adjList[Yt], graph->adjList[Yt] + E);     // N = Neighbors of Yt (expansions)
             Yt = NearestNeighbor(&N, Query,&S);
-            
             // Yt = arg minY∈N(Yt−1,E,G) δ(Y, Q)
-            
             if (Yt == -1)
                 break;
         }

@@ -110,6 +110,20 @@ class Cluster{
                 Centroid[j] = accumulator;
             }
         }
+        void UpdateFromReduced(void){
+            double accumulator ;
+            //Update the center using the current members
+            delete [] Centroid;    //Delete old centroid    
+            Centroid = new double[GetDimension()];
+            int DIMENSION = GetDimension();
+            for (int j = 0 ; j < DIMENSION ; j ++){
+                accumulator = 0;
+                for (int i =0 ; i < (int)Members.size() ; i ++){
+                    accumulator += GetRepresenation(Members[i])[j] / (double)Members.size();
+                }
+                Centroid[j] = accumulator;
+            }
+        }
         void DisplayFullInfo(void){
             outputFile << "{";
             PrintCentroid();
@@ -171,6 +185,88 @@ KMeans :: KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int prob
         outputFile << "\n\n\n\n\n##################################################################\n\n\n";
         for (int i = 0;i<K ; i ++ )
             MyClusters[i]->DisplayFullInfo();
+    }
+    //Calculate Objective Function
+    double ObjectiveFunction = 0;
+    for (int i = 0 ; i< GetTrainNumber();i++){
+        ObjectiveFunction += powf(Euclidean(MyClusters[GetCluster(i)]->GetCentroid(),GetRepresenation(i),GetDimension()),2)/GetTrainNumber();
+    }
+    outputFile << "Objective Function Value: " << ObjectiveFunction << "\n";
+
+    for (int i = 0 ; i < GetTrainNumber() ; i++)
+        SetCluster(i,-1);
+    outputFile.close();
+}
+KMeans :: KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int probes,const char * outputfileName,bool flag,string InputFile){
+
+    outputFile.open(outputfileName, std::ios::app);
+    if (!outputFile.is_open()) {
+        std::cerr << "Error: Could not open the output file." << std::endl;
+        return;
+    }
+    //Constructor of Kmeans
+    K = K_;
+    MyClusters  = new Cluster *[K];
+    random_device rd;  
+    mt19937 gen(rd()); 
+    uniform_int_distribution<> distrib(0, GetTrainNumber());
+    //Randomly pick the first Centroid
+    int NewCentroidIndex = distrib(gen);
+    MyClusters[0] = new Cluster(NewCentroidIndex);
+    //Setting the Cluster of datapoint using the position in dataset
+    SetCluster(NewCentroidIndex,0);
+    Initialize();           //KMEans++
+    clock_t start, end;
+    double Time = 0;
+
+    start = clock();
+    if (strcmp(Method,"Classic") == 0 ){
+        outputFile << "Algorithm: Lloyds\n";
+        Lloyds();
+    }
+    else if (strcmp(Method,"LSH") == 0 || strcmp(Method,"Hypercube") == 0 ){
+        outputFile << "Algorithm: Range Search " << Method << "\n";
+        RangeSearch(KLSH,L,Kcube,M,probes,Method);
+    }
+    else{
+        outputFile << "No such method" << Method << "\n";
+        return;
+    }
+    end = clock();
+    Time = double(end - start) / double(CLOCKS_PER_SEC);
+    
+    for (int i =0 ; i< K;i++){
+        outputFile << "Cluster-" << i+1 << " {size: " << MyClusters[i]->GetSize()<< " centroid: ";
+        MyClusters[i]->PrintCentroid();
+        outputFile << " }\n";
+    }
+    outputFile <<"clustering_time: " << Time <<"\n";
+    Silhouette();
+    if (flag){
+        outputFile << "\n\n\n\n\n##################################################################\n\n\n";
+        for (int i = 0;i<K ; i ++ )
+            MyClusters[i]->DisplayFullInfo();
+    }
+    //Calculate Objective Function
+    double ObjectiveFunction = 0;
+    for (int i = 0 ; i< GetTrainNumber();i++){
+        ObjectiveFunction += powf(Euclidean(MyClusters[GetCluster(i)]->GetCentroid(),GetRepresenation(i),GetDimension()),2)/GetTrainNumber();
+    }
+    outputFile << "Objective Function Value: " << ObjectiveFunction << "\n";
+    outputFile << "For reduced dataset we have : \n";
+    SilhouetteReduced(InputFile);
+    //Recalculate ceentroids
+    
+    //Calculate Objective Function
+    ObjectiveFunction = 0;
+    for (int i = 0 ; i< GetTrainNumber();i++){
+        ObjectiveFunction += powf(Euclidean(MyClusters[GetCluster(i)]->GetCentroid(),GetRepresenation(i),GetDimension()),2)/GetTrainNumber();
+    }
+    outputFile << "Objective Function Value: " << ObjectiveFunction << "\n";
+    for (int i =0 ; i< K;i++){
+        outputFile << "Cluster-" << i+1 << " {size: " << MyClusters[i]->GetSize()<< " centroid: ";
+        MyClusters[i]->PrintCentroid();
+        outputFile << " }\n";
     }
     for (int i = 0 ; i < GetTrainNumber() ; i++)
         SetCluster(i,-1);
@@ -238,7 +334,7 @@ void KMeans :: Lloyds(void){
     int DIMENSION = GetDimension();
     int Position;
     double Min;
-    bool SmtChanged ;
+    bool SmtChanged;
     do
     {
         SmtChanged = false;
@@ -423,13 +519,76 @@ void KMeans :: Silhouette(void){
 }
 
 double KMeans :: GetMean(int i,int ClusterIndex){
+    
     int DIMENSION = GetDimension();
     //Function that get Mean distance from point i to all the members that belong to cluster with this index
     double ToReturn = 0;
+    
     for (int j = 0 ; j < MyClusters[ClusterIndex]->GetSize();j++){
         if (MyClusters[ClusterIndex]->GetMember(j) == i)
             continue;
         ToReturn+= Euclidean(GetRepresenation(MyClusters[ClusterIndex]->GetMember(j)),GetRepresenation(i),DIMENSION);
     }
+    
     return ToReturn/(double)MyClusters[ClusterIndex]->GetSize();
+}
+
+void KMeans :: SilhouetteReduced(string inputFileReduced){
+    int ClusterPerPoint[GetTrainNumber()];
+    for (int i = 0 ; i < GetTrainNumber() ; i++){
+        ClusterPerPoint[i] = GetCluster(i);
+    }
+    if (ReadTrainData(inputFileReduced) == ERROR)
+        return;
+    int DIMENSION = GetDimension();
+    for (int i = 0 ; i < GetTrainNumber();i++)
+        SetCluster(i,ClusterPerPoint[i]);
+    // Simple implementation of metric
+    for (int i = 0 ; i < K ; i ++ ) // Update centroids
+        MyClusters[i]->UpdateFromReduced();
+    double * A = new double [GetTrainNumber()], * B =new double [GetTrainNumber()], * S = new double[GetTrainNumber()] ;
+    double * SAvergae = new double [K];
+    double STotal = 0;
+    
+    
+    
+    for (int i = 0 ; i < K ; i++)
+        SAvergae[i] = 0;
+    
+    for (int i = 0 ; i < GetTrainNumber();i++){
+        A[i] = GetMean(i,GetCluster(i));
+        double Min = static_cast <double> (MAXSIZE);
+        int MinPos = -1;
+        for (int j = 0; j < K ; j++){
+            if (GetCluster(i) == j )
+                continue;
+            double e = Euclidean(MyClusters[j]->GetCentroid(),GetRepresenation(i),DIMENSION);
+            if (e < Min){
+                MinPos = j;
+                Min = e;
+            }
+        }
+        B[i] = GetMean(i,MinPos);
+        if (A[i] < B[i])
+            S[i] = 1  - A[i]/B[i];
+        else if (A[i] > B[i]){
+            S[i] = B[i]/A[i] -1;
+        }
+        else
+            S[i] = 0;
+        SAvergae[GetCluster(i)] += S[i]/(double)MyClusters[GetCluster(i)]->GetSize();
+        STotal += S[i];
+        
+    }
+    
+    STotal/=(double)GetTrainNumber();
+    outputFile << "Silhouette: [ ";
+    for (int i = 0 ; i< K; i++)
+        outputFile <<SAvergae[i] <<", ";
+    outputFile << STotal << " ]\n";
+    cout << "Return Value: " << STotal << endl;
+    delete []A;
+    delete []B;
+    delete []S;
+    delete []SAvergae;
 }

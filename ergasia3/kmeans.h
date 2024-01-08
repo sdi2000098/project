@@ -1,7 +1,7 @@
     #ifndef K_MEANS
     #include <iostream>
     #define K_MEANS
-
+    #include <string>
     class Cluster;
     class KMeans{
         private :
@@ -12,9 +12,11 @@
             void RangeSearch(int KLSH,int L,int KCube,int M,int probes,char * Method);
             void Silhouette(void);
             double GetMean(int i,int ClusterIndex);
+            void SilhouetteReduced(std::string inputFileReduced);
         public :
             KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int probes,const char * outputfileName,bool flag);
             //All arguments are passed to constructor, even if they are not used
+            KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int probes,const char * outputfileName,bool flag,std::string InputFile);
             ~KMeans();
 
     };
