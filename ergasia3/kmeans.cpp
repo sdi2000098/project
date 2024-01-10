@@ -198,6 +198,7 @@ KMeans :: KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int prob
     outputFile.close();
 }
 KMeans :: KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int probes,const char * outputfileName,bool flag,string InputFile){
+    //Overloaded constructor for reduced dataset that also gets the input file to the original dataset
 
     outputFile.open(outputfileName, std::ios::app);
     if (!outputFile.is_open()) {
@@ -234,14 +235,13 @@ KMeans :: KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int prob
     }
     end = clock();
     Time = double(end - start) / double(CLOCKS_PER_SEC);
-    
-    for (int i =0 ; i< K;i++){
+    for (int i =0 ; i< K;i++){      //Print clusters in reduced space
         outputFile << "Cluster-" << i+1 << " {size: " << MyClusters[i]->GetSize()<< " centroid: ";
         MyClusters[i]->PrintCentroid();
         outputFile << " }\n";
     }
-    outputFile <<"clustering_time: " << Time <<"\n";
-    Silhouette();
+    outputFile <<"clustering_time: " << Time <<"\n"; 
+    Silhouette();      //Calculate Silhouette for reduced space 
     if (flag){
         outputFile << "\n\n\n\n\n##################################################################\n\n\n";
         for (int i = 0;i<K ; i ++ )
@@ -252,10 +252,9 @@ KMeans :: KMeans(int K_,char * Method, int KLSH,int L,int Kcube, int M, int prob
     for (int i = 0 ; i< GetTrainNumber();i++){
         ObjectiveFunction += powf(Euclidean(MyClusters[GetCluster(i)]->GetCentroid(),GetRepresenation(i),GetDimension()),2)/GetTrainNumber();
     }
-    outputFile << "Objective Function Value: " << ObjectiveFunction << "\n";
+    outputFile << "Objective Function Value: " << ObjectiveFunction << "\n";    //Print objective function in reduced space
     outputFile << "For reduced dataset we have : \n";
-    SilhouetteReduced(InputFile);
-    //Recalculate ceentroids
+    SilhouetteReduced(InputFile);    //Calculate Silhouette for original space this function also loads the original dataset
     
     //Calculate Objective Function
     ObjectiveFunction = 0;
@@ -533,19 +532,21 @@ double KMeans :: GetMean(int i,int ClusterIndex){
     return ToReturn/(double)MyClusters[ClusterIndex]->GetSize();
 }
 
-void KMeans :: SilhouetteReduced(string inputFileReduced){
+void KMeans :: SilhouetteReduced(string inputFileReduced){     //Same as Silhouette but also loads the original dataset 
     int ClusterPerPoint[GetTrainNumber()];
     for (int i = 0 ; i < GetTrainNumber() ; i++){
-        ClusterPerPoint[i] = GetCluster(i);
+        ClusterPerPoint[i] = GetCluster(i);     //Store the cluster of each point so we can assigng it in the original dataset since when we load it it will be set to -1
     }
-    if (ReadTrainData(inputFileReduced) == ERROR)
+    if (ReadTrainData(inputFileReduced) == ERROR)   //Load original dataset
         return;
     int DIMENSION = GetDimension();
     for (int i = 0 ; i < GetTrainNumber();i++)
         SetCluster(i,ClusterPerPoint[i]);
     // Simple implementation of metric
-    for (int i = 0 ; i < K ; i ++ ) // Update centroids
+    for (int i = 0 ; i < K ; i ++ )     // Update centroids
         MyClusters[i]->UpdateFromReduced();
+
+    // Same preocedure as Silhouette
     double * A = new double [GetTrainNumber()], * B =new double [GetTrainNumber()], * S = new double[GetTrainNumber()] ;
     double * SAvergae = new double [K];
     double STotal = 0;
@@ -586,7 +587,8 @@ void KMeans :: SilhouetteReduced(string inputFileReduced){
     for (int i = 0 ; i< K; i++)
         outputFile <<SAvergae[i] <<", ";
     outputFile << STotal << " ]\n";
-    cout << "Return Value: " << STotal << endl;
+    cout << "Return Value: " << STotal << endl; //Return value for python script
+    
     delete []A;
     delete []B;
     delete []S;

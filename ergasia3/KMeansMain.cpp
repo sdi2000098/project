@@ -11,10 +11,10 @@
 std::map<std::string, int> readArgumentsFromFile(const std::string& filename) {
     // Define default values
     std::map<std::string, int> defaults;
-    defaults["number_of_vector_hash_tables"] = 3;
-    defaults["number_of_vector_hash_functions"] = 4;
-    defaults["max_number_M_hypercube"] = 10;
-    defaults["number_of_hypercube_dimensions"] = 3;
+    defaults["number_of_vector_hash_tables"] = 8;
+    defaults["number_of_vector_hash_functions"] = 2;
+    defaults["max_number_M_hypercube"] = 96;
+    defaults["number_of_hypercube_dimensions"] = 6;
     defaults["number_of_probes"] = 2;
 
     // Open the file

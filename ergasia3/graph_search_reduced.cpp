@@ -110,14 +110,13 @@ int main (int argc, char* argv[]){
         return ERROR;
     }
     int limit2 = GetQueryNumber(); //limit2 number of queries
-    limit2 = 20;
     if (m == 1)
         outputFile << "GNN Results\n";
     else
         outputFile << "MRNG Results\n";
     double GraphSearchTime =0 ,AccurateTime =0;
     auto start = chrono::high_resolution_clock::now();
-    vector <int> indexes[limit];
+    vector <int> indexes[limit2];
     for (int i = 0 ; i < limit2;i++){ //for all queries
         vector<double *> currentResult;
         //Current result is a vector of double arrays, each array has 2 values : position in dataset, distance of point from query
@@ -130,6 +129,10 @@ int main (int argc, char* argv[]){
         
     }
     auto stop = chrono::high_resolution_clock::now();
+    //Same as brute force 
+    //Return to original space and calculate true distances
+    //and then calculate mean approximation factor
+
     if (ReadTrainData(inputFile) == ERROR)
         return NULL;
     if (ReadQueryData(queryFile) == ERROR)

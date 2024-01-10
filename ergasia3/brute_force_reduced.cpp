@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
         } else if (arg == "-o" && i + 1 < argc) {
             outputfileName = argv[i + 1];
             i++;
-        } else if (arg == "-dr" && i + 1 < argc) {
+        } else if (arg == "-dr" && i + 1 < argc) {      //Add two more arguments for reduced files
             inputFileReduced = argv[i + 1];
             i++;
         } else if (arg == "-qr" && i + 1 < argc) {
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
         return ERROR;
     }
     
-    if (ReadTrainData(inputFileReduced) == ERROR)
+    if (ReadTrainData(inputFileReduced) == ERROR)   //Read reduced files
         return ERROR;
     if (ReadQueryData(queryFileReduced) == ERROR)
         return ERROR;
@@ -79,40 +79,40 @@ int main(int argc, char* argv[]) {
         return ERROR;
     }
     int limit = GetQueryNumber();
-    limit = 20;
-    vector <int> indexes[limit];
+    vector <int> indexes[limit];   //Vector that contains the indexes of the K nearest neighbors for each query
+    //Will be use to hold indexes to return to original space
     double minDistance;
     int minIndex;
     //Start measuring time
     auto start = chrono::high_resolution_clock::now();
-    for (int i = 0;i<limit;i++){
+    for (int i = 0;i<limit;i++){    //Find K nearest neighbors for each query in reduced space
         uint8_t * query = GetQueryRepresentation(i);
-        SetAllUnchecked();
-        for (int j = 0;j<K;j++){
+        SetAllUnchecked();      //For each query we set all train images as unchecked
+        for (int j = 0;j<K;j++){    //Find K nearest neighbors
             minDistance = 100000000;
-            for (int k = 0;k<GetTrainNumber();k++){
+            for (int k = 0;k<GetTrainNumber();k++){   //For each train image
                 
-                uint8_t * train = GetRepresenation(k);
-                double distance = Euclidean(query,train,GetDimension());
-                if (distance < minDistance && GetChecked(k) == false){
+                uint8_t * train = GetRepresenation(k);  //Get representation
+                double distance = Euclidean(query,train,GetDimension());    //Calculate distance
+                if (distance < minDistance && GetChecked(k) == false){    //If distance is smaller than minDistance and image is unchecked
                     minDistance = distance;
                     minIndex = k;
                 }
             }
-            SetChecked(minIndex);
-            indexes[i].push_back(minIndex);
+            SetChecked(minIndex);   //Set image as checked
+            indexes[i].push_back(minIndex); //Insert index to vector
         }   
     }
     auto stop = chrono::high_resolution_clock::now();
-    if (ReadTrainData(inputFile) == ERROR)
+    if (ReadTrainData(inputFile) == ERROR)  //Read original files
         return NULL;
     if (ReadQueryData(queryFile) == ERROR)
         return NULL;
     double * Distances;
     
-    for (int i = 0;i<limit;i++){
+    for (int i = 0;i<limit;i++){    //For each query calculate true distances and print them
         outputFile << "Query : "<<i<<std::endl;
-        Distances = GetTrueDistances(indexes[i],GetQueryRepresentation(i));
+        Distances = GetTrueDistances(indexes[i],GetQueryRepresentation(i));     // Get back to original space and calculate true distances
         for (int j = 0;j<K;j++){
             outputFile << "Nearest neighbor-" << j+1 <<": "<<indexes[i][j]<<endl;
             outputFile << "distance: "<<Distances[j]<<endl;
@@ -122,7 +122,8 @@ int main(int argc, char* argv[]) {
     chrono::duration<double> duration = stop - start;
     outputFile << "Average time : " << duration.count()/(limit*K) << " seconds" << endl;
     double MeanApproximationFactor = 0;
-    for (int i = 0 ; i < limit ; i ++){
+    for (int i = 0 ; i < limit ; i ++){ 
+        //We need to calclualte k true neighbors for each query in original space in order to calculate mean approximation factor
         uint8_t * query = GetQueryRepresentation(i);
         SetAllUnchecked();
         for (int j = 0;j<K;j++){
@@ -137,6 +138,7 @@ int main(int argc, char* argv[]) {
             }
             SetChecked(minIndex);
             MeanApproximationFactor += Euclidean(GetRepresenation(indexes[i][j]),query,GetDimension()) /minDistance;
+            //Calculate approximation factor for each neighbor and add it to the sum
         }
         
     }
@@ -146,5 +148,6 @@ int main(int argc, char* argv[]) {
     DeleteQueries();
     DeleteTrain();
     std::cout << "Return Value: " << MeanApproximationFactor << std::endl;
+    //This stdout output is used by the python script to get the mean approximation factor
     return (int)MeanApproximationFactor;
 }

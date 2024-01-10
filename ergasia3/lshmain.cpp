@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
         cin >> queryFile;
     }
     double MeanApproximationFactor;
-    do{
+    //do{
     
         if ( ReadQueryData(queryFile) == ERROR)
             return ERROR;
@@ -142,7 +142,7 @@ int main(int argc, char* argv[]) {
         outputFile << "Mean Approximation Factor: " << MeanApproximationFactor << endl;
         outputFile.close();
         delete MyLsh;
-        std::cout<<"Terminate program? (y/n)\n";
+        /*std::cout<<"Terminate program? (y/n)\n";
         std::cin>>answer;
         if (answer=="y")
             break;
@@ -152,9 +152,10 @@ int main(int argc, char* argv[]) {
 
             std::cin >> queryFile;
         }
-    } while(answer=="n");
+    } while(answer=="n");*/
     DeleteQueries();
     DeleteTrain();
+    cout << "Return Value: " << MeanApproximationFactor << endl;
     return (int)MeanApproximationFactor;
 }
 

@@ -267,6 +267,7 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
     for (int CurrentHamming = 0; CurrentHamming <= Probes;CurrentHamming++){
         //We keep searching until we reach probes or we find M canditates
         double * Result= NULL;
+        double x;
         do
         {
             if (Result != NULL)
@@ -283,7 +284,9 @@ vector <double> RandomProjection :: KNN(int K,uint8_t * Query){
                 ToReturn.push_back(Result[1]);
                 i++;
             }
-        } while (Result[1] != -1);  //If result == -1, no neighbor was found for this hamming, we go to the next one
+            x = Result[1];
+            delete []Result;
+        } while (x != -1);  //If result == -1, no neighbor was found for this hamming, we go to the next one
     }
     
     bool swapped;

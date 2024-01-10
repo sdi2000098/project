@@ -31,7 +31,7 @@ EXEC7 = cluster
 EXEC8 = lshReduced
 EXEC9 = clusterReduced
 
-all: bruteForceReduced bruteForce graphSearchReduced graphs lshh projection kmeans
+all: bruteForceReduced bruteForce graphSearchReduced graphs lshh projection kmeans lshReducedd clusterReducedN 
 
 bruteForceReduced: $(EXEC)
 bruteForce: $(EXEC2)
@@ -75,7 +75,7 @@ $(EXEC9): $(OBJS9)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(OBJS) $(EXEC) $(OBJS2) $(EXEC2) $(OBJS3) $(EXEC3) $(OBJS4) $(EXEC4) $(OBJS5) $(EXEC5) $(OBJS6) $(EXEC6) $(OBJS7) $(EXEC7) $(OBJS8) $(EXEC8)
+	rm -f $(OBJS) $(EXEC) $(OBJS2) $(EXEC2) $(OBJS3) $(EXEC3) $(OBJS4) $(EXEC4) $(OBJS5) $(EXEC5) $(OBJS6) $(EXEC6) $(OBJS7) $(EXEC7) $(OBJS8) $(EXEC8) $(OBJS9) $(EXEC9)
 
 .PHONY: all clean
 

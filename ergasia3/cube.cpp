@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
         cin >> queryFile;
     }
     double MeanApproximationFactor;
-    do{
+    //do{
     
         if ( ReadQueryData(queryFile) == ERROR)
             return ERROR;
@@ -82,7 +82,6 @@ int main(int argc, char* argv[]) {
         
         MyCube->Train();
         int limit = GetQueryNumber();
-        limit = 20;
         // Check if the file exists and delete it if it does
         
         if (std::ifstream(outputfileName)) {
@@ -141,7 +140,7 @@ int main(int argc, char* argv[]) {
         outputFile << "Mean Approximation Factor: " << MeanApproximationFactor << endl;
         outputFile.close();
         delete MyCube;
-        std::cout<<"Terminate program? (y/n)\n";
+        /*std::cout<<"Terminate program? (y/n)\n";
         std::cin>>answer;
         if (answer=="y")
             break;
@@ -151,9 +150,9 @@ int main(int argc, char* argv[]) {
 
             std::cin >> queryFile;
         }
-    } while(answer=="n");
+    } while(answer=="n");*/
     DeleteQueries();
     DeleteTrain();
-    
+    std::cout << "Return Value: " << MeanApproximationFactor << std::endl;
     return (int)MeanApproximationFactor;
 }

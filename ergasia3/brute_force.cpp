@@ -65,7 +65,8 @@ int main(int argc, char* argv[]) {
         return ERROR;
     }
     int limit = GetQueryNumber();
-    limit = 5;
+    limit = 20
+    ;
     double minDistance;
     int minIndex;
     //Start measuring time

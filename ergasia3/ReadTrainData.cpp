@@ -33,7 +33,6 @@ int ReadTrainData(string path){
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
         NumberOfImages = reverseInt(NumberOfImages);
         TrainNumber = NumberOfImages;
-        TrainNumber = 3000;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));

@@ -146,6 +146,7 @@ int main(int argc, char* argv[]) {
     outputFile << "Mean Approximation Factor: " << MeanApproximationFactor << endl;
     outputFile.close();
     cout << "Return Value: " << MeanApproximationFactor << endl;
+    
 }
 
 
