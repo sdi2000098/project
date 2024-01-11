@@ -22,7 +22,8 @@ int ReadQueryData(string path){
         Magic= reverseInt(Magic);
         file.read((char*)&NumberOfImages,sizeof(NumberOfImages));
         NumberOfImages= reverseInt(NumberOfImages);
-        QueryNumber = NumberOfImages;
+        //QueryNumber = NumberOfImages;
+        QueryNumber = 5;
         file.read((char*)&Rows,sizeof(Rows));
         Rows= reverseInt(Rows);
         file.read((char*)&Columns,sizeof(Columns));

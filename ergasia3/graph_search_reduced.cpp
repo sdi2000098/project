@@ -126,7 +126,8 @@ int main (int argc, char* argv[]){
             currentResult = GenericGraphSearch(graph2,Navigating,GetQueryRepresentation(i),L,N); //mrng algorithm
         for (int j = 0;j<N;j++)
             indexes[i].push_back((int)currentResult[j][POSITION]);
-        
+        for (int j = 0 ; j < (int)currentResult.size();j++) //free this array
+                delete [] currentResult[j];
     }
     auto stop = chrono::high_resolution_clock::now();
     //Same as brute force 
