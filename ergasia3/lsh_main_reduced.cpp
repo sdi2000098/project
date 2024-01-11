@@ -145,6 +145,9 @@ int main(int argc, char* argv[]) {
     MeanApproximationFactor = MeanApproximationFactor/(limit*N);
     outputFile << "Mean Approximation Factor: " << MeanApproximationFactor << endl;
     outputFile.close();
+    delete MyLsh;
+    DeleteQueries();
+    DeleteTrain();
     cout << "Return Value: " << MeanApproximationFactor << endl;
     
 }
