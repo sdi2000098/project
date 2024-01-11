@@ -1,6 +1,5 @@
 #include "mrng.h"
 //Keep in mind that the graph each neighbor is represented by a double array
-
 struct GraphMRNG {
     int vertices;
     vector <double *> * adjList; //Each node in graph has a list of neighbors represented by a double array
