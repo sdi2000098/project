@@ -31,7 +31,7 @@ EXEC7 = cluster
 EXEC8 = lshReduced
 EXEC9 = clusterReduced
 
-all: bruteForceReduced bruteForce graphSearchReduced graphs lshh projection kmeans lshReducedd clusterReducedN 
+all: bruteForceReduced bruteForce graphSearchReduced graphs lshh projection kmeanss lshReducedd clusterReducedN 
 
 bruteForceReduced: $(EXEC)
 bruteForce: $(EXEC2)
@@ -39,7 +39,7 @@ graphSearchReduced : $(EXEC3)
 graphs: $(EXEC4)
 lshh: $(EXEC5)
 projection: $(EXEC6)
-kmeans: $(EXEC7)
+kmeanss: $(EXEC7)
 lshReducedd: $(EXEC8)
 clusterReducedN: $(EXEC9)
 
